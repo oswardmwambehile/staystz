@@ -1,0 +1,327 @@
+{% extends "property/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+{% include "property/sidebar.html" %}
+
+<style>
+/* SAME CSS AS BOOKING */
+.step-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #222;
+    border-left: 4px solid #0066ff;
+    padding-left: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+input[type="date"],
+textarea,
+select {
+    width: 50% !important;
+    background: transparent !important;
+    border: 2px solid #999 !important;
+    border-radius: 5px;
+    padding: 6px 12px;
+    color: #000;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-group .form-check {
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #0066ff;
+    border-radius: 3px;
+    accent-color: #0066ff;
+    cursor: pointer;
+    background: #fff;
+    appearance: none;
+    position: relative;
+}
+
+.checkbox-group input[type="checkbox"]:checked::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 4px;
+    height: 9px;
+    border: solid #0066ff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+select {
+    background-color: transparent !important;
+    color: #000 !important;
+}
+
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="password"],
+    input[type="date"],
+    textarea,
+    select {
+        width: 100% !important;
+    }
+}
+
+.dropzone {
+    width: 100%;
+    padding: 40px;
+    border: 2px dashed #999;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.dropzone.dragover {
+    background: #eef5ff;
+    border-color: #0066ff;
+}
+</style>
+
+<div class="main-panel">
+    <div class="main-header">
+        <div class="main-header-logo">
+            <div class="logo-header" data-background-color="dark">
+                <a href="#" class="logo">
+                    <img src="{% static 'customer/img/logo.png' %}" alt="navbar brand" class="navbar-brand" height="20">
+                </a>
+                <div class="nav-toggle">
+                    <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
+                </div>
+            </div>
+        </div>
+        {% include "property/nav.html" %}
+    </div>
+
+    <div class="container">
+        <div class="page-inner">
+            <div class="container py-4">
+
+                <h2 class="mb-4">Add Residence Property</h2>
+
+                {% if success %}
+                <div class="alert alert-success">
+                    Residence Property Added Successfully ✓
+                </div>
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- STEP 1 -->
+                    <div class="step" id="step1">
+                        <h3 class="step-title">Step 1: Basic Information</h3>
+
+                        {% for field in property_form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label><br>
+
+                            {% if field.is_checkbox %}
+                            <div class="checkbox-group">
+                                {% for subwidget in field %}
+                                <div class="form-check">
+                                    {{ subwidget.tag }}
+                                    <label class="form-check-label">{{ subwidget.choice_label }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ field|add_class:"form-control" }}
+                            {% endif %}
+
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2 -->
+                    <div class="step d-none" id="step2">
+                        <h3 class="step-title">Step 2: Property Setup</h3>
+
+                        {% for field in setup_form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label><br>
+
+                            {% if field.is_checkbox %}
+                            <div class="checkbox-group">
+                                {% for subwidget in field %}
+                                <div class="form-check">
+                                    {{ subwidget.tag }}
+                                    <label class="form-check-label">{{ subwidget.choice_label }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                                {{ field|add_class:"form-control" }}
+                            {% endif %}
+
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3 -->
+                    <div class="step d-none" id="step3">
+                        <h3 class="step-title">Step 3: Property Photos</h3>
+                        <div id="dropzone" class="dropzone">
+                            <p>Drag & Drop Images Here<br>or click to browse</p>
+                            <input type="file" id="imageUpload" name="image" multiple hidden>
+                        </div>
+                        <p class="text-muted small mt-2">Upload multiple photos</p>
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4 -->
+                    <div class="step d-none" id="step4">
+                        <h3 class="step-title">Step 4: Pricing</h3>
+
+                        {% for field in pricing_form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label><br>
+                            {{ field|add_class:"form-control" }}
+
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 5 -->
+                    <div class="step d-none" id="step5">
+                        <h3 class="step-title">Step 5: Legal Information</h3>
+
+                        {% for field in legal_form %}
+                        <div class="mb-3">
+                            <label class="form-label">{{ field.label }}</label><br>
+                            {{ field|add_class:"form-control" }}
+
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
+                            <button type="submit" class="btn btn-success">Finish ✓</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentStep = 1;
+
+function showStep(step) {
+    document.querySelectorAll('.step').forEach(s => s.classList.add('d-none'));
+    document.getElementById('step' + step).classList.remove('d-none');
+}
+
+function nextStep() { currentStep++; showStep(currentStep); }
+function prevStep() { currentStep--; showStep(currentStep); }
+
+const dropzone = document.getElementById("dropzone");
+const fileInput = document.getElementById("imageUpload");
+const preview = document.createElement("div");
+preview.id = "preview";
+preview.style.display = "flex";
+preview.style.flexWrap = "wrap";
+preview.style.marginTop = "10px";
+dropzone.appendChild(preview);
+
+dropzone.addEventListener("click", () => fileInput.click());
+
+dropzone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropzone.classList.add("dragover");
+});
+dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+
+dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("dragover");
+
+    const dtFiles = e.dataTransfer.files;
+    const fileList = new DataTransfer();
+
+    for (let i = 0; i < fileInput.files.length; i++) {
+        fileList.items.add(fileInput.files[i]);
+    }
+
+    for (let i = 0; i < dtFiles.length; i++) {
+        fileList.items.add(dtFiles[i]);
+    }
+
+    fileInput.files = fileList.files;
+    updatePreview();
+});
+
+fileInput.addEventListener("change", () => updatePreview());
+
+function updatePreview() {
+    preview.innerHTML = "";
+    Array.from(fileInput.files).forEach(file => {
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+        img.style.height = "100px";
+        img.style.marginRight = "10px";
+        img.style.marginBottom = "10px";
+        img.style.border = "1px solid #ccc";
+        img.style.borderRadius = "5px";
+        preview.appendChild(img);
+    });
+}
+
+showStep(currentStep);
+</script>
+
+{% endblock %}

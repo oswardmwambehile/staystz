@@ -1,0 +1,104 @@
+{% load static %}
+
+<div class="sidebar" data-background-color="dark">
+  <div class="sidebar-logo">
+    <!-- Logo Header -->
+    <div class="logo-header" data-background-color="dark">
+      <a href="" class="logo">
+        <img src="{% static 'customer/img/logo.png' %}" alt="navbar brand" class="navbar-brand" height="30" />
+      </a>
+      <div class="nav-toggle">
+        <button class="btn btn-toggle toggle-sidebar">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
+        <button class="btn btn-toggle sidenav-toggler">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+      </div>
+      <button class="topbar-toggler more">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+    </div>
+    <!-- End Logo Header -->
+  </div>
+
+  <div class="sidebar-wrapper scrollbar scrollbar-inner">
+    <div class="sidebar-content">
+      <ul class="nav nav-secondary">
+
+        <!-- Section -->
+        <li class="nav-section">
+          <span class="sidebar-mini-icon"><i class="fas fa-ellipsis-h"></i></span>
+          <h4 class="text-section">Components</h4>
+        </li>
+
+        <!-- Home -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-gray-700 hover:text-blue-600">
+            <i class="fas fa-home text-base"></i>
+            <span>Home</span>
+          </a>
+        </li>
+
+        <!-- Add Bookings -->
+        <li class="nav-item">
+          <a href="{% url 'add_property_all_in_one' %}">
+            <i class="fas fa-plus-square"></i>
+            <p>Add Bookings</p>
+          </a>
+        </li>
+
+        <!-- Manage Bookings -->
+        <li class="nav-item">
+          <a href="{% url 'my_properties' %}">
+            <i class="fas fa-tasks"></i>
+            <p>Manage Bookings</p>
+          </a>
+        </li>
+
+        <!-- Add Residence -->
+        <li class="nav-item">
+          <a href="{% url 'add_residence_all_in_one' %}">
+            <i class="fas fa-home"></i>
+            <p>Add Residence</p>
+          </a>
+        </li>
+
+        <!-- Manage Residence -->
+        <li class="nav-item">
+          <a href="{% url 'my_residence_properties' %}">
+            <i class="fas fa-building"></i>
+            <p>Manage Residence</p>
+          </a>
+        </li>
+
+        <!-- Add Car Rental -->
+        <li class="nav-item">
+          <a href="{% url 'add_car_rental' %}">
+            <i class="fas fa-car"></i>
+            <p>Add Car Rental</p>
+          </a>
+        </li>
+
+        <!-- Manage Car Rental -->
+        <li class="nav-item">
+          <a href="{% url 'my_car_rentals' %}">
+            <i class="fas fa-warehouse"></i>
+            <p>Manage Car Rental</p>
+          </a>
+        </li>
+
+        <!-- Bookings -->
+        <li class="nav-item">
+          <a href="{% url 'owner_bookings' %}">
+            <i class="fas fa-calendar-alt"></i>
+            <p>Bookings</p>
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+

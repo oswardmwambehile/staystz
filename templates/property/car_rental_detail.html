@@ -1,0 +1,160 @@
+{% extends "property/base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "property/sidebar.html" %}
+
+<div class="main-panel">
+  <div class="main-header">
+    <div class="main-header-logo">
+      <div class="logo-header" data-background-color="dark">
+        <a href="index.html" class="logo">
+          <img src="{% static 'customer/img/logo.png' %}" alt="navbar brand" class="navbar-brand" height="20" />
+        </a>
+        <div class="nav-toggle">
+          <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
+          <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
+        </div>
+        <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
+      </div>
+    </div>
+    {% include "property/nav.html" %}
+  </div>
+
+  <div class="container">
+    <div class="page-inner">
+
+      <!-- Car Rental Title -->
+      <h2 class="mb-2">{{ car.car_name }}</h2>
+      <p class="text-muted">{{ car.get_car_type_display }} | {{ car.registration_number }} | {{ car.manufacturer }} | {{ car.model_year }} | {{ car.color }}</p>
+
+      <!-- Main Content Grid -->
+      <div class="row">
+        <!-- Left: Images + Description -->
+        <div class="col-lg-7 mb-4">
+          {% if photos %}
+          <div class="main-photo mb-2">
+            <img src="{{ photos.0.image.url }}" class="img-fluid rounded shadow-sm" id="mainImage">
+          </div>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            {% for photo in photos %}
+            <img src="{{ photo.image.url }}" class="img-thumbnail" style="width:80px; height:60px; cursor:pointer;" onclick="document.getElementById('mainImage').src='{{ photo.image.url }}'">
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <!-- Description under images -->
+          {% if car.car_description %}
+          <div class="mb-3">
+            <h5>Car Description</h5>
+            <p>{{ car.car_description }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Right: Cards -->
+        <div class="col-lg-5">
+
+          <!-- Car Info Card -->
+          <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body p-3">
+              <h5 class="card-title">Car Info</h5>
+              <p><strong>Phone:</strong> {{ car.phone_number }}</p>
+              <p><strong>Seats:</strong> {{ car.seats }}</p>
+              <p><strong>Fuel Type:</strong> {{ car.fuel_type }}</p>
+              <p><strong>Automatic Transmission:</strong> {{ car.automatic_transmission|yesno:"Yes,No" }}</p>
+              <p><strong>Air Conditioning:</strong> {{ car.has_air_conditioning|yesno:"Yes,No" }}</p>
+              <p><strong>Mileage (km):</strong> {{ car.mileage_km }}</p>
+            </div>
+          </div>
+
+          <!-- Setup Card -->
+          {% if setup %}
+          <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body p-3">
+              <h5 class="card-title">Setup & Features</h5>
+              <p><strong>GPS:</strong> {{ setup.has_gps|yesno:"Yes,No" }}</p>
+              <p><strong>Radio:</strong> {{ setup.has_radio|yesno:"Yes,No" }}</p>
+              <p><strong>Music System:</strong> {{ setup.has_music_system|yesno:"Yes,No" }}</p>
+              {% if setup.safety_features %}
+              <p><strong>Safety Features:</strong> {{ setup.safety_features|join:", " }}</p>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Pricing Card -->
+          {% if pricing %}
+          <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body p-3">
+              <h5 class="card-title">Pricing</h5>
+              <p>Base Price: {{ pricing.base_price_per_day }} / day</p>
+              {% if pricing.weekly_discount %}
+              <p>Weekly Discount: {{ pricing.weekly_discount }}%</p>
+              {% endif %}
+              {% if pricing.monthly_discount %}
+              <p>Monthly Discount: {{ pricing.monthly_discount }}%</p>
+              {% endif %}
+              {% if pricing.cleaning_fee %}
+              <p>Cleaning Fee: {{ pricing.cleaning_fee }}</p>
+              {% endif %}
+              {% if pricing.tax_percentage %}
+              <p>Tax: {{ pricing.tax_percentage }}%</p>
+              {% endif %}
+              <p>Currency: {{ pricing.currency }}</p>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Legal Card -->
+          {% if legal %}
+          <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body p-3">
+              <h5 class="card-title">Legal & Policies</h5>
+              <p><strong>Terms:</strong> {{ legal.terms_and_conditions }}</p>
+              <p><strong>Rental Policy:</strong> {{ legal.rental_policy }}</p>
+              <p><strong>Cancellation Policy:</strong> {{ legal.cancellation_policy }}</p>
+              <p><strong>Deposit Policy:</strong> {{ legal.deposit_policy }}</p>
+              <p><strong>Insurance:</strong> {{ legal.insurance_details }}</p>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Thumbnails hover effect */
+.img-thumbnail:hover {
+  border-color: #007bff;
+  transform: scale(1.05);
+  transition: 0.2s;
+}
+
+/* Card styling */
+.card {
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* Main image */
+.main-photo img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .col-lg-7, .col-lg-5 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+</style>
+{% endblock %}

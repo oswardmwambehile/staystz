@@ -1,0 +1,235 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+    <!-- Spinner -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    {% include 'customer/nav.html' %}
+
+    <div class="container mt-5">
+        <div class="page-inner">
+
+            <!-- Car Title -->
+            <h2 class="mb-2">{{ car.car_name }}</h2>
+            <p class="text-muted">{{ car.get_car_type_display }} | {{ car.color }} | Seats: {{ car.seats }}</p>
+
+            <div class="row">
+                <!-- Left: Images + Description -->
+                <div class="col-lg-7 mb-4">
+                    {% if photos %}
+                    <div class="carousel-container mb-2">
+                        <button class="carousel-nav left" onclick="prevImage()">‹</button>
+                        <img src="{{ photos.0.image.url }}" id="mainImage" class="img-fluid rounded shadow-sm">
+                        <button class="carousel-nav right" onclick="nextImage()">›</button>
+                    </div>
+
+                    <!-- Thumbnails -->
+                    <div class="d-flex flex-wrap gap-2 mb-3 thumbs-container">
+                        {% for photo in photos %}
+                        <img src="{{ photo.image.url }}" class="thumb" onclick="setImage({{ forloop.counter0 }})">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if car.car_description %}
+                    <div class="mb-3">
+                        <h5>Car Description</h5>
+                        <p>{{ car.car_description }}</p>
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <a href="" class="btn btn-primary w-100 py-2">Book Now</a>
+                    </div>
+                </div>
+
+                <!-- Right: Cards -->
+                <div class="col-lg-5">
+
+                    <!-- Car Info Card -->
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Car Info</h5>
+                            <p><strong>Phone:</strong> {{ car.phone_number|default:"N/A" }}</p>
+                            <p><strong>Manufacturer:</strong> {{ car.manufacturer|default:"N/A" }}</p>
+                            <p><strong>Model Year:</strong> {{ car.model_year|default:"N/A" }}</p>
+                            <p><strong>Color:</strong> {{ car.color|default:"N/A" }}</p>
+                            <p><strong>Seats:</strong> {{ car.seats|default:"N/A" }}</p>
+                            <p><strong>Fuel Type:</strong> {{ car.fuel_type|default:"N/A" }}</p>
+                            <p><strong>Mileage:</strong> {{ car.mileage_km|default:"N/A" }} km</p>
+                        </div>
+                    </div>
+
+                    <!-- Setup / Features -->
+                    {% if setup %}
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Features</h5>
+                            <p>Air Conditioning: {{ car.has_air_conditioning|yesno:"Yes,No" }}</p>
+                            <p>Automatic Transmission: {{ car.automatic_transmission|yesno:"Yes,No" }}</p>
+                            <p>GPS: {{ setup.has_gps|yesno:"Yes,No" }}</p>
+                            <p>Radio: {{ setup.has_radio|yesno:"Yes,No" }}</p>
+                            <p>Music System: {{ setup.has_music_system|yesno:"Yes,No" }}</p>
+                            {% if setup.safety_features %}
+                            <p>Safety Features: {{ setup.safety_features|join:", " }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Pricing -->
+                    {% if pricing %}
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Pricing</h5>
+                            <p>Base Price: {{ pricing.base_price_per_day|floatformat:0 }} {{ pricing.currency }}/day</p>
+                            {% if pricing.weekly_discount %}
+                            <p>Weekly Discount: {{ pricing.weekly_discount }}%</p>
+                            {% endif %}
+                            {% if pricing.monthly_discount %}
+                            <p>Monthly Discount: {{ pricing.monthly_discount }}%</p>
+                            {% endif %}
+                            {% if pricing.cleaning_fee %}
+                            <p>Cleaning Fee: {{ pricing.cleaning_fee }} {{ pricing.currency }}</p>
+                            {% endif %}
+                            {% if pricing.tax_percentage %}
+                            <p>Tax: {{ pricing.tax_percentage }}%</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Legal / Policies -->
+                    {% if legal %}
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Legal & Policies</h5>
+                            <p><strong>Terms & Conditions:</strong> {{ legal.terms_and_conditions|default:"N/A" }}</p>
+                            <p><strong>Rental Policy:</strong> {{ legal.rental_policy|default:"N/A" }}</p>
+                            <p><strong>Cancellation Policy:</strong> {{ legal.cancellation_policy|default:"N/A" }}</p>
+                            <p><strong>Deposit Policy:</strong> {{ legal.deposit_policy|default:"N/A" }}</p>
+                            <p><strong>Insurance:</strong> {{ legal.insurance_details|default:"N/A" }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'customer/footer.html' %}
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- Carousel Styles -->
+<style>
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f1f1f1;
+}
+.carousel-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+}
+.carousel-nav.left { left: 10px; }
+.carousel-nav.right { right: 10px; }
+
+.thumbs-container {
+    gap: 10px;
+    overflow-x: auto;
+}
+.thumb {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .2s;
+}
+.thumb:hover { border-color: #0d6efd; transform: scale(1.05); }
+
+@media(max-width:768px){
+    .carousel-container { height: 260px; }
+    .thumb { width: 60px; height: 45px; }
+}
+</style>
+
+<!-- Carousel Script -->
+<script>
+const images = [
+    {% for photo in photos %}
+    "{{ photo.image.url }}",
+    {% endfor %}
+];
+
+let current = 0;
+const mainImage = document.getElementById('mainImage');
+
+// Auto slide every 3 seconds
+function autoSlide() {
+    current = (current + 1) % images.length;
+    mainImage.style.opacity = 0;
+    setTimeout(() => {
+        mainImage.src = images[current];
+        mainImage.style.opacity = 1;
+    }, 150);
+}
+let slideInterval = setInterval(autoSlide, 3000);
+
+// Manual navigation
+function nextImage() { current = (current + 1) % images.length; updateImage(); }
+function prevImage() { current = (current - 1 + images.length) % images.length; updateImage(); }
+function setImage(i) { current = i; updateImage(); }
+
+function updateImage() {
+    mainImage.style.opacity = 0;
+    setTimeout(() => {
+        mainImage.src = images[current];
+        mainImage.style.opacity = 1;
+    }, 150);
+}
+
+// Optional: swipe support on mobile
+let startX = 0;
+mainImage.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+mainImage.addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) { nextImage(); resetAutoSlide(); }
+    if (endX - startX > 50) { prevImage(); resetAutoSlide(); }
+});
+
+function resetAutoSlide() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(autoSlide, 3000);
+}
+</script>
+
+{% endblock %}

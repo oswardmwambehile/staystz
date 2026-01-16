@@ -1,0 +1,95 @@
+{% load static %}
+
+<section class="hotel-split-section">
+  <div class="hotel-text">
+    <h1>Experience Comfort & Luxury</h1>
+    <p>
+      Discover the perfect stay for travelers, families,
+      and business guests in a welcoming and relaxing environment.
+    </p>
+    <a href="#rooms" class="btn-book">Book Your Stay</a>
+  </div>
+
+  <div class="hotel-video">
+    <video autoplay muted loop playsinline controls>
+      <source src="{% static 'videos/osward.mp4' %}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</section>
+
+<style>
+    .hotel-split-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 10%;
+  gap: 40px;
+  background: #f8f8f8;
+}
+
+.hotel-text {
+  flex: 1;
+}
+
+.hotel-text h1 {
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.hotel-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  color: #555;
+}
+
+.hotel-video {
+  flex: 1;
+}
+
+.hotel-video video {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.btn-book {
+  padding: 12px 30px;
+  background: #f9b233;
+  color: #000;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.btn-book:hover {
+  background: #ffc857;
+}
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+  .hotel-split-section {
+    flex-direction: column;
+    padding: 60px 5%;
+  }
+
+  .hotel-text {
+    width: 100%;
+    text-align: center;
+  }
+
+  .hotel-video {
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .hotel-video video {
+    width: 100%;
+    height: 240px; /* force visible height */
+    object-fit: cover;
+  }
+}
+
+</style>

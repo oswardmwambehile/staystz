@@ -1,0 +1,124 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid p-0 bg-light">
+    <!-- Spinner -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <!-- Hero Section -->
+    <div class="py-5 text-center text-white position-relative" style="background-color: #174376;">
+        <div class="container">
+            <div class="display-1 mb-3 animate__animated animate__bounceIn">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h1 class="fw-bold animate__animated animate__fadeInDown" style="color: white;">Booking Confirmed!</h1>
+            <p class="lead mb-0 animate__animated animate__fadeInUp">
+                Congratulations, {{ user.first_name }} {{ user.last_name }}! Your stay is officially booked.
+            </p>
+        </div>
+    </div>
+
+    <!-- Success Card -->
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+
+                <div class="card shadow-lg border-0 rounded-5 overflow-hidden animate__animated animate__fadeInUp">
+                    <div class="row g-0">
+
+                        <!-- Left: Property Image -->
+                        {% if booking and booking.property.photos.first %}
+                        <div class="col-md-5">
+                            <img src="{{ booking.property.photos.first.image.url }}" 
+                                 class="img-fluid h-100 w-100 object-fit-cover" 
+                                 alt="{{ booking.property.property_name }}">
+                        </div>
+                        {% else %}
+                        <div class="col-md-5">
+                            <img src="{% static 'images/no-image.png' %}" 
+                                 class="img-fluid h-100 w-100 object-fit-cover" 
+                                 alt="Property Image">
+                        </div>
+                        {% endif %}
+
+                        <!-- Right: Booking Details -->
+                        <div class="col-md-7">
+                            <div class="card-body p-5">
+                                <h2 class="card-title fw-bold mb-3">Hello, {{ user.first_name }}!</h2>
+                                <p class="text-muted mb-4">We are thrilled to host you. Here are your booking details:</p>
+
+                                {% if booking %}
+                                <ul class="list-group list-group-flush mb-4 shadow-sm rounded-3">
+                                    <li class="list-group-item"><strong>Property:</strong> {{ booking.property.property_name }}</li>
+                                    <li class="list-group-item"><strong>Room Type:</strong> {{ booking.room_type }}</li>
+                                    <li class="list-group-item"><strong>Check-in:</strong> {{ booking.check_in|date:"M d, Y" }}</li>
+                                    <li class="list-group-item"><strong>Check-out:</strong> {{ booking.check_out|date:"M d, Y" }}</li>
+                                    <li class="list-group-item"><strong>Nights:</strong> {{ booking.nights }}</li>
+                                     <li class="list-group-item"><strong>Guest:</strong> {{ booking.guests }}</li>
+                                    <li class="list-group-item"><strong>Total Cost:</strong> {{ booking.total_price|intcomma }} TZS</li>
+                                </ul>
+                                {% endif %}
+
+                                <p class="mb-4">
+                                    Your booking is confirmed and your room is ready! 🎉<br>
+                                    We can’t wait to give you an unforgettable experience.
+                                </p>
+
+                                <a href="/" class="btn btn-success btn-lg rounded-pill px-4 me-2 mb-2">Return to Home</a>
+                                {% if booking %}
+                                <a href="{% url 'my_bookings' %}" 
+                                   class="btn btn-outline-success btn-lg rounded-pill px-4 mb-2">View Your Bookings</a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Social Sharing -->
+                <div class="text-center mt-4">
+                    <p class="text-muted mb-2">Share your excitement with friends:</p>
+                    <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="bi bi-facebook"></i> Facebook</a>
+                    <a href="#" class="btn btn-outline-info btn-sm me-2"><i class="bi bi-twitter"></i> Twitter</a>
+                    <a href="#" class="btn btn-outline-danger btn-sm"><i class="bi bi-envelope"></i> Email</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'customer/footer.html' %}
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-success btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
+{% endblock %}
+
+<style>
+.object-fit-cover {
+    object-fit: cover;
+    height: 100%;
+}
+.card-body ul.list-group-item {
+    background-color: #f8f9fa;
+    border: none;
+}
+.card-body ul.list-group-item strong {
+    color: #495057;
+}
+</style>
+
+<!-- Optional: Animate.css for entrance effects -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>

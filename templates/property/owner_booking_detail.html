@@ -1,0 +1,117 @@
+{% extends "property/base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+{% include "property/sidebar.html" %}
+
+<div class="main-panel">
+  <div class="main-header">
+    <div class="main-header-logo">
+      <div class="logo-header" data-background-color="dark">
+        <a href="index.html" class="logo">
+          <img src="{% static 'customer/img/logo.png' %}" alt="navbar brand" class="navbar-brand" height="20" />
+        </a>
+        <div class="nav-toggle">
+          <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
+          <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
+        </div>
+        <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
+      </div>
+    </div>
+    {% include "property/nav.html" %}
+  </div>
+
+  <div class="container">
+    <div class="page-inner">
+      <div class="container mt-4">
+        <h2>Booking Detail: ST-B-{{ booking.id|stringformat:"04d" }}</h2>
+
+        <div class="row g-4 mt-3">
+
+          <!-- Customer Info Card -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+              <div class="card-header  text-white" style="background-color: #174376;">
+                Customer Information
+              </div>
+              <div class="card-body">
+                <p><strong>Customer Name:</strong> {{ booking.user.get_full_name }}</p>
+                <p><strong>Email:</strong> {{ booking.user.email }}</p>
+                <p><strong>Phone:</strong> {{ booking.user.phone_number|default:"N/A" }}</p>
+                <p><strong>Location:</strong> {{ booking.user.location|default:"N/A" }}</p>
+                {% if booking.user.nida_number %}
+                  <p><strong>NIDA Number:</strong> {{ booking.user.nida_number }}</p>
+                {% endif %}
+                {% if booking.user.nida_card %}
+                  <p><strong>NIDA Card:</strong></p>
+                  <img src="{{ booking.user.nida_card.url }}" class="img-fluid rounded" style="max-width:200px;">
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Details Card -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-info text-white">
+                Booking Details
+              </div>
+              <div class="card-body">
+                <p><strong>Room Type:</strong> {{ booking.room_type }}</p>
+                <p><strong>Guests:</strong> {{ booking.guests }}</p>
+                <p><strong>Check-in:</strong> {{ booking.check_in|date:"M d, Y" }}</p>
+                <p><strong>Check-out:</strong> {{ booking.check_out|date:"M d, Y" }}</p>
+                <p><strong>Nights:</strong> {{ booking.nights }}</p>
+                <p><strong>Total Price:</strong> {{ booking.total_price|intcomma }} TZS</p>
+                <p>
+                  <strong>Status:</strong>
+                  {% if booking.status == 'pending' %}
+                    <span class="badge bg-warning text-dark">{{ booking.status|title }}</span>
+                  {% elif booking.status == 'confirmed' %}
+                    <span class="badge bg-success">{{ booking.status|title }}</span>
+                  {% elif booking.status == 'cancelled' %}
+                    <span class="badge bg-danger">{{ booking.status|title }}</span>
+                  {% elif booking.status == 'completed' %}
+                    <span class="badge bg-primary">{{ booking.status|title }}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ booking.status|title }}</span>
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Property Image Card -->
+          <div class="col-12">
+            <div class="card shadow-sm border-0">
+              <div class="card-body text-center">
+                <h5><strong>Property Name</strong> :{{ booking.property.property_name }}</h5>
+                <p class="text-muted"><strong>Property Type</strong> :{{ booking.property.property_type|title }}</p>
+                {% if booking.property.photos.first %}
+                  <img src="{{ booking.property.photos.first.image.url }}" class="img-fluid rounded" style="max-width:600px;">
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <a href="{% url 'owner_bookings' %}" class="btn btn-outline-primary mt-4">Back to All Bookings</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.card-header {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.img-thumbnail:hover {
+  transform: scale(1.05);
+  transition: 0.2s;
+}
+</style>
+
+{% endblock %}

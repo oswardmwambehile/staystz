@@ -1,0 +1,83 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Navbar Start -->
+    {% include 'customer/nav.html' %}
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid header bg-white p-0">
+        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+            <div class="col-md-6 p-5 mt-lg-5">
+                <h1 class="display-5 animate__animated animate__fadeIn mb-4">About Us</h1>
+                <nav aria-label="breadcrumb" class="animate__animated animate__fadeIn">
+                    <ol class="breadcrumb text-uppercase">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-body active" aria-current="page">About</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-6 animate__animated animate__fadeIn">
+                <img class="img-fluid" src="{% static 'customer/img/header.jpg' %}" alt="Header">
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- About Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6 animate__animated animate__fadeIn" data-wow-delay="0.1s">
+                    <div class="about-img position-relative overflow-hidden p-5 pe-0">
+                        <img class="img-fluid w-100" src="{% static 'customer/img/about.jpg' %}" alt="About">
+                    </div>
+                </div>
+                <div class="col-lg-6 animate__animated animate__fadeIn" data-wow-delay="0.5s">
+                    <h1 class="mb-4">About Stays Tanzania</h1>
+                    <p class="mb-4">Established on November 11, 2023, Stays Tanzania is committed to transforming how Tanzanians access housing, business premises, guest houses, auctions, and flexible rent payment plans. Our innovative solutions also include rental loans and online property transactions — all aimed at simplifying lives.</p>
+
+                    <span class="text-primary" style="font-weight: 800;">OUR MISSION</span>
+                    <p>To revolutionize access to housing, business premises, and accommodation by providing seamless, affordable, and secure online services, while empowering Tanzanian communities through job creation and technological innovation.</p>
+                   
+
+                    <span class="text-primary" style="font-weight: 800;">OUR MISSION</span>
+                    <p>To become the leading platform in East Africa for finding, booking, and managing properties, enhancing convenience and quality of life for every user.</p>
+                    <p><i class="fa fa-check text-primary me-3"></i>Customer-Centricity</p>
+                    <p><i class="fa fa-check text-primary me-3"></i>Innovation</p>
+                    <p><i class="fa fa-check text-primary me-3"></i>Transparency</p>
+                    <p><i class="fa fa-check text-primary me-3"></i>Empowerment</p>
+                    <p><i class="fa fa-check text-primary me-3"></i>Quality</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+    <!-- Footer Start -->
+    {% include 'customer/footer.html' %}
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+</div>
+
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+{% endblock %}

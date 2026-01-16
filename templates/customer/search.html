@@ -1,0 +1,62 @@
+ {% load static %}
+ 
+ 
+{% load static %}
+
+<form method="GET" action="">
+    <div class="container-fluid bg-primary mb-5 wow fadeIn"
+         data-wow-delay="0.1s" style="padding: 35px;">
+        <div class="container">
+            <div class="row g-2">
+
+                <div class="col-md-10">
+                    <div class="row g-2">
+
+                        <!-- Keyword Search -->
+                        <div class="col-md-4">
+                            <input type="text" name="keyword" value="{{ request.GET.keyword }}"
+                                   class="form-control border-0 py-3"
+                                   placeholder="Search Keyword">
+                        </div>
+
+                        <!-- Property Type -->
+                        <div class="col-md-4">
+                            <select name="property_type_filter"
+                                    class="form-select border-0 py-3">
+                                <option value="">Property Type</option>
+                                {% for key, value in property_type_choices %}
+                                    <option value="{{ key }}"
+                                        {% if request.GET.property_type_filter == key %}selected{% endif %}>
+                                        {{ value }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Region (all Tanzania regions) -->
+                        <div class="col-md-4">
+                            <select name="region" class="form-select border-0 py-3">
+                                <option value="">Select Region</option>
+                                {% for reg in tanzania_regions %}
+                                    <option value="{{ reg }}"
+                                        {% if request.GET.region == reg %}selected{% endif %}>
+                                        {{ reg }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="col-md-2">
+                    <button class="btn btn-dark border-0 w-100 py-3">
+                        Search
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

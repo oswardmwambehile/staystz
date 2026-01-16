@@ -1,0 +1,135 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <!-- Header Start -->
+    <div class="container-fluid header bg-white p-0">
+        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+            <div class="col-md-6 p-5 mt-lg-5">
+                <h1 class="display-5 animated fadeIn mb-4">Property List in <span class="text-primary">{{ property_type }}</span></h1> 
+                <nav aria-label="breadcrumb animated fadeIn">
+                    <ol class="breadcrumb text-uppercase">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                        <li class="breadcrumb-item text-body active" aria-current="page">Property List</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-6 animated fadeIn">
+               <img class="img-fluid" src="{% static 'customer/img/h9.jpg' %}" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Search Start -->
+    {% include 'customer/search.html' %}
+    <!-- Search End -->
+
+    <!-- Property List Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+
+                        {% for property in properties %}
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0|add:"1" }}s">
+                            <div class="property-item rounded overflow-hidden">
+
+                                <div class="position-relative overflow-hidden">
+                                    <a href="{% url 'residence_property_detail' property.pk %}">
+                                        {% if property.photos.first %}
+                                            <img class="img-fluid" src="{{ property.photos.first.image.url }}" alt="{{ property.property_name }}">
+                                        {% else %}
+                                            <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ property.property_name }}">
+                                        {% endif %}
+                                    </a>
+
+                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
+                                        {{ property.status|title }}
+                                    </div>
+
+                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                        {{ property.property_type|title }}
+                                    </div>
+                                </div>
+
+                                <div class="p-4 pb-0">
+                                    <h5 class="text-primary mb-3">
+                                        TZS {% if property.residencepropertypricing %}{{ property.residencepropertypricing.base_price|floatformat:0|intcomma }}{% else %}N/A{% endif %}/Month
+                                    </h5>
+                                    <a class="d-block h5 mb-2" href="{% url 'residence_property_detail' property.pk %}">
+                                        {{ property.property_name }}
+                                    </a>
+                                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>
+                                        {{ property.address }}, {{ property.region }}
+                                    </p>
+                                </div>
+
+                                <div class="d-flex border-top">
+                                    <small class="flex-fill text-center border-end py-2">
+                                        <i class="fa fa-ruler-combined text-primary me-2"></i>
+                                        {{ property.property_size_sqm|default:"N/A" }} Sqm
+                                    </small>
+                                    <small class="flex-fill text-center border-end py-2">
+                                        <i class="fa fa-bed text-primary me-2"></i>
+                                        {% if property.residencepropertysetup %}{{ property.residencepropertysetup.total_beds|default:"N/A" }}{% else %}N/A{% endif %} Bed
+                                    </small>
+                                    <small class="flex-fill text-center py-2">
+                                        <i class="fa fa-bath text-primary me-2"></i>
+                                        {% if property.residencepropertysetup %}{{ property.residencepropertysetup.number_of_bathrooms|default:"N/A" }}{% else %}N/A{% endif %} Bath
+                                    </small>
+                                </div>
+
+                                <div class="p-4 pt-2">
+                                    <a href="{% url 'residence_property_details' property.id %}" class="btn btn-primary w-100">
+                                        See Availability
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% empty %}
+                            <p class="text-center text-danger">No properties found in this property type. Thank you for browsing our properties</p>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Property List End -->
+
+    <!-- Footer Start -->
+    {% include 'customer/footer.html' %}
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
+<style>
+.property-item img {
+    height: 260px;        /* fixed height */
+    width: 100%;
+    object-fit: cover;    /* crop images without stretching */
+}
+.property-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.property-item .p-4 {
+    flex-grow: 1; /* push footer down so cards align */
+}
+</style>
+{% endblock %}

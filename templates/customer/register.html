@@ -1,0 +1,158 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+ <div class="container-fluid bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar Start -->
+        {% include 'customer/nav.html' %}
+
+        <!-- Navbar End -->
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <!-- Django messages -->
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="card shadow-sm">
+                <div class="card-header text-center"  style="background-color: white !important;">
+
+    <!-- FIXED: Logo above, text below -->
+    <div style="text-align: center; margin-bottom: 10px;">
+        <img src="{% static 'customer/img/logo.png' %}" 
+             alt="Logo"
+             style="height: 50px; margin-bottom: 10px;">
+        
+        <h4 style="
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #111;
+            letter-spacing: -0.5px;
+            margin: 0;
+            margin-top: 5px;
+        ">
+            Sign up to the Platform
+        </h4>
+    </div>
+
+</div>
+
+                <div class="card-body">
+
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                            <div class="mb-3" id="field-{{ field.name }}">
+                                <label class="form-label">{{ field.label }}</label>
+
+                                {% if field.errors %}
+                                    {{ field|add_class:"form-control is-invalid" }}
+                                {% else %}
+                                    {{ field|add_class:"form-control" }}
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <!-- Bootstrap invalid feedback -->
+                                    <div class="text-danger small mt-1">
+                                        {% for error in field.errors %}
+                                            {{ error }}<br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3">
+                            Register
+                        </button>
+                        <div class="text-center mt-3">
+                            Already have an account? <a href="{% url 'login' %}">Login here</a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+/* Make select fields white */
+select.form-control {
+    background-color: #fff !important;
+    color: #111 !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+/* Make file input match other inputs */
+input[type="file"].form-control {
+    background-color: #fff !important;
+    border: 1px solid #ced4da !important;
+    color: #111 !important;
+    padding: 0.375rem 0.75rem !important;
+    height: auto !important;
+    box-shadow: none !important;
+}
+</style>
+
+<script>
+  setTimeout(function() {
+    $('.alert').alert('close');
+  }, 1000);
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const userType = document.getElementById("id_user_type");
+    const nidaNumber = document.getElementById("field-nida_number");
+    const nidaCard = document.getElementById("field-nida_card");
+
+    function toggleFields() {
+        if (userType.value === "property_owner") {
+            nidaNumber.style.display = "block";
+            nidaCard.style.display = "block";
+        } else {
+            nidaNumber.style.display = "none";
+            nidaCard.style.display = "none";
+        }
+    }
+
+    toggleFields();
+    userType.addEventListener("change", toggleFields);
+});
+</script>
+       
+     
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+
+{% endblock %}
+
+

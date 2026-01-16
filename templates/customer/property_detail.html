@@ -1,0 +1,221 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <div class="container mt-5">
+        <div class="page-inner">
+            <h2 class="mb-2">{{ property.property_name }}</h2>
+            <p class="text-muted">{{ property.property_type|title }} | {{ property.address }}, {{ property.district }}, {{ property.region }}, {{ property.country }}</p>
+
+            <div class="row">
+                <!-- LEFT: Custom Carousel -->
+                <div class="col-lg-7 mb-4">
+                    {% if photos %}
+                    <div class="carousel-container mb-2">
+                        <button class="carousel-nav left" onclick="prevImage()">‹</button>
+                        <img src="{{ photos.0.image.url }}" id="mainImage" class="img-fluid rounded shadow-sm">
+                        <button class="carousel-nav right" onclick="nextImage()">›</button>
+                    </div>
+
+                    <!-- Thumbnails -->
+                    <div class="d-flex flex-wrap gap-2 thumbs-container">
+                        {% for photo in photos %}
+                        <img src="{{ photo.image.url }}" class="thumb" onclick="setImage({{ forloop.counter0 }})">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if property.property_description %}
+                    <div class="mb-3 mt-3">
+                        <h5>Property Description</h5>
+                        <p>{{ property.property_description }}</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <a href="{% url 'book_property' property.id %}" class="btn btn-primary w-100 py-2">Book Now</a>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Cards -->
+                <div class="col-lg-5">
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Property Info</h5>
+                            <p><strong>Property Size (sqm):</strong> {{ property.property_size_sqm }}</p>
+                            <p><strong>Languages Spoken:</strong> {{ property.languages_spoken }}</p>
+                            {% if property.status %}
+                            <p>
+                                <strong>Status:</strong>
+                                {% if property.status|lower == "open" %}
+                                    <span class="badge bg-success">{{ property.status|title }}</span>
+                                {% elif property.status|lower == "hold" %}
+                                    <span class="badge bg-warning text-dark">{{ property.status|title }}</span>
+                                {% elif property.status|lower == "closed" %}
+                                    <span class="badge bg-danger">{{ property.status|title }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ property.status|title }}</span>
+                                {% endif %}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if setup %}
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Setup & Rooms</h5>
+                            <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds }}</p>
+                            <p>Bathrooms: {{ setup.number_of_bathrooms }}</p>
+                            <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}</p>
+                            <p>Amenities: {{ setup.amenities|join:", " }}</p>
+                            <p>Room Types: {{ setup.room_types|join:", " }}</p>
+                            <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if pricing %}
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Pricing</h5>
+                            <p>Base Price: {{ pricing.base_price_per_night }} / night</p>
+                            <p>Available: {{ pricing.available_from }} to {{ pricing.available_to }}</p>
+                            <p>Minimum stay: {{ pricing.minimum_stay_nights }} nights</p>
+                            <p>Maximum stay: {{ pricing.maximum_stay_nights|default:"No limit" }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if legal %}
+                    <div class="card mb-3 shadow-sm border-0">
+                        <div class="card-body p-3">
+                            <h5 class="card-title">Legal & Policies</h5>
+                            <p><strong>Terms and Conditions:</strong> {{ legal.terms_and_conditions }}</p>
+                            <p><strong>House Rules:</strong> {{ legal.house_rules }}</p>
+                            <p><strong>Cancellation Policy:</strong> {{ legal.cancellation_policy }}</p>
+                            <p><strong>Check-in Policy:</strong> {{ legal.check_in_policy }}</p>
+                            <p><strong>Smoking Policy:</strong> {{ legal.smoking_policy }}</p>
+                            <p><strong>Pets policy:</strong> {{ legal.pet_policy }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'customer/footer.html' %}
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- Carousel Styles -->
+<style>
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f1f1f1;
+}
+.carousel-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+}
+.carousel-nav.left { left: 10px; }
+.carousel-nav.right { right: 10px; }
+
+.thumbs-container {
+    gap: 10px;
+    overflow-x: auto;
+}
+.thumb {
+    width: 90px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .2s;
+}
+.thumb:hover { border-color: #0d6efd; transform: scale(1.05); }
+
+@media(max-width:768px){
+    .carousel-container { height: 260px; }
+    .thumb { width: 70px; height: 55px; }
+}
+</style>
+
+<!-- Carousel Script -->
+<script>
+const images = [
+    {% for photo in photos %}
+    "{{ photo.image.url }}",
+    {% endfor %}
+];
+
+let current = 0;
+const mainImage = document.getElementById('mainImage');
+
+// Auto slide every 3 seconds
+function autoSlide() {
+    current = (current + 1) % images.length;
+    mainImage.style.opacity = 0;
+    setTimeout(() => {
+        mainImage.src = images[current];
+        mainImage.style.opacity = 1;
+    }, 150);
+}
+let slideInterval = setInterval(autoSlide, 3000);
+
+// Manual navigation
+function nextImage() { current = (current + 1) % images.length; updateImage(); }
+function prevImage() { current = (current - 1 + images.length) % images.length; updateImage(); }
+function setImage(i) { current = i; updateImage(); }
+
+function updateImage() {
+    mainImage.style.opacity = 0;
+    setTimeout(() => {
+        mainImage.src = images[current];
+        mainImage.style.opacity = 1;
+    }, 150);
+}
+
+// Swipe support for mobile
+let startX = 0;
+mainImage.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+mainImage.addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) { nextImage(); resetAutoSlide(); }
+    if (endX - startX > 50) { prevImage(); resetAutoSlide(); }
+});
+
+function resetAutoSlide() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(autoSlide, 3000);
+}
+</script>
+
+{% endblock %}
