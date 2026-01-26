@@ -1,0 +1,70 @@
+{% load static %}
+
+<!-- Offers Section -->
+<section class="offers py-5">
+  <div class="container">
+    <div class="mb-5">
+      <h3 class="mb-2">Offers</h3>
+      <p class="text-muted">Promotions, deals and special offers for you</p>
+      <h2>Early 2026 Deals</h2>
+      <p class="text-primary fw-bold">At least 15% off</p>
+      <p>Save on your next stay with Early 2026 Deals. Book now, stay until 1 April 2026.</p>
+      <a href="#" class="btn btn-primary">Explore deals</a>
+    </div>
+
+    <h3 class="mb-4">Browse by property type</h3>
+    <div class="row g-4">
+      <!-- Hotels -->
+      <div class="col-md-3 col-sm-6">
+        <a href="{% url 'booking_properties' 'hotel' %}" class="text-decoration-none">
+          <div class="card h-100">
+            <img src="{% static 'customer/img/a1.jpg' %}" class="card-img-top" alt="Hotels">
+            <div class="card-body text-center">
+              <h5 class="card-title">Hotels</h5>
+              
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Apartments -->
+      <div class="col-md-3 col-sm-6">
+        <a href="{% url 'residence_properties_type' 'apartment' %}" class="text-decoration-none">
+          <div class="card h-100">
+            <img src="{% static 'customer/img/s5.jpg' %}" class="card-img-top" alt="Apartments">
+            <div class="card-body text-center">
+              <h5 class="card-title">Apartments</h5>
+             
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- House -->
+      <div class="col-md-3 col-sm-6">
+        <a href="{% url 'residence_properties_type' 'house' %}" class="text-decoration-none">
+          <div class="card h-100">
+            <img src="{% static 'customer/img/s1.jpg' %}" class="card-img-top" alt="House">
+            <div class="card-body text-center">
+              <h5 class="card-title">House</h5>
+              
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Lodge -->
+      <div class="col-md-3 col-sm-6">
+        <a href="{% url 'booking_properties' 'guest_house' %}" class="text-decoration-none">
+          <div class="card h-100">
+            <img src="{% static 'customer/img/s2.jpg' %}" class="card-img-top" alt="Lodge">
+            <div class="card-body text-center">
+              <h5 class="card-title">Guest House</h5>
+              
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

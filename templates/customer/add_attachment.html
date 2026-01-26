@@ -1,0 +1,119 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid bg-light min-vh-100 py-5">
+
+    {% include 'customer/nav.html' %}
+
+    <div class="container mt-5">
+        <!-- Page Header --> 
+        <div class="text-center mb-4">
+            <h1 class="fw-bold">Property Ownership Verification</h1>
+            <p class="text-muted">
+                Only <strong>property owners</strong> can upload attachments for the properties they own.
+                All documents are reviewed for<br> verification purposes.So that your property can be visible to Our system
+            </p>
+        </div>
+
+        <!-- Info Alert -->
+        <div class="alert alert-primary d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
+                <use xlink:href="#info-fill"/>
+            </svg>
+            <div>
+                Upload clear images only. Accepted formats: JPG, PNG. NIDA number is required when selecting NIDA.
+            </div>
+        </div>
+
+        <!-- Form Card (Reduced Width) -->
+        <div class="card shadow-sm mx-auto" style="max-width: 650px;">
+            <div class="card-body">
+                <h5 class="card-title mb-4 text-center">Upload Attachment</h5>
+                
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Attachment Type -->
+                    <div class="mb-3">
+                        <label for="id_attachment_type" class="form-label">Attachment Type</label>
+                        {{ form.attachment_type|add_class:"form-select" }}
+                        <div class="form-text">Select the type of document you want to upload</div>
+                    </div>
+
+                    <!-- NIDA Number -->
+                    <div class="mb-3" id="nida-wrapper" style="display: none;">
+                        <label for="id_nida_number" class="form-label">NIDA Number</label>
+                        {{ form.nida_number|add_class:"form-control" }}
+                        <div class="form-text">Enter your NIDA number exactly as on your card</div>
+                    </div>
+
+                    <!-- Document Upload -->
+                    <div class="mb-4">
+                        <label for="id_document" class="form-label">Upload Document Image</label>
+                        {{ form.document|add_class:"form-control" }}
+                        <div class="form-text">Accepted formats: JPG, PNG</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Submit for Verification
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NIDA Toggle Script -->
+<script>
+    const attachmentSelect = document.getElementById("id_attachment_type");
+    const nidaWrapper = document.getElementById("nida-wrapper");
+
+    function toggleNidaField() {
+        if (attachmentSelect.value === "nida") {
+            nidaWrapper.style.display = "block";
+        } else {
+            nidaWrapper.style.display = "none";
+        }
+    }
+
+    attachmentSelect.addEventListener("change", toggleNidaField);
+    toggleNidaField();
+</script>
+<style>
+    input{
+        background-color: white;
+    } 
+</style>
+<style>
+/* FIX GRAY FILE INPUT */
+input[type="file"].form-control {
+    background-color: #fff !important;
+    color: #212529;
+    cursor: pointer;
+}
+
+/* Remove disabled-looking opacity */
+input[type="file"].form-control:focus {
+    box-shadow: none;
+    border-color: #0d6efd;
+}
+
+/* Style the file button (Bootstrap 5) */
+.form-control::file-selector-button {
+    background-color: #0d6efd;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    margin-right: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-control::file-selector-button:hover {
+    background-color: #0b5ed7;
+}
+</style>
+
+{% endblock %}

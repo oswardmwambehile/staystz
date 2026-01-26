@@ -1,69 +1,115 @@
 {% load static %}
+<style>
+/* Prevent horizontal scroll */
+body {
+    overflow-x: hidden;
+}
+
+/* Navbar adjustments */
+.navbar-nav {
+    flex-wrap: wrap;
+}
+
+/* Make collapse container not cut off dropdown */
+.navbar-collapse {
+    overflow: visible !important;
+}
+
+/* Dropdown menu properly positioned and full visible */
+.navbar .dropdown-menu {
+    position: absolute !important;
+    top: 100%;       /* below the toggle */
+    right: 0;        /* align right */
+    left: auto;
+    display: block;
+    min-width: 220px; /* adjust width */
+    z-index: 1050;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+}
+
+/* Ensure dropdown items stretch */
+.navbar .dropdown-menu a,
+.navbar .dropdown-menu .btn {
+    width: 100%;
+    text-align: left;
+    white-space: nowrap; /* prevent wrapping */
+    padding: 8px 16px;
+}
+
+/* Navbar toggle button */
+.navbar-toggler {
+    border: none;
+}
+
+/* Dropdown hover effect */
+.navbar .dropdown-menu a:hover,
+.navbar .dropdown-menu .btn:hover {
+    background-color: #f1f1f1;
+}
+</style>
+
 <div class="container-fluid nav-bar bg-transparent">
     <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+        <!-- Brand -->
         <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center text-center">
             <div class="icon p-2 me-2">
-               <img class="img-fluid" src="{% static 'customer/img/logo.png' %}" alt="Icon" style="width: 80px; height: 40px;">
+               <img class="img-fluid" src="{% static 'customer/img/logo.png' %}" alt="Logo" style="width: 180px; height: 40px;">
             </div>
         </a>
+
+        <!-- Toggler -->
         <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
+
+        <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto">
-                <a href="{% url 'index' %}" class="nav-item nav-link active">Home</a>
-                <a href="{%url 'about' %}" class="nav-item nav-link">About</a>
-                <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">RESIDENCE</a>
-                        <div class="dropdown-menu rounded-0 m-0">
-                            <a href="{% url 'residence_properties_type' 'apartment' %}" class="dropdown-item">Apartment</a>
-                            <a href="{% url 'residence_properties_type' 'house' %}" class="dropdown-item">Houses</a>
-                            <a href="{% url 'residence_properties_type' 'frame' %}" class="dropdown-item">Frames</a>
-                        </div>
-                    </div>
 
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">BOOKING</a>
-                    <div class="dropdown-menu rounded-0 m-0">
-                        <a href="{% url 'booking_properties' 'hotel' %}" class="dropdown-item">Hotels</a>
-                        <a href="{% url 'booking_properties' 'lodge' %}" class="dropdown-item">Lodge</a>
-                        <a href="{% url 'booking_properties' 'guest_house' %}" class="dropdown-item">Guest House</a>
-                        <a href="{% url 'booking_properties' 'tent or campsite' %}" class="dropdown-item">Tent/Camp Site</a>
-                    </div>
-                </div>
-                <div class="nav-item dropdown">
-    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">CAR RENTAL</a>
-    <div class="dropdown-menu rounded-0 m-0">
-        <a href="{% url 'car_rental_list_by_type' 'shuffle' %}" class="dropdown-item">Shuffles</a>
-        <a href="{% url 'car_rental_list_by_type' 'moving_logistic' %}" class="dropdown-item">Moving Logistic</a>
-        <a href="{% url 'car_rental_list_by_type' 'piki_piki_bajaji' %}" class="dropdown-item">Piki Piki/Bajaji</a>
-    </div>
-</div>
+                <a href="{% url 'index' %}" class="nav-item nav-link active">
+                    <i class="fa fa-building me-1"></i> Residences
+                </a>
 
+                <a href="{% url 'about' %}" class="nav-item nav-link">
+                    <i class="fa fa-bed me-1"></i> Bookings
+                </a>
+
+                <a href="{% url 'about' %}" class="nav-item nav-link">
+                    <i class="fa fa-car me-1"></i> Car Rental
+                </a>
 
                 {% if user.is_authenticated %}
                 <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="color: oklab(79.399% 0.05169 0.16052);">{{request.user.first_name}} {{request.user.last_name}}</a>
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
+                        <i class="fa fa-user me-1"></i> {{ request.user.first_name }} {{ request.user.last_name }}
+                    </a>
                     <div class="dropdown-menu rounded-0 m-0">
-                        <a href="{%url 'change_password' %}" class="dropdown-item">Change Password</a>
-                        <a href="{%url 'user_profile' %}" class="dropdown-item">My Profile</a>
-                        <a href="{%url 'my_bookings' %}" class="dropdown-item">My Bookings</a>
-                         <a href="{% url 'logout' %}" class="btn btn-primary px-3 d-flex">Logout</a>
+                        <a href="{% url 'change_password' %}" class="dropdown-item">
+                            <i class="fa fa-key me-1"></i> Change Password
+                        </a>
+                        <a href="{% url 'user_profile' %}" class="dropdown-item">
+                            <i class="fa fa-id-badge me-1"></i> My Profile
+                        </a>
+                        <a href="{% url 'my_bookings' %}" class="dropdown-item">
+                            <i class="fa fa-book me-1"></i> My Bookings
+                        </a>
+                        <a href="{% url 'add_attachment' %}" class="dropdown-item">
+                            <i class="fa fa-book me-1"></i> List Your Property
+                        </a>
+                        <a href="{% url 'logout' %}" class="btn btn-primary mt-2 d-flex align-items-center justify-content-center">
+                            <i class="fa fa-sign-out-alt me-1"></i> Logout
+                        </a>
                     </div>
                 </div>
-                
                 {% endif %}
 
-                
             </div>
-            
-           
-           
 
             {% if not user.is_authenticated %}
-            <a href="{% url 'register' %}" class="btn btn-primary px-3 d-flex">Sign Up</a>
+            <a href="{% url 'signin' %}" class="btn btn-primary px-3 d-flex align-items-center">
+                <i class="fa fa-user-plus me-1"></i> Sign Up
+            </a>
             {% endif %}
-            
         </div>
     </nav>
 </div>

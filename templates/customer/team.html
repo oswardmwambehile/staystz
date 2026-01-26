@@ -1,88 +1,155 @@
 {% load static %}
 
-<div class="container-fluid py-5">
-    <div class="container">
-        <!-- Section Header -->
-        <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-            <h1 class="mb-3 text-primary">Meet Our Property Agents</h1>
-            <p>Our certified real estate agents are dedicated to helping you find the perfect property. With years of experience and in-depth local knowledge, they guide you through buying, selling, or renting with confidence and ease.</p>
+<style>
+/* Fade In Up Animation */
+.fade-in-up {
+    animation: fadeInUp 1.5s ease forwards;
+}
+
+.fade-delay {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<div class="container-fluid header p-0">
+    <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+        <div class="col-md-6 p-5 mt-lg-5">
+            <br><br><br>
+
+            <!-- Hero Text Section -->
+            <div>
+
+                <h1 class="fw-bold mb-4 text-uppercase fade-in-up"
+                    style="
+                    line-height:1.15;
+                    font-size:42px;
+                    letter-spacing:1.5px;
+                    color:#1b1b1b;
+                    ">
+                    Find A
+                    
+                        Perfect Home
+                    
+                    <br>
+                    <span style="
+                        font-size:28px;
+                        font-weight:500;
+                        color:#444;
+                        text-transform:none;
+                        ">
+                        Where Your Family Can Live Comfortably
+                    </span>
+                </h1>
+
+                <!-- Description -->
+                <p class="mb-4 fade-in-up fade-delay"
+                   style="
+                   color:#555;
+                   font-weight:400;
+                   font-size:1.1rem;
+                   line-height:1.9;
+                   max-width:750px;
+                   ">
+                    Discover your ideal home from our carefully curated selection of residential properties
+                    designed for every lifestyle. From modern apartments and cozy family houses to luxurious
+                    villas, lodges, and spacious living environments, we help you find a place that truly feels
+                    like home. Our platform makes it easy to explore, compare, and confidently choose properties
+                    that match your needs, preferences, and budget.
+                </p>
+
+            </div>
+
+            <!-- Call to action -->
+            <a href="{% url 'register' %}"
+               class="btn py-3 px-5 fw-bold fade-in-up fade-delay"
+               style="
+               background-color:#174376;
+               color:#fff;
+               border-radius:6px;
+               letter-spacing:1px;
+               box-shadow:0 10px 25px rgba(23,67,118,0.3);
+               transition:0.3s;
+               ">
+                Get Started Now
+            </a>
         </div>
 
-        <!-- Agents Row -->
-        <div class="row g-4">
-            
-            <!-- Agent 1 -->
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="team-item rounded overflow-hidden">
-                    <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'customer/img/team-1.jpg' %}" alt="Agent John Doe">
-                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">John Doe</h5>
-                        <small>Senior Real Estate Agent</small>
-                    </div>
+        <div class="col-md-6 animated fadeIn">
+            <div class="owl-carousel header-carousel">
+                <div class="owl-carousel-item">
+                    <img class="img-fluid" src="{% static 'customer/img/a1.jpg' %}" alt="">
+                </div>
+                <div class="owl-carousel-item">
+                    <img class="img-fluid" src="{% static 'customer/img/a2.jpg' %}" alt="">
+                </div>
+                <div class="owl-carousel-item">
+                    <img class="img-fluid" src="{% static 'customer/img/a3.jpg' %}" alt="">
+                </div>
+                <div class="owl-carousel-item">
+                    <img class="img-fluid" src="{% static 'customer/img/a4.jpg' %}" alt="">
+                </div>
+                <div class="owl-carousel-item">
+                    <img class="img-fluid" src="{% static 'customer/img/a5.jpg' %}" alt="">
                 </div>
             </div>
-
-            <!-- Agent 2 -->
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="team-item rounded overflow-hidden">
-                    <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'customer/img/team-2.jpg' %}" alt="Agent Sarah Lee">
-                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Sarah Lee</h5>
-                        <small>Property Consultant</small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Agent 3 -->
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="team-item rounded overflow-hidden">
-                    <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'customer/img/team-3.jpg' %}" alt="Agent Michael Smith">
-                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Michael Smith</h5>
-                        <small>Real Estate Advisor</small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Agent 4 -->
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                <div class="team-item rounded overflow-hidden">
-                    <div class="position-relative">
-                        <img class="img-fluid" src="{% static 'customer/img/team-4.jpg' %}" alt="Agent Emily Davis">
-                        <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square mx-1" href="#"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                    <div class="text-center p-4 mt-3">
-                        <h5 class="fw-bold mb-0">Emily Davis</h5>
-                        <small>Property Specialist</small>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
+
+<style>
+/* Spacing fix */
+.header {
+    margin-top: 80px;
+}
+
+/* Carousel height */
+.header-carousel,
+.owl-carousel-item {
+    height: 500px;
+}
+
+/* Force same image size */
+.owl-carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fade In Animation */
+.fade-in-up {
+    animation: fadeInUp 1.2s ease forwards;
+}
+
+.fade-delay {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Button hover */
+.hero-btn:hover {
+    transform: translateY(-3px);
+    box-shadow:0 15px 30px rgba(23,67,118,0.4);
+}
+</style>
+

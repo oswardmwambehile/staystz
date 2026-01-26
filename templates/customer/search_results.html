@@ -1,0 +1,199 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <!-- Header Start -->
+    <div class="container-fluid header bg-white p-0">
+        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+
+            <!-- Text Section -->
+            <div class="col-md-6 p-5 mt-lg-5">
+                <h1 class="animated fadeIn mb-3" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 3rem; line-height: 1.2;">
+                    Property List in <span style="color: #174376;">{{ property_type }}</span>
+                </h1>
+
+                <p class="text-muted animated fadeIn mb-4" style="font-size: 16px;">
+                    Explore a curated list of properties available in {{ property_type }}. Browse through a variety of homes, apartments, and land options to find the one that fits your lifestyle and budget. Use our filters to refine your search by type, location, price, and other amenities.
+                </p>
+
+                <nav aria-label="breadcrumb" class="animated fadeIn">
+                    <ol class="breadcrumb text-uppercase mb-0">
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Pages</a></li>
+                        <li class="breadcrumb-item text-body active" aria-current="page">Property List</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <!-- Image Section -->
+            <div class="col-md-6 animated fadeIn text-center">
+                <img class="img-fluid rounded" src="{% static 'customer/img/s6.jpg' %}" alt="Property Image">
+            </div>
+
+        </div>
+    </div>
+    <!-- Header End -->
+
+   
+
+    <!-- Property List Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-4">
+
+                        {# Residence Properties #}
+                        {% if residence_results %}
+                            <h3 class="mb-4">Residence Properties</h3>
+                            <div class="row g-4">
+                                {% for property in residence_results %}
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="property-item rounded overflow-hidden">
+                                            <div class="position-relative overflow-hidden">
+                                                <a href="{% url 'residence_property_detail' property.id %}">
+                                                    {% if property.photos.first %}
+                                                        <img class="img-fluid" src="{{ property.photos.first.image.url }}">
+                                                    {% else %}
+                                                        <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}">
+                                                    {% endif %}
+                                                </a>
+                                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                    {{ property.property_type|title }}
+                                                </div>
+                                            </div>
+                                            <div class="p-4">
+                                                <h5 class="text-primary">
+                                                    TZS {{ property.residencepropertypricing.base_price|intcomma }}/Month
+                                                </h5>
+                                                <a class="d-block h5 mb-2">{{ property.property_name }}</a>
+                                                <p><i class="fa fa-map-marker-alt text-primary"></i>
+                                                    {{ property.region }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <div class="col-12">
+                                        <div class="alert alert-warning text-center py-3">
+                                            <h5 class="mb-2">No Residence properties found</h5>
+                                            <p class="mb-0">Sorry, there are no residence properties available in this region at the moment.</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {# Booking Properties #}
+                        {% if booking_results %}
+                            <h3 class="mt-5 mb-4">Booking Properties</h3>
+                            <div class="row g-4">
+                                {% for property in booking_results %}
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="property-item rounded overflow-hidden">
+                                            <div class="position-relative overflow-hidden">
+                                                <a href="{% url 'booking_property_detail' property.id %}">
+                                                    {% if property.photos.first %}
+                                                        <img class="img-fluid" src="{{ property.photos.first.image.url }}">
+                                                    {% else %}
+                                                        <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}">
+                                                    {% endif %}
+                                                </a>
+                                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
+                                                    {{ property.property_type|title }}
+                                                </div>
+                                            </div>
+                                            <div class="p-4">
+                                                <h5 class="text-primary">
+                                                    TZS {{ property.bookingpropertypricing.base_price_per_night|intcomma }}/Night
+                                                </h5>
+                                                <a class="d-block h5 mb-2">{{ property.property_name }}</a>
+                                                <p><i class="fa fa-map-marker-alt text-primary"></i>
+                                                    {{ property.region }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <div class="col-12">
+                                        <div class="alert alert-warning text-center py-3">
+                                            <h5 class="mb-2">No Booking properties found</h5>
+                                            <p class="mb-0">Sorry, there are no booking properties available in this region at the moment.</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {# Car Rentals #}
+                        {% if car_results %}
+                            <h3 class="mt-5 mb-4">Car Rentals</h3>
+                            <div class="row g-4">
+                                {% for car in car_results %}
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="property-item rounded overflow-hidden">
+                                            <div class="position-relative overflow-hidden">
+                                                {% if car.photos.first %}
+                                                    <img class="img-fluid" src="{{ car.photos.first.image.url }}">
+                                                {% else %}
+                                                    <img class="img-fluid" src="{% static 'customer/img/car-placeholder.jpg' %}">
+                                                {% endif %}
+                                            </div>
+                                            <div class="p-4">
+                                                <h5 class="text-primary">{{ car.car_name }}</h5>
+                                                <p>{{ car.get_car_type_display }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <div class="col-12">
+                                        <div class="alert alert-warning text-center py-3">
+                                            <h5 class="mb-2">No Car Rentals found</h5>
+                                            <p class="mb-0">Sorry, there are no car rentals available in this region at the moment.</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Property List End -->
+
+    <!-- Footer Start -->
+    {% include 'customer/footer.html' %}
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
+<style>
+.property-item img {
+    height: 260px;        
+    width: 100%;
+    object-fit: cover;    
+}
+.property-item {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.property-item .p-4 {
+    flex-grow: 1; 
+}
+</style>
+<!-- Google Fonts: Montserrat with 300, 400, 700 -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
+{% endblock %}

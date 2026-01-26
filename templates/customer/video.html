@@ -1,95 +1,157 @@
 {% load static %}
+<section class="trending-destinations py-2">
+    <div class="container">
 
-<section class="hotel-split-section">
-  <div class="hotel-text">
-    <h1>Experience Comfort & Luxury</h1>
-    <p>
-      Discover the perfect stay for travelers, families,
-      and business guests in a welcoming and relaxing environment.
-    </p>
-    <a href="#rooms" class="btn-book">Book Your Stay</a>
-  </div>
+        <!-- Section Title -->
+        <div class="mb-2">
+            <h2 class="section-title">Popular cities</h2>
+            <p class="section-subtitle">Most popular choices for travelers from Tanzania</p>
+        </div>
 
-  <div class="hotel-video">
-    <video autoplay muted loop playsinline controls>
-      <source src="{% static 'videos/osward.mp4' %}" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  </div>
+        <!-- First Row: 2 Big Images -->
+        <div class="row g-3 mb-3">
+            <!-- Dar es Salaam -->
+            <div class="col-md-6">
+                <a href="{% url 'city_search' 'Dar es Salaam' %}" class="destination-card big-card">
+                    <div class="destination-img" style="background-image: url('{% static "customer/img/a8.jpg" %}');">
+                        <div class="destination-overlay top-left">
+                            <h4 class="text-white"><i class="fa-solid fa-location-dot me-1"></i>Dar es Salaam</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Arusha -->
+            <div class="col-md-6">
+                <a href="{% url 'city_search' 'Arusha' %}" class="destination-card big-card">
+                    <div class="destination-img" style="background-image: url('{% static "customer/img/s5.jpg" %}');">
+                        <div class="destination-overlay top-left">
+                            <h4 class="text-white"><i class="fa-solid fa-location-dot me-1"></i>Arusha</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Second Row: 3 Smaller Images -->
+        <div class="row g-3">
+            <!-- Mwanza -->
+            <div class="col-md-4">
+                <a href="{% url 'city_search' 'Mwanza' %}" class="destination-card small-card">
+                    <div class="destination-img" style="background-image: url('{% static "customer/img/a2.jpg" %}');">
+                        <div class="destination-overlay top-left">
+                            <h4 class="text-white"><i class="fa-solid fa-location-dot me-1"></i>Mwanza</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Dodoma -->
+            <div class="col-md-4">
+                <a href="{% url 'city_search' 'Dodoma' %}" class="destination-card small-card">
+                    <div class="destination-img" style="background-image: url('{% static "customer/img/a3.jpg" %}');">
+                        <div class="destination-overlay top-left">
+                            <h4 class="text-white"><i class="fa-solid fa-location-dot me-1"></i>Dodoma</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Mbeya -->
+            <div class="col-md-4">
+                <a href="{% url 'city_search' 'Mbeya' %}" class="destination-card small-card">
+                    <div class="destination-img" style="background-image: url('{% static "customer/img/a.jpg" %}');">
+                        <div class="destination-overlay top-left">
+                            <h4 class="text-white"><i class="fa-solid fa-location-dot me-1"></i>Mbeya</h4>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
 </section>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-    .hotel-split-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 80px 10%;
-  gap: 40px;
-  background: #f8f8f8;
+  .trending-destinations {
+    background: #f7f7f7;
 }
 
-.hotel-text {
-  flex: 1;
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #003580;
 }
 
-.hotel-text h1 {
-  font-size: 2.8rem;
-  margin-bottom: 15px;
-  color: #222;
+.section-subtitle {
+    font-size: 1rem;
+    color: #555;
 }
 
-.hotel-text p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 25px;
-  color: #555;
+/* Destination Card */
+.destination-card {
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    display: block;
+    color: #fff;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
 }
 
-.hotel-video {
-  flex: 1;
+.destination-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-.hotel-video video {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.btn-book {
-  padding: 12px 30px;
-  background: #f9b233;
-  color: #000;
-  font-weight: bold;
-  text-decoration: none;
-  border-radius: 6px;
-}
-
-.btn-book:hover {
-  background: #ffc857;
-}
-/* MOBILE RESPONSIVENESS */
-@media (max-width: 768px) {
-  .hotel-split-section {
-    flex-direction: column;
-    padding: 60px 5%;
-  }
-
-  .hotel-text {
+/* Big Cards */
+.big-card .destination-img {
     width: 100%;
-    text-align: center;
-  }
+    aspect-ratio: 16 / 9;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-  .hotel-video {
+/* Small Cards */
+.small-card .destination-img {
     width: 100%;
-    margin-top: 30px;
-  }
+    aspect-ratio: 4 / 3;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-  .hotel-video video {
-    width: 100%;
-    height: 240px; /* force visible height */
-    object-fit: cover;
-  }
+/* Overlay text top-left */
+.destination-overlay.top-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.45);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.destination-overlay.top-left h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.destination-overlay.top-left p {
+    font-size: 0.85rem;
+    margin: 2px 0 0;
+    color: #fff;
+}
+
+/* Property types / link text */
+.property-types {
+    padding: 10px;
+    font-size: 0.9rem;
+    color: #003580;
+    font-weight: 500;
 }
 
 </style>

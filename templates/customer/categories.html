@@ -1,135 +1,59 @@
-{% load static %}
-
 <div class="container-fluid py-5">
     <div class="container">
-        <div style="width: 100%; background-color: #174376; padding: 50px 0;">
-    <div class="text-center mx-auto" style="max-width: 600px;">
-        <h1 class="mb-3" style="color: #fff;">OUR SERVICES</h1>
-        <p class="mb-4 pb-2" style="color: #fff; font-weight: 600; font-size: 1.1rem; line-height: 1.6;">
-            We specialize in a wide range of real estate solutions, offering properties to suit every lifestyle and need. Whether you are looking for a cozy apartment, a luxurious villa, a functional guest house, or even unique outdoor accommodations like tents and campsites, we have it all. Our portfolio also includes hotels, lodges, and commercial spaces, ensuring you can find the perfect property for living, business, or leisure.
-        </p>
-    </div>
-</div>
 
+        <!-- TITLE -->
+        <div class="text-center mx-auto mb-5" style="max-width:600px;">
+            <h1 class="mb-3">OUR SERVICES</h1>
+            <p class="fw-semibold">
+                We offer complete lifestyle solutions – from comfortable residences,
+                reliable booking services to flexible car rentals.
+            </p>
+        </div>
 
+        <!-- SERVICES -->
         <div class="row g-4">
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'residence_properties_type' 'apartment' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-apartment.png' %}" alt="Icon">
-                        </div>
-                        <h6>Apartment</h6>
-                        
-                    </div>
-                </a>
+
+            <!-- BOOKINGS -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card h-100 shadow border-0 text-center p-4">
+                    <i class="bi bi-calendar-check display-1 mb-3" style="color:#174376;"></i>
+                    <h4>Bookings</h4>
+                    <p>
+                        Book hotels, lodges, guest houses, campsites and more
+                        with fast confirmation and affordable prices.
+                    </p>
+
+                </div>
             </div>
 
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'residence_properties_type' 'house' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-villa.png' %}" alt="Icon">
-                        </div>
-                        <h6>Houses</h6>
-                       
-                    </div>
-                </a>
+            <!-- RESIDENCES -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card h-100 shadow border-0 text-center p-4">
+                    <i class="bi bi-house-door display-1 mb-3" style="color:#174376;"></i>
+                    <h4>Residences</h4>
+                    <p>
+                        Find apartments, houses and frames for rent or sale
+                        that match your lifestyle and budget.
+                    </p>
+
+                </div>
             </div>
 
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'residence_properties_type' 'frame' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-house.png' %}" alt="Icon">
-                        </div>
-                        <h6>Frame</h6>
-                       
-                    </div>
-                </a>
+            <!-- CAR RENTAL -->
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="card h-100 shadow border-0 text-center p-4">
+                    <i class="bi bi-car-front display-1 mb-3" style="color:#174376;"></i>
+                    <h4>Car Rental</h4>
+                    <p>
+                        Rent cars, shuttles, logistics trucks and bikes
+                        for personal or business needs.
+                    </p>
+
+                </div>
             </div>
 
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'booking_properties' 'hotel' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-housing.png' %}" alt="Icon">
-                        </div>
-                        <h6>Hotel</h6>
-                       
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'booking_properties' 'lodge' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-building.png' %}" alt="Icon">
-                        </div>
-                        <h6>Lodges</h6>
-                       
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'booking_properties' 'guest_house' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-neighborhood.png' %}" alt="Icon">
-                        </div>
-                        <h6>Guest House</h6>
-                       
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'booking_properties' 'tent or campsite' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-condominium.png' %}" alt="Icon">
-                        </div>
-                        <h6>Tent/Camp Site</h6>
-                       
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'car_rental_list_by_type' 'shuffle' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-luxury.png' %}" alt="Icon">
-                        </div>
-                        <h6>Shuffes</h6>
-                       
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'car_rental_list_by_type' 'moving_logistic' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-luxury.png' %}" alt="Icon">
-                        </div>
-                        <h6>Moving Logistic</h6>
-                       
-                    </div>
-                </a>
-            </div>
-            <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                <a class="cat-item d-block bg-light text-center rounded p-3" href="{% url 'car_rental_list_by_type' 'piki_piki_bajaji' %}">
-                    <div class="rounded p-4">
-                        <div class="icon mb-3">
-                            <img class="img-fluid" src="{% static 'customer/img/icon-luxury.png' %}" alt="Icon">
-                        </div>
-                        <h6>Pikipiki/Bajaji</h6>
-                       
-                    </div>
-                </a>
-            </div>
         </div>
     </div>
 </div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">

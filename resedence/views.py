@@ -172,7 +172,7 @@ def residence_properties(request, property_type):
     # Filter by selected property_type (e.g., "apartment", "house", "frame")
     properties = ResidenceProperty.objects.filter(
         property_type=property_type,
-        owner__user_verified=True
+        owner__attachments__is_verified=True
     )
 
     keyword = request.GET.get("keyword", "")

@@ -4,107 +4,20 @@ from django.contrib.auth.password_validation import validate_password
 from .models import User
 import re
 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model 
 
-class RegistrationForm(forms.ModelForm):
-    # Password fields with required=True
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control",
-            "placeholder": "Enter strong password"
-        }),
-        label="Password",
-        required=True
-    )
 
-    confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            "class": "form-control",
-            "placeholder": "Confirm password"
-        }),
-        label="Confirm Password",
-        required=True
-    )
-
+class RegisterForm(UserCreationForm):
+    email=forms.CharField(widget=forms.EmailInput(attrs={"placeholder": "Enter email-address", "class": "form-control"}))
+    username=forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Enter email-username", "class": "form-control"}))
+    password1=forms.CharField(label="Password", widget=forms.PasswordInput(attrs={"placeholder": "Enter password", "class": "form-control"}))
+    password2=forms.CharField(label="Confirm Password", widget=forms.PasswordInput(attrs={"placeholder": "Confirm password", "class": "form-control"}))
+    
     class Meta:
-        model = User
-        fields = [
-            "first_name",
-            "last_name",
-            "email",
-            "phone_number",
-            "location",
-            "user_type",
-            "nida_number",
-            "nida_card",
-        ]
-        widgets = {
-            "first_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "First Name"}),
-            "last_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Last Name"}),
-            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Email"}),
-            "phone_number": forms.TextInput(attrs={"class": "form-control", "placeholder": "Phone Number"}),
-            "location": forms.Select(attrs={"class": "form-select"}),
-            "user_type": forms.Select(attrs={"class": "form-select"}),
-            "nida_number": forms.TextInput(attrs={"class": "form-control"}),
-            "nida_card": forms.ClearableFileInput(attrs={"class": "form-control"}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Make fields required at form level (server-side validation)
-        self.fields["first_name"].required = True
-        self.fields["last_name"].required = True
-        self.fields["email"].required = True
-        self.fields["phone_number"].required = True
-        self.fields["location"].required = True
-        self.fields["user_type"].required = True
-
-    def clean(self):
-        cleaned_data = super().clean()
-        user_type = cleaned_data.get("user_type")
-        nida_number = cleaned_data.get("nida_number")
-        nida_card = cleaned_data.get("nida_card")
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
-
-        # Require NIDA fields for property owners
-        if user_type == "property_owner":
-            if not nida_number:
-                self.add_error("nida_number", "NIDA Number is required for property owners.")
-
-            if nida_number and not re.fullmatch(r"^[0-9]{20}$", nida_number):
-                self.add_error("nida_number", "NIDA number must be exactly 20 digits.")
-
-            if not nida_card:
-                self.add_error("nida_card", "Upload your NIDA card image.")
-
-        # Password validation
-        if password != confirm_password:
-            self.add_error("confirm_password", "Passwords do not match.")
-
-        if password:
-            if len(password) < 8:
-                self.add_error("password", "Password must be at least 8 characters long.")
-            if not re.search(r"[A-Z]", password):
-                self.add_error("password", "Password must contain at least one uppercase letter.")
-            if not re.search(r"[a-z]", password):
-                self.add_error("password", "Password must contain at least one lowercase letter.")
-            if not re.search(r"[0-9]", password):
-                self.add_error("password", "Password must contain at least one digit.")
-            if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-                self.add_error("password", "Password must contain at least one special character.")
-
-            validate_password(password)
-
-        return cleaned_data
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        password = self.cleaned_data["password"]
-        user.set_password(password)
-        user.user_verified = False
-        if commit:
-            user.save()
-        return user
+        model = get_user_model()
+        fields = ["email", "username", "password1", "password2"]
 
 
 

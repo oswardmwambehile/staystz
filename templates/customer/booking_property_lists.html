@@ -22,24 +22,37 @@
         <!-- Navbar End -->
 
         
-        <!-- Header Start -->
-        <div class="container-fluid header bg-white p-0">
-            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-                <div class="col-md-6 p-5 mt-lg-5">
-                    <h1 class="display-5 animated fadeIn mb-4">Property List in <span class="text-primary">{{ property_type }}</span></h1> 
-                        <nav aria-label="breadcrumb animated fadeIn">
-                        <ol class="breadcrumb text-uppercase">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                            <li class="breadcrumb-item text-body active" aria-current="page">Property List</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class="col-md-6 animated fadeIn">
-                   <img class="img-fluid" src="{% static 'customer/img/h9.jpg' %}" alt="">
-                </div>
-            </div>
+       <!-- Header Start -->
+<div class="container-fluid header bg-white p-0">
+    <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+        
+        <!-- Text Section -->
+        <div class="col-md-6 p-5 mt-lg-5">
+            <h1 class="animated fadeIn mb-3" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 3rem; line-height: 1.2;">
+    Property List in <span class="text-primary">{{ property_type }}</span>
+</h1>
+
+            <p class="text-muted animated fadeIn mb-4" style="font-size: 16px;">
+                Explore a curated list of properties available in {{ property_type }}. Filter by type, location, and price to find your perfect home or investment.
+            </p>
+            <nav aria-label="breadcrumb" class="animated fadeIn">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Pages</a></li>
+                    <li class="breadcrumb-item text-body active" aria-current="page">Property List</li>
+                </ol>
+            </nav>
         </div>
+
+        <!-- Image Section -->
+        <div class="col-md-6 animated fadeIn text-center">
+            <img class="img-fluid rounded" src="{% static 'customer/img/a2.jpg' %}" alt="Property Image">
+        </div>
+
+    </div>
+</div>
+<!-- Header End -->
+
         <!-- Header End -->
      <!-- Search Start -->
         {% include 'customer/search.html' %}
@@ -105,7 +118,7 @@
                             </div>
                             <div class="p-4 pt-2">
     <a href="{% url 'booking_property_detail' property.id%}" 
-       class="btn btn-primary w-100">
+       class="btn  w-100" style="background-color: #174376; color: white;">
        See Availability
     </a>
 </div>
@@ -114,8 +127,13 @@
                         </div>
                     </div>
                     {% empty %}
-                        <p class="text-center text-danger">No properties found in this property type. Thank you for browsing our properties</p>
-                    {% endfor %}
+<div class="col-12">
+    <div class="alert alert-warning text-center py-3" role="alert">
+        <h5 class="mb-2">No properties found</h5>
+        <p class="mb-0">Sorry, there are no properties available in this property type at the moment. Thank you for browsing our listings.</p>
+    </div>
+</div>
+{% endfor %}
 
                 </div>
             </div>
@@ -153,6 +171,8 @@
     flex-grow: 1; /* push footer down so cards align */
 }
 </style>
+<!-- Google Fonts: Montserrat with 300, 400, 700 -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
 
 
 {% endblock %}

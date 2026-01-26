@@ -4,41 +4,42 @@ from .models import (
     BookingPropertySetup,
     BookingPropertyPricing,
     BookingPropertyLegal,
-    BookingPropertyPhoto
+    BookingPropertyPhoto,
+    Booking,
 )
 from .widgets import MultipleFileInput
+
 
 # ------------------------------------------------------------------
 # UNIVERSAL BOOTSTRAP HELPER
 # ------------------------------------------------------------------
 def bootstrap_fields(fields):
-    """Auto-apply Bootstrap styles + placeholders to ALL fields."""
+    """Auto-apply Bootstrap styles to ALL fields."""
     for name, field in fields.items():
         widget = field.widget
         input_type = getattr(widget, "input_type", None)
 
-        # Mark checkbox fields so template can safely check
-        if isinstance(widget, forms.CheckboxSelectMultiple):
-            field.is_checkbox = True
-        else:
-            field.is_checkbox = False
+        # Mark checkbox fields
+        field.is_checkbox = isinstance(widget, forms.CheckboxSelectMultiple)
 
-        # Add placeholder
-        placeholder_text = f"Enter {field.label}"
         if input_type == "file":
             widget.attrs.update({"class": "form-control"})
         elif input_type == "checkbox":
             widget.attrs.update({"class": "form-check-input"})
         elif isinstance(widget, forms.Select):
             widget.attrs.update({"class": "form-select"})
-            widget.attrs["placeholder"] = f"Select {field.label}"
         elif isinstance(widget, forms.Textarea):
-            widget.attrs.update({"class": "form-control"})
-            widget.attrs.setdefault("placeholder", f"Enter {field.label}")
+            widget.attrs.update({
+                "class": "form-control",
+                "placeholder": f"Enter {field.label}"
+            })
         else:
-            widget.attrs.update({"class": "form-control"})
-            widget.attrs.setdefault("placeholder", f"Enter {field.label}")
+            widget.attrs.update({
+                "class": "form-control",
+                "placeholder": f"Enter {field.label}"
+            })
     return fields
+
 
 # ------------------------------------------------------------------
 # STEP 1 – BASIC INFORMATION
@@ -59,10 +60,17 @@ class BookingPropertyForm(forms.ModelForm):
     class Meta:
         model = BookingProperty
         fields = [
-            "property_name", "property_type", "property_description",
-            "address", "district", "region", "country",
-            "postal_code", "phone_number",
-            "property_size_sqm", "languages_spoken"
+            "property_name",
+            "property_type",
+            "property_description",
+            "address",
+            "district",
+            "region",
+            "country",
+            "postal_code",
+            "phone_number",
+            "property_size_sqm",
+            "languages_spoken",
         ]
         widgets = {
             "property_description": forms.Textarea(attrs={"rows": 3}),
@@ -71,7 +79,18 @@ class BookingPropertyForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Force region dropdown default option
+        self.fields["region"].choices = [("", "Select Region")] + list(
+            self.fields["region"].choices
+        )
+
+        # Lock country to Tanzania
+        self.fields["country"].initial = "Tanzania"
+        self.fields["country"].widget.attrs["readonly"] = True
+
         bootstrap_fields(self.fields)
+
 
 # ------------------------------------------------------------------
 # STEP 2 – PROPERTY SETUP
@@ -112,16 +131,21 @@ class BookingPropertySetupForm(forms.ModelForm):
     class Meta:
         model = BookingPropertySetup
         fields = [
-            "number_of_rooms", "beds_per_room",
-            "max_guests_per_room", "number_of_bathrooms",
-            "has_kitchen", "has_living_room",
-            "amenities", "room_types",
-            "accessibility_features"
+            "number_of_rooms",
+            "beds_per_room",
+            "max_guests_per_room",
+            "number_of_bathrooms",
+            "has_kitchen",
+            "has_living_room",
+            "amenities",
+            "room_types",
+            "accessibility_features",
         ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         bootstrap_fields(self.fields)
+
 
 # ------------------------------------------------------------------
 # STEP 3 – MULTIPLE IMAGES
@@ -140,6 +164,7 @@ class BookingPropertyPhotoForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         bootstrap_fields(self.fields)
 
+
 # ------------------------------------------------------------------
 # STEP 4 – PRICING & CALENDAR
 # ------------------------------------------------------------------
@@ -148,20 +173,20 @@ class BookingPropertyPricingForm(forms.ModelForm):
         model = BookingPropertyPricing
         fields = [
             "base_price_per_night",
-            "available_from", "available_to",
-    
+            "available_from",
+            "available_to",
             "minimum_stay_nights",
-            "maximum_stay_nights"
+            "maximum_stay_nights",
         ]
         widgets = {
             "available_from": forms.DateInput(attrs={"type": "date"}),
             "available_to": forms.DateInput(attrs={"type": "date"}),
-            
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         bootstrap_fields(self.fields)
+
 
 # ------------------------------------------------------------------
 # STEP 5 – LEGAL INFORMATION
@@ -191,46 +216,35 @@ class BookingPropertyLegalForm(forms.ModelForm):
         bootstrap_fields(self.fields)
 
 
-
-from django import forms
-from .models import Booking, BookingProperty, BookingPropertySetup
-
-from django import forms
-
-
+# ------------------------------------------------------------------
+# BOOKING FORM
+# ------------------------------------------------------------------
 class BookingForm(forms.Form):
-    room_type = forms.ChoiceField(
-        choices=[],
-        required=True
-    )
+    room_type = forms.ChoiceField(choices=[], required=True)
 
     check_in = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'})
+        widget=forms.DateInput(attrs={"type": "date"})
     )
-
     check_out = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'})
+        widget=forms.DateInput(attrs={"type": "date"})
     )
-
     guests = forms.IntegerField(min_value=1)
 
     def __init__(self, *args, **kwargs):
-        self.property_obj = kwargs.pop('property', None)
+        self.property_obj = kwargs.pop("property", None)
         super().__init__(*args, **kwargs)
 
         if self.property_obj:
-            setup = getattr(self.property_obj, 'bookingpropertysetup', None)
+            setup = getattr(self.property_obj, "bookingpropertysetup", None)
             if setup and setup.room_types:
-                self.fields['room_type'].choices = [
-                    (rt, rt) for rt in setup.room_types
-                ]
-            else:
-                self.fields['room_type'].choices = []
+                self.fields["room_type"].choices = [(rt, rt) for rt in setup.room_types]
 
     def clean(self):
         cleaned_data = super().clean()
 
-        if not self.fields['room_type'].choices:
-            raise forms.ValidationError("No room types available for this property.")
+        if not self.fields["room_type"].choices:
+            raise forms.ValidationError(
+                "No room types available for this property."
+            )
 
         return cleaned_data

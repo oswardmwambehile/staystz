@@ -5,6 +5,39 @@ from django.db import models
 from django.conf import settings
 
 class BookingProperty(models.Model):
+    TANZANIA_REGIONS = [
+    ('Arusha', 'Arusha'),
+    ('Dar es Salaam', 'Dar es Salaam'),
+    ('Dodoma', 'Dodoma'),
+    ('Geita', 'Geita'),
+    ('Iringa', 'Iringa'),
+    ('Kagera', 'Kagera'),
+    ('Katavi', 'Katavi'),
+    ('Kigoma', 'Kigoma'),
+    ('Kilimanjaro', 'Kilimanjaro'),
+    ('Lindi', 'Lindi'),
+    ('Manyara', 'Manyara'),
+    ('Mara', 'Mara'),
+    ('Mbeya', 'Mbeya'),
+    ('Morogoro', 'Morogoro'),
+    ('Mtwara', 'Mtwara'),
+    ('Mwanza', 'Mwanza'),
+    ('Njombe', 'Njombe'),
+    ('Pwani', 'Pwani (Coast)'),
+    ('Rukwa', 'Rukwa'),
+    ('Ruvuma', 'Ruvuma'),
+    ('Shinyanga', 'Shinyanga'),
+    ('Simiyu', 'Simiyu'),
+    ('Singida', 'Singida'),
+    ('Songwe', 'Songwe'),
+    ('Tabora', 'Tabora'),
+    ('Tanga', 'Tanga'),
+    ('Zanzibar North', 'Zanzibar North'),
+    ('Zanzibar South', 'Zanzibar South'),
+    ('Zanzibar Central/South', 'Zanzibar Central/South'),
+    ('Zanzibar Urban/West', 'Zanzibar Urban/West'),
+]
+
     PROPERTY_TYPE_CHOICES = [
         ('hotel', 'Hotel'),
         ('lodge', 'Lodge'),
@@ -19,7 +52,10 @@ class BookingProperty(models.Model):
     property_description = models.TextField(blank=True, null=True)
     address = models.CharField(max_length=255)
     district = models.CharField(max_length=100)
-    region = models.CharField(max_length=50)
+    region = models.CharField(
+        max_length=50,
+        choices=TANZANIA_REGIONS
+    )
     country = models.CharField(max_length=50, default='Tanzania')
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
@@ -38,6 +74,7 @@ class BookingProperty(models.Model):
 
 # Step 2: Property Setup
 class BookingPropertySetup(models.Model):
+
     property = models.OneToOneField(BookingProperty, on_delete=models.CASCADE)
     number_of_rooms = models.IntegerField(default=1)
     beds_per_room = models.IntegerField(default=1)

@@ -42,7 +42,7 @@ def add_property_all_in_one(request):
             legal_obj.save()
 
             # Save multiple images
-            images = request.FILES.getlist("images")  # <-- get all uploaded files
+            images = request.FILES.getlist("image")  # <-- get all uploaded files
             for image in images:
                 BookingPropertyPhoto.objects.create(
                     property=property_obj,
@@ -107,12 +107,10 @@ def property_delete(request, pk):
     return redirect('my_properties')
 
 
-
 from django.shortcuts import render
 from django.db.models import Q
 from .models import BookingProperty
 
-# List of all Tanzania regions
 TANZANIA_REGIONS = [
     'Arusha', 'Dar es Salaam', 'Dodoma', 'Geita', 'Iringa', 'Kagera', 'Katavi',
     'Kigoma', 'Kilimanjaro', 'Lindi', 'Manyara', 'Mara', 'Mbeya', 'Morogoro',
@@ -122,10 +120,12 @@ TANZANIA_REGIONS = [
 ]
 
 def booking_properties(request, property_type):
+
+    # ✅ ONLY show properties whose OWNER has VERIFIED attachment
     properties = BookingProperty.objects.filter(
         property_type=property_type,
-        owner__user_verified=True
-    )
+        owner__attachments__is_verified=True
+    ).distinct()
 
     keyword = request.GET.get("keyword", "")
     region = request.GET.get("region", "")
@@ -152,6 +152,7 @@ def booking_properties(request, property_type):
     }
 
     return render(request, "customer/booking_property_lists.html", context)
+
 
 
 

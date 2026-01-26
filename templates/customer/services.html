@@ -1,0 +1,132 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border" style="width:3rem;height:3rem; color:#174376;" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center mt-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Services Section -->
+    <div class="container py-5">
+
+        <!-- Title -->
+        <div class="text-center mx-auto mb-5" style="max-width:600px;">
+            <h1 class="mb-3">ADD YOUR PROPERTY</h1>
+            <p class="fw-semibold text-muted">
+                Choose a category below to add your property or service.
+            </p>
+        </div>
+
+        <!-- Cards -->
+        <div class="row g-4">
+
+            <!-- BOOKINGS -->
+            <div class="col-lg-4 col-md-6">
+                <a href="{% url 'add_property_all_in_one' %}" class="text-decoration-none text-dark">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-card">
+                        <i class="bi bi-calendar-check display-1 mb-3 brand-color"></i>
+                        <h4 class="fw-bold">Bookings</h4>
+                        <p class="text-muted">
+                            Add hotels, lodges, guest houses, campsites and other
+                            accommodation listings.
+                        </p>
+                        <span class="btn btn-brand mt-2">Add Booking</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- RESIDENCES -->
+            <div class="col-lg-4 col-md-6">
+                <a href="" class="text-decoration-none text-dark">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-card">
+                        <i class="bi bi-house-door display-1 mb-3 brand-color"></i>
+                        <h4 class="fw-bold">Residences</h4>
+                        <p class="text-muted">
+                            Add apartments, houses, farms or land for rent or sale.
+                        </p>
+                        <span class="btn btn-brand mt-2">Add Residence</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- CAR RENTAL -->
+            <div class="col-lg-4 col-md-6">
+                <a href="" class="text-decoration-none text-dark">
+                    <div class="card h-100 border-0 shadow text-center p-4 hover-card">
+                        <i class="bi bi-car-front display-1 mb-3 brand-color"></i>
+                        <h4 class="fw-bold">Car Rental</h4>
+                        <p class="text-muted">
+                            Add cars, buses, trucks or bikes for rental services.
+                        </p>
+                        <span class="btn btn-brand mt-2">Add Vehicle</span>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Styles -->
+<style>
+/* Brand color */
+.brand-color {
+    color: #174376;
+}
+
+/* Brand button */
+.btn-brand {
+    color: #174376;
+    border: 2px solid #174376;
+    background-color: transparent;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-brand:hover {
+    background-color: #174376;
+    color: #fff;
+}
+
+/* Hover Effects */
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 14px;
+}
+
+.hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+}
+
+.hover-card i {
+    transition: transform 0.3s ease;
+}
+
+.hover-card:hover i {
+    transform: scale(1.1);
+}
+</style>
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
