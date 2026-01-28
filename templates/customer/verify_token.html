@@ -2,184 +2,98 @@
 {% load static %}
 {% load widget_tweaks %}
 
-
 {% block content %}
- <div class="container-fluid bg-white p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
+<div class="container-fluid bg-light min-vh-100 p-0">
+
+    <!-- Spinner Overlay -->
+    <div id="spinner" class="d-none position-fixed w-100 vh-100 top-0 start-0 bg-white bg-opacity-75 d-flex align-items-center justify-content-center" style="z-index:9999;">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+    </div>
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <!-- Form Card -->
+    <div class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+        <div class="card shadow-sm p-4 p-md-5" style="max-width: 450px; width: 90%; border-radius: 12px;">
+            
+            <h3 class="text-center mb-4 animated fadeIn" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 1.8rem; line-height: 1.2;">
+                Verify Your Email
+            </h3>
+
+            <div class="container mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} text-center">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             </div>
+
+            <p class="text-center text-muted mb-4">Enter the OTP sent to your email address.</p>
+
+            <form id="verificationForm" action="" method="POST">
+                {% csrf_token %}
+
+                <div class="form-floating mb-4">
+                    <input type="text" class="form-control" id="otp" name="otp_code" placeholder="Enter OTP" required>
+                    <label for="otp">OTP</label>
+                </div>
+
+                <button type="submit" class="btn w-100 py-2 fw-bold" id="verifyBtn" style="background-color: #0b5ed7; color: white;">
+                    <span id="btnText">Activate Account</span>
+                    <span id="btnSpinner" class="spinner-border spinner-border-sm d-none ms-2" role="status"></span>
+                </button>
+
+                <p class="text-center mt-3">Didn't receive OTP? <a href="{% url 'resend-otp' %}">Resend</a></p>
+            </form>
         </div>
-        <!-- Spinner End -->
-
-
-        <!-- Navbar Start -->
-        {% include 'customer/nav.html' %}
-<div class="container-fluid bg-light min-vh-100 d-flex justify-content-center align-items-center">
-    <div class="otp-card shadow rounded-3 bg-white p-5 text-center" style="max-width: 450px; width: 100%;">
-
-        <!-- Heading -->
-        <h2 class="fw-bold mb-2">Verify your email address to sign in</h2>
-
-        <!-- Description -->
-        <p class="text-muted mb-4" style="font-size: 0.95rem;">
-            We’ve sent a verification code to
-            <strong>{{ request.user.email }}</strong>.
-            Please enter this code to continue.
-        </p>
-
-        <!-- Django Messages -->
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} text-center py-2">
-                {{ message }}
-            </div>
-        {% endfor %}
-
-        <!-- OTP Form -->
-        <form method="POST" id="otpForm" class="mt-3" novalidate>
-            {% csrf_token %}
-
-            <div class="mb-3">
-                <input type="text"
-                       name="otp_code"
-                       id="otpInput"
-                       class="form-control form-control-lg text-center"
-                       placeholder="Enter 6-digit code"
-                       maxlength="6"
-                       inputmode="numeric"
-                       autocomplete="one-time-code"
-                       pattern="[0-9]{6}"
-                       required
-                       style="letter-spacing: 0.35rem; font-size: 1.1rem;">
-            </div>
-
-            <button type="submit"
-                    id="verifyBtn"
-                    class="btn btn-primary btn-lg w-100 mb-3">
-                Verify Email
-            </button>
-        </form>
-
-        <!-- Countdown -->
-        <p class="text-muted mb-2" style="font-size: 0.9rem;">
-            Didn’t receive an email? Request another code in
-            <strong><span id="resendCountdown">300</span>s</strong>
-        </p>
-
-        <!-- Resend -->
-        <a href="{% url 'resend-otp' %}"
-           id="resendLink"
-           class="text-decoration-none fw-medium d-block mb-3"
-           aria-disabled="true">
-            Request another code
-        </a>
-
-        <!-- Back -->
-        <a href="{% url 'signin' %}"
-           class="text-decoration-none d-block mb-3">
-            Back to sign in
-        </a>
-
-        <!-- Footer -->
-        <p class="text-muted small mb-1" style="font-size: 0.8rem;">
-            By signing in or creating an account, you agree with our
-            <a href="#" class="text-decoration-none">Terms & Conditions</a> and
-            <a href="#" class="text-decoration-none">Privacy statement</a>.
-        </p>
-
-        <p class="text-muted small" style="font-size: 0.75rem;">
-            All rights reserved. © 2006 – 2026 Booking.com
-        </p>
     </div>
 </div>
- </div>
+
+<!-- Styles -->
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f6f8fa;
+    }
+
+    .card {
+        background-color: #fff;
+        transition: all 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 20px;
+    }
+
+    .form-floating>.form-control:focus~label {
+        color: #0d6efd;
+        font-weight: 600;
+    }
+
+    #verifyBtn {
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    #verifyBtn:hover {
+        background-color: #0b5ed7;
+        transform: translateY(-1px);
+    }
+</style>
 
 <!-- Scripts -->
 <script>
-    const otpInput = document.getElementById('otpInput');
-    const otpForm = document.getElementById('otpForm');
-    const verifyBtn = document.getElementById('verifyBtn');
-    const resendLink = document.getElementById('resendLink');
-    const resendCountdown = document.getElementById('resendCountdown');
+    const form = document.getElementById('verificationForm');
+    const spinner = document.getElementById('spinner');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
 
-    let submitted = false;
-    let resendTime = 300;
-
-    // OTP input handling
-    otpInput.addEventListener('input', () => {
-        otpInput.value = otpInput.value.replace(/\D/g, '');
-
-        if (otpInput.value.length === 6 && !submitted) {
-            submitted = true;
-            verifyBtn.disabled = true;
-            otpForm.submit();
-        }
+    form.addEventListener('submit', function() {
+        spinner.classList.remove('d-none');
+        btnSpinner.classList.remove('d-none');
+        btnText.textContent = 'Verifying...';
     });
-
-    
-
-    // Countdown
-    const countdownTimer = setInterval(() => {
-        if (resendTime <= 0) {
-            clearInterval(countdownTimer);
-            resendCountdown.textContent = '0';
-            resendLink.classList.remove('disabled');
-            resendLink.removeAttribute('aria-disabled');
-        } else {
-            resendCountdown.textContent = resendTime;
-            resendTime--;
-        }
-    }, 1000);
 </script>
 
-<style>
-    body {
-        background-color: #f7f7f7;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    }
-
-    .otp-card {
-        animation: fadeIn 0.35s ease-in-out;
-    }
-
-    .otp-card input {
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        transition: border-color 0.2s ease;
-    }
-
-    .otp-card input:focus {
-        border-color: #0071c2;
-        box-shadow: 0 0 0 0.2rem rgba(0, 113, 194, 0.2);
-    }
-
-    .otp-card button.btn-primary {
-        background-color: #0071c2;
-        border-color: #0071c2;
-    }
-
-    .otp-card button.btn-primary:hover {
-        background-color: #005fa3;
-        border-color: #005fa3;
-    }
-
-    a.disabled {
-        pointer-events: none;
-        color: #999 !important;
-        cursor: not-allowed;
-        text-decoration: none;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>
-{% endblock %}
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+{% endblock content %}

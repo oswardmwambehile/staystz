@@ -225,7 +225,11 @@
 					</div>
 					{% if user.is_authenticated %}
 					<span class="profile-username" style="color: white;">
-						<span class="op-7">Hi,</span> <span class="fw-bold">{{ user.first_name }} {{ user.last_name }}</span>
+						<span class="op-7">Hi,</span> <span class="fw-bold">{% if user.username %}{{ user.username }}{% endif %}
+        {% if user.first_name or user.last_name %}
+            {% if user.username %} - {% endif %}
+            {{ user.first_name }} {{ user.last_name }}
+        {% endif %}</span>
 					</span>
 					{% else %}
 					<span class="profile-username" style="color: white;">

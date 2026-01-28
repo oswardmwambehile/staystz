@@ -1,0 +1,138 @@
+{% extends 'customer/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid bg-white p-0">
+
+    <!-- Spinner -->
+    <div id="spinner"
+         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    {% include 'customer/nav.html' %}
+
+    <!-- Header -->
+    <div class="container-fluid header bg-white p-0">
+        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+
+            <!-- Text -->
+            <div class="col-md-6 p-5 mt-lg-5">
+                <h1 class="wow fadeInUp mb-3"
+                    data-wow-delay="0.1s"
+                    style="font-family:'Montserrat', sans-serif; font-weight:500; font-size:3rem;">
+                    Find the right vehicle for
+                    <span style="color:#174376;">every journey</span>
+                </h1>
+
+                <p class="text-muted wow fadeInUp mb-4" data-wow-delay="0.3s">
+                    Rent reliable vehicles tailored to your travel and transport needs.
+                    Choose from comfortable shuttles for city trips and airport transfers,
+                    powerful trucks for moving and logistics, or quick piki piki and bajaji
+                    options for fast and affordable rides. Compare prices, availability,
+                    and vehicle types — then book with confidence and ease.
+                </p>
+            </div>
+
+            <!-- Image -->
+            <div class="col-md-6 text-center wow zoomIn" data-wow-delay="0.2s">
+                <img class="img-fluid rounded"
+                     src="{% static 'customer/img/c1.jpg' %}"
+                     alt="Car Rental">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Car Rental Categories -->
+    <div class="container-fluid py-5">
+        <div class="container">
+
+            <div class="text-center mx-auto mb-5" style="max-width:600px;">
+                <h1 class="mb-3 wow fadeInUp" data-wow-delay="0.1s" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 1.5rem;">
+                    CAR RENTAL CATEGORIES
+                </h1>
+                <p class="fw-semibold wow fadeInUp" data-wow-delay="0.2s">
+                    Select the type of vehicle that fits your needs
+                </p>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Shuttles -->
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <a href="{% url 'car_rental_list_by_type' 'shuffle' %}"
+                       class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow border-0 text-center p-4">
+                            <i class="bi bi-bus-front display-1 mb-3" style="color:#174376;"></i>
+                            <h5>Shuffles</h5>
+                            <p>
+                                Comfortable vehicles for city travel, airport transfers,
+                                tours, and group transportation.
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Moving & Logistics -->
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
+                    <a href="{% url 'car_rental_list_by_type' 'moving_logistic' %}"
+                       class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow border-0 text-center p-4">
+                            <i class="bi bi-truck display-1 mb-3" style="color:#174376;"></i>
+                            <h5>Moving & Logistics</h5>
+                            <p>
+                                Reliable trucks and vans for home moving, deliveries,
+                                and business logistics.
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Piki Piki / Bajaji -->
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <a href="{% url 'car_rental_list_by_type' 'piki_piki_bajaji' %}"
+                       class="text-decoration-none text-dark">
+                        <div class="card h-100 shadow border-0 text-center p-4">
+                            <i class="bi bi-bicycle display-1 mb-3" style="color:#174376;"></i>
+                            <h5>Piki Piki / Bajaji</h5>
+                            <p>
+                                Fast, affordable rides ideal for short distances
+                                and busy city streets.
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    {% include 'customer/footer.html' %}
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
+</div>
+
+<!-- Animate.css -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+<!-- WOW.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+<!-- Icons & Fonts -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
+{% endblock %}

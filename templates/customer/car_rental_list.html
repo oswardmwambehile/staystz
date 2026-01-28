@@ -19,8 +19,8 @@
                     </ol>
                 </nav>
             </div>
-            <div class="col-md-6 animated fadeIn">
-                <img class="img-fluid" src="{% static 'customer/img/car-rental.webp' %}" alt="">
+            <div class="col-md-6 animated fadeIn wow zoomIn" data-wow-delay="0.2s">
+                <img class="img-fluid" src="{% static 'customer/img/c1.jpg' %}" alt="">
             </div>
         </div>
     </div>
@@ -85,8 +85,13 @@
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-center text-danger">No car rentals found. Please check back later.</p>
-                {% endfor %}
+<div class="col-12">
+    <div class="alert alert-warning text-center py-3" role="alert">
+        <h5 class="mb-2">No properties found</h5>
+        <p class="mb-0">Sorry, there are no properties available in this property type at the moment. Thank you for browsing our listings.</p>
+    </div>
+</div>
+{% endfor %}
             </div>
         </div>
     </div>

@@ -84,38 +84,36 @@ def signup(request):
     return render(request, "customer/signup.html", context)
 
 
-
-
 def verify_email(request, username):
+    # Get user or return 404 if not found
     user = get_user_model().objects.get(username=username)
-    user_otp = OtpToken.objects.filter(user=user).last()
-    
-    
-    if request.method == 'POST':
-        # valid token
-        if user_otp.otp_code == request.POST['otp_code']:
-            
-            # checking for expired token
-            if user_otp.otp_expires_at > timezone.now():
-                user.is_active=True
-                user.save()
-                messages.success(request, "Account activated successfully!! You can Login.")
-                return redirect("signin")
-            
-            # expired token
-            else:
-                messages.warning(request, "The OTP has expired, get a new OTP!")
-                return redirect("verify-email", username=user.username)
-        
-        
-        # invalid otp code
-        else:
-            messages.warning(request, "Invalid OTP entered, enter a valid OTP!")
-            return redirect("verify-email", username=user.username)
-        
-    context = {}
-    return render(request, "customer/verify_token.html", context)
 
+    # Get the latest OTP for this user
+    user_otp = OtpToken.objects.filter(user=user).last()
+
+    if request.method == 'POST':
+        otp_input = request.POST.get('otp_code', '').strip()  # Get OTP from form safely
+
+        if not user_otp:
+            messages.warning(request, "No OTP found. Please request a new one!")
+            return redirect("resend-otp")  # Or redirect back to verification page
+
+        if user_otp.otp_code == otp_input:
+            # Check if OTP is expired
+            if user_otp.otp_expires_at > timezone.now():
+                user.is_active = True
+                user.save()
+                messages.success(request, "Account activated successfully! You can now login.")
+                return redirect("signin")
+            else:
+                messages.warning(request, "The OTP has expired, please request a new OTP!")
+                return redirect("verify-email", username=user.username)
+        else:
+            messages.warning(request, "Invalid OTP entered! Please enter a valid OTP.")
+            return redirect("verify-email", username=user.username)
+
+    # GET request, just render form
+    return render(request, "customer/verify_token.html", {"username": username})
 
 
 

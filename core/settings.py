@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
+    
 
 
       
@@ -84,9 +86,18 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
             'client_id': env('OAUTH_GOOGLE_CLIENT_ID'),
-            'secret': env('OAUTH_GOOGLE_SECRET'),
+            'secret': env('OAUTH_GOOGLE_SECRET'
+                          ),
         }
-    }
+    },
+    'twitter': {
+        'APP': {
+            'client_id': env('OAUTH_TWITTER_CLIENT_ID'),
+            'secret': env('OAUTH_TWITTER_SECRET'
+                          ),
+        }
+    },
+    
 }
 
 SITE_ID = 1

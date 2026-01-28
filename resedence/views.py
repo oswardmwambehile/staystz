@@ -232,3 +232,6 @@ def residence_property_details(request, pk):
 
 
 
+def resedence(request, booking_id=None):
+    
+    return render(request, 'customer/resedence.html')

@@ -255,6 +255,11 @@ def booking_success(request, booking_id=None):
     return render(request, 'customer/booking_success.html', {'booking': booking})
 
 
+def book(request, booking_id=None):
+    
+    return render(request, 'customer/book.html')
+
+
 
 
 

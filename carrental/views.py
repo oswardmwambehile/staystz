@@ -72,6 +72,9 @@ def my_car_rentals(request):
         "car_rentals": car_rentals
     })
 
+def car(request):
+    return render(request, "customer/car.html")
+
 
 from django.shortcuts import render, get_object_or_404
 from .models import CarRental, CarRentalSetup, CarRentalPricing, CarRentalLegal, CarRentalPhoto
@@ -113,7 +116,7 @@ def car_rental_list(request, car_type=None):
     List cars optionally filtered by type, region, or keyword.
     """
     # Base queryset
-    cars = CarRental.objects.filter(owner__user_verified=True)
+    cars = CarRental.objects.filter(owner__attachments__is_verified=True)
 
     # Filters from URL or GET parameters
     keyword = request.GET.get("keyword", "")

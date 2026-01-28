@@ -77,6 +77,11 @@
                                                     {{ property.region }}
                                                 </p>
                                             </div>
+                                               <div class="p-4 pt-2">
+                                    <a href="{% url 'residence_property_details' property.id %}" class="btn  w-100" style="background-color: #174376; color: white;">
+                                        See Availability
+                                    </a>
+                                </div>
                                         </div>
                                     </div>
                                 {% empty %}
@@ -118,6 +123,12 @@
                                                     {{ property.region }}
                                                 </p>
                                             </div>
+                                              <div class="p-4 pt-2">
+    <a href="{% url 'booking_property_detail' property.id%}" 
+       class="btn  w-100" style="background-color: #174376; color: white;">
+       See Availability
+    </a>
+</div>
                                         </div>
                                     </div>
                                 {% empty %}
@@ -149,6 +160,12 @@
                                                 <h5 class="text-primary">{{ car.car_name }}</h5>
                                                 <p>{{ car.get_car_type_display }}</p>
                                             </div>
+
+                                            <div class="p-4 pt-2">
+                            <a href="{% url 'car_rental_details' car.id %}" class="btn  w-100" style="background-color: #174376; color: white;">
+                                See Availability
+                            </a>
+                        </div>
                                         </div>
                                     </div>
                                 {% empty %}
