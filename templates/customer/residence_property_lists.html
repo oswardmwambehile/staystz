@@ -1,128 +1,159 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-<div class="container-fluid bg-white p-0">
+<div class="min-h-screen bg-white relative">
 
     <!-- Navbar -->
-    {% include 'customer/nav.html' %}
+    {% include 'customers/nav.html' %}
+    <div class="h-40 md:h-24"></div>
 
-       
-      
-       <!-- Header Start -->
-<div class="container-fluid header bg-white p-0">
-    <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-        
+    <!-- Header Start -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
+
         <!-- Text Section -->
-        <div class="col-md-6 p-5 mt-lg-5">
-            <h1 class="animated fadeIn mb-3" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 1.8rem; line-height: 1.2;">
-    Property List in <span style="color: #174376;">{{ property_type }}</span>
-</h1>
-
-            <p class="text-muted animated fadeIn mb-4" style="font-size: 16px;">
-    Explore a curated list of properties available in {{ property_type }}. Browse through a variety of homes, apartments, and land options to find the one that fits your lifestyle and budget. Use our filters to refine your search by type, location, price, and other amenities, making it easier to discover your perfect property or investment opportunity.
-</p>
-
-            <nav aria-label="breadcrumb" class="animated fadeIn">
-                <ol class="breadcrumb text-uppercase mb-0">
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Pages</a></li>
-                    <li class="breadcrumb-item text-body active" aria-current="page">Property List</li>
-                </ol>
-            </nav>
-        </div> 
-
-        <!-- Image Section --> 
-        <div class="col-md-6 animated fadeIn text-center wow zoomIn" data-wow-delay="0.2s">
-            <img class="img-fluid rounded" src="{% static 'customer/img/s6.jpg' %}" alt="Property Image">
+        <div class="md:w-1/2 md:pr-8 mt-8 md:mt-0">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl  mb-3" style="font-family: 'Montserrat', sans-serif;">
+                Property List in <span class="text-green-800">{{ property_type|title }}</span>
+            </h1>
+            <p class="text-gray-600 text-base sm:text-lg">
+                Explore a curated list of properties available in {{ property_type|title }}. Browse through a variety of options to find
+                the one that fits your lifestyle and budget. Use filters to refine your search by type, location, price, and amenities.Each property is
+                carefully verified to ensure comfort, safety, and convenience. Browse high-quality photos, detailed descriptions, and amenities to make an informed choice for
+                your stay. Whether you're planning a short getaway, a business trip, or an extended vacation,
+                Stayz TZ helps you find the perfect home away from home.
+            </p>
         </div>
 
+        <!-- Image Section -->
+        <div class="md:w-1/2 text-center">
+            <img class="rounded-lg shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover" src="{% static 'customer/img/a3.jpg' %}" alt="Property Image">
+        </div>
     </div>
-</div>
-<!-- Header End -->
-<!-- Header End -->
+    <!-- Header End -->
 
     <!-- Search Start -->
     {% include 'customer/search.html' %}
     <!-- Search End -->
 
     <!-- Property List Start -->
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="tab-content">
-                <div id="tab-1" class="tab-pane fade show p-0 active">
-                    <div class="row g-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                        {% for property in properties %}
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0|add:"1" }}s">
-                            <div class="property-item rounded overflow-hidden">
+            {% for property in properties %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full transition-transform transform hover:-translate-y-2 hover:shadow-2xl">
 
-                                <div class="position-relative overflow-hidden">
-                                    <a href="{% url 'residence_property_detail' property.pk %}">
-                                        {% if property.photos.first %}
-                                            <img class="img-fluid" src="{{ property.photos.first.image.url }}" alt="{{ property.property_name }}">
-                                        {% else %}
-                                            <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ property.property_name }}">
-                                        {% endif %}
-                                    </a>
+                <!-- Property Image -->
+                <div class="relative">
+                    <a href="{% url 'residence_property_detail' property.pk %}">
+                        {% if property.photos.first %}
+                            <img class="w-full h-64 sm:h-72 md:h-72 object-cover" src="{{ property.photos.first.image.url }}" alt="{{ property.property_name }}">
+                        {% else %}
+                            <img class="w-full h-64 sm:h-72 md:h-72 object-cover" src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ property.property_name }}">
+                        {% endif %}
+                    </a>
 
-                                    <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
-                                        {{ property.status|title }}
-                                    </div>
-
-                                    <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                                        {{ property.property_type|title }}
-                                    </div>
-                                </div>
-
-                                <div class="p-4 pb-0">
-                                    <h5 class="text-primary mb-3">
-                                        TZS {% if property.residencepropertypricing %}{{ property.residencepropertypricing.base_price|floatformat:0|intcomma }}{% else %}N/A{% endif %}/Month
-                                    </h5>
-                                    <a class="d-block h5 mb-2" href="{% url 'residence_property_detail' property.pk %}">
-                                        {{ property.property_name }}
-                                    </a>
-                                    <p><i class="fa fa-map-marker-alt text-primary me-2"></i>
-                                        {{ property.address }}, {{ property.region }}
-                                    </p>
-                                </div>
-
-                                <div class="d-flex border-top">
-                                    <small class="flex-fill text-center border-end py-2">
-                                        <i class="fa fa-ruler-combined text-primary me-2"></i>
-                                        {{ property.property_size_sqm|default:"N/A" }} Sqm
-                                    </small>
-                                    <small class="flex-fill text-center border-end py-2">
-                                        <i class="fa fa-bed text-primary me-2"></i>
-                                        {% if property.residencepropertysetup %}{{ property.residencepropertysetup.total_beds|default:"N/A" }}{% else %}N/A{% endif %} Bed
-                                    </small>
-                                    <small class="flex-fill text-center py-2">
-                                        <i class="fa fa-bath text-primary me-2"></i>
-                                        {% if property.residencepropertysetup %}{{ property.residencepropertysetup.number_of_bathrooms|default:"N/A" }}{% else %}N/A{% endif %} Bath
-                                    </small>
-                                </div>
-
-                                <div class="p-4 pt-2">
-                                    <a href="{% url 'residence_property_details' property.id %}" class="btn  w-100" style="background-color: #174376; color: white;">
-                                        See Availability
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                        {% empty %}
-<div class="col-12">
-    <div class="alert alert-warning text-center py-3" role="alert">
-        <h5 class="mb-2">No properties found</h5>
-        <p class="mb-0">Sorry, there are no properties available in this property type at the moment. Thank you for browsing our listings.</p>
-    </div>
-</div>
-{% endfor %}
-
+                    <div class="absolute top-4 left-4 bg-[#00b20d] text-white px-3 py-1 rounded">
+                        {{ property.status|title }}
+                    </div>
+                    <div class="absolute bottom-4 left-4 bg-white text-[#00b20d] px-3 py-1 rounded">
+                        {{ property.property_type|title }}
                     </div>
                 </div>
+
+                <!-- Property Details -->
+                <div class="p-4 flex-1 flex flex-col">
+                    <h5 class="text-[#00b20d] mb-2">
+                        TZS {% if property.residencepropertypricing %}{{ property.residencepropertypricing.base_price|floatformat:0|intcomma }}{% else %}N/A{% endif %}/Month
+                    </h5>
+                    <a class="block font-semibold text-lg mb-2" href="">
+                        {{ property.property_name }}
+                    </a>
+                    <p class="text-gray-600 text-sm mb-4"><i class="fa fa-map-marker-alt text-[#00b20d] mr-2"></i>{{ property.address }}, {{ property.region }}</p>
+
+                    <!-- Property Features -->
+                    <div class="flex border-t border-gray-200 text-center text-sm text-gray-600 divide-x divide-gray-200">
+                        {% if property.property_type == "office_space" %}
+                            <div class="flex-1 py-2">
+                                <i class="fa fa-ruler-combined text-[#00b20d] mr-1"></i>
+                                {% if property.office_setup %}
+                                    {{ property.office_setup.office_size_sqm|default:"N/A" }} Sqm
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 py-2">
+                                <i class="fa fa-users text-[#00b20d] mr-1"></i>
+                                {% if property.office_setup %}
+                                    {{ property.office_setup.number_of_tenants|default:"N/A" }} Tenants
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 py-2">
+                                Toilet Available
+                                {% if property.office_setup and property.office_setup.toilet_available %}
+                                    Floor {{ property.office_setup.toilet_available }}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="flex-1 py-2">
+                                <i class="fa fa-bed text-[#00b20d] mr-1"></i>
+                                {% if property.residencepropertysetup %}
+                                    {{ property.residencepropertysetup.total_beds|default:"N/A" }} Bed
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                            <div class="flex-1 py-2">
+                                <i class="fa fa-bath text-[#00b20d] mr-1"></i>
+                                {% if property.residencepropertysetup %}
+                                    {{ property.residencepropertysetup.number_of_bathrooms|default:"N/A" }} Bath
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Extra Office Features -->
+                    {% if property.property_type == "office_space" and property.office_setup %}
+                    <div class="flex border-t border-gray-200 text-center text-sm text-gray-600 divide-x divide-gray-200">
+                        <div class="flex-1 py-2">
+                            <i class="fa fa-water text-[#00b20d] mr-1"></i>
+                            {% if property.office_setup.has_water %}Water Available{% else %}N/A{% endif %}
+                        </div>
+                        <div class="flex-1 py-2">
+                            <i class="fa fa-bolt text-[#1591bc] mr-1"></i>
+                            {% if property.office_setup.has_electricity %}Electricity Available{% else %}N/A{% endif %}
+                        </div>
+                        <div class="flex-1 py-2">
+                            <i class="fa fa-fan text-[#00b20d] mr-1"></i>
+                            {{ property.office_setup.fan_or_ac|title }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Call to Action -->
+<div class="mt-auto pt-4">
+    <a href="{% url 'residence_property_details' property.id %}"
+       class="w-full inline-block bg-[#1591bc] text-white py-2 px-4 rounded-lg text-center hover:bg-[#1591bc] transition">
+        See Availability
+    </a>
+</div>
+                </div>
+
             </div>
+            {% empty %}
+            <div class="col-span-full text-center py-6">
+                <div class="bg-yellow-100 text-yellow-800 p-4 rounded">
+                    <h5 class="mb-2 font-semibold">No properties found</h5>
+                    <p>Sorry, there are no properties available in this property type at the moment. Thank you for browsing our listings.</p>
+                </div>
+            </div>
+            {% endfor %}
+
         </div>
     </div>
     <!-- Property List End -->
@@ -132,27 +163,9 @@
     <!-- Footer End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" class="fixed bottom-6 right-6 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition">
+        <i class="bi bi-arrow-up"></i>
+    </a>
 
 </div>
-
-<style>
-.property-item img {
-    height: 260px;        /* fixed height */
-    width: 100%;
-    object-fit: cover;    /* crop images without stretching */
-}
-.property-item {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.property-item .p-4 {
-    flex-grow: 1; /* push footer down so cards align */
-}
-</style>
-<!-- Google Fonts: Montserrat with 300, 400, 700 -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-
 {% endblock %}

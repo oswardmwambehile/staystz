@@ -35,45 +35,45 @@
 
         <div class="table-responsive">
           <table class="table table-hover align-middle table-transparent">
-            <thead class="text-uppercase text-secondary small">
-              <tr>
-                <th>Property Name</th>
-                <th>Property Type</th>
-                <th>District</th>
-                <th>Region</th>
-                <th>Country</th>
-                <th>Created At</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for property in properties %}
-              <tr class="align-middle">
-                <td class="fw-bold">{{ property.property_name }}</td>
-                <td>{{ property.property_type|title }}</td>
-                <td>{{ property.district }}</td>
-                <td>{{ property.region }}</td>
-                <td>{{ property.country }}</td>
-                <td>{{ property.created_at|date:"Y-m-d H:i" }}</td>
-                <td class="d-flex gap-1">
-                  <a href="{% url 'property_detail' property.id %}" class="btn btn-sm btn-primary">
-                    <i class="bi bi-eye"></i>
-                  </a>
+  <thead class="text-uppercase text-secondary small">
+    <tr>
+      <th>Property Name</th>
+      <th>Property Type</th>
+      <th>District</th>
+      <th>Region</th>
+      <th>Country</th>
+      <th>Created At</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for property in properties %}
+    <tr class="align-middle">
+      <td class="fw-bold">{{ property.property_name }}</td>
+      <td>{{ property.property_type|title }}</td>
+      <td>{{ property.district }}</td>
+      <td>{{ property.region }}</td>
+      <td>{{ property.country }}</td>
+      <td>{{ property.created_at|date:"Y-m-d H:i" }}</td>
+      <td class="d-flex gap-1">
+        <a href="{% url 'property_detail' property.id %}" class="btn btn-sm btn-primary">
+          <i class="bi bi-eye"></i>
+        </a>
 
-                  <!-- Delete property form -->
-                  <form action="{% url 'property_delete' property.id %}" method="POST" onsubmit="return confirm('Are you sure you want to delete this property?');">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                  </form>
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="7" class="text-center text-muted">No properties found.</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+        <form action="{% url 'property_delete' property.id %}" method="POST" onsubmit="return confirm('Are you sure you want to delete this property?');">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="7" class="text-center text-muted">No properties found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
         </div>
 
       </div>
@@ -91,7 +91,7 @@
 
 .table-transparent th,
 .table-transparent td {
-  background: transparent !important;
+  background: transparent !importnt;
   color: #000;
   border: 1px solid rgba(0,0,0,0.1);
   padding: 0.5rem 0.75rem;

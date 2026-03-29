@@ -1,181 +1,133 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load widget_tweaks %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-
-<div class="container-fluid bg-white p-0">
+<div class="bg-white min-h-screen">
 
     <!-- Navbar -->
-    {% include 'customer/nav.html' %}
+    {% include 'customers/nav.html' %}
+    <div class="h-40 md:h-24"></div>
 
-    <div class="container py-5">
-        <div class="row g-4">
+    <div class="container mx-auto py-10 px-4 md:px-8">
+
+        <div class="flex flex-col lg:flex-row gap-8">
 
             <!-- LEFT: IMAGE CAROUSEL -->
-            <div class="col-lg-6">
-                <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="lg:w-1/2 relative">
 
-                    <div class="carousel-inner">
+                <div x-data="{
+                    current: 0,
+                    images: [
                         {% for photo in property.photos.all %}
-                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img src="{{ photo.image.url }}" class="d-block w-100 custom-carousel-img" alt="">
-                        </div>
+                        '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
                         {% empty %}
-                        <div class="carousel-item active">
-                            <img src="{% static 'images/no-image.png' %}" class="d-block w-100 custom-carousel-img" alt="">
-                        </div>
+                        '{% static "images/no-image.png" %}'
                         {% endfor %}
+                    ],
+                    prev() { this.current = (this.current - 1 + this.images.length) % this.images.length },
+                    next() { this.current = (this.current + 1) % this.images.length },
+                    set(i) { this.current = i }
+                }" class="relative">
+
+                    <!-- Carousel Images -->
+                    <template x-for="(img, index) in images" :key="index">
+                        <img
+                            :src="img"
+                            x-show="current === index"
+                            class="w-full h-96 md:h-[420px] object-cover rounded-lg transition-all duration-500 cursor-pointer">
+                    </template>
+
+                    <!-- Prev/Next Buttons -->
+                    <button @click="prev()" class="absolute top-1/2 left-2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
+                        &#10094;
+                    </button>
+                    <button @click="next()" class="absolute top-1/2 right-2 -translate-y-1/2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
+                        &#10095;
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+                        <template x-for="(img, index) in images" :key="index">
+                            <span @click="set(index)" :class="current === index ? 'bg-blue-600' : 'bg-gray-400'" class="w-3 h-3 rounded-full cursor-pointer"></span>
+                        </template>
                     </div>
 
-                    <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-
-                    <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-
                 </div>
+
             </div>
 
             <!-- RIGHT: FORM CARD -->
-            <div class="col-lg-6">
-                <div class="card p-4" style="background: transparent; border: 1px solid #d5d5d5; box-shadow: none; border-radius: 10px;">
+            <div class="lg:w-1/2 bg-white border border-gray-300 rounded-lg p-6 shadow-lg">
 
-                    <h3 class="text-center mb-3">{{ property.property_name|title }}</h3>
+                <h3 class="text-center text-2xl font-semibold mb-4">{{ property.property_name|title }}</h3>
 
-                    <!-- Base Price -->
-                    <div class="alert alert-success text-center">
-                        Price per night: 
-                        <strong>{{ property.bookingpropertypricing.base_price_per_night|intcomma }} TZS</strong>
+                <!-- Base Price -->
+                <div class="bg-green-100 text-green-800 text-center py-2 rounded mb-4">
+                    Price per night: <strong>{{ property.bookingpropertypricing.base_price_per_night|intcomma }} TZS</strong>
+                </div>
+
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block mb-1 font-medium">Phone Number</label>
+                        {{ form.phone_number|add_class:"w-full border-gray-300 rounded-lg p-2" }}
+                    </div>
+                    <!-- Room Type -->
+                    <div>
+                        <label class="block mb-1 font-medium">Room Type</label>
+                        {{ form.room_type|add_class:"w-full border-gray-300 rounded-lg p-2" }}
                     </div>
 
-                    <form method="POST">
-                        {% csrf_token %}
-
-                        <!-- Room Type -->
-                        <label class="form-label">Room Type</label>
-                        {{ form.room_type|add_class:"form-select" }}
-
-                        <!-- Dates -->
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Check-in</label>
-                                {{ form.check_in|add_class:"form-control" }}
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Check-out</label>
-                                {{ form.check_out|add_class:"form-control" }}
-                            </div>
+                    <!-- Dates -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-1 font-medium">Check-in</label>
+                            {{ form.check_in|add_class:"w-full border-gray-300 rounded-lg p-2" }}
                         </div>
-
-                        <!-- Guests -->
-                        <div class="mt-3">
-                            <label class="form-label">Guests</label>
-                            {{ form.guests|add_class:"form-control" }}
-                        </div>
-
-                        <!-- Total Cost -->
-                        <div class="alert alert-info text-center mt-3" id="totalBox" style="display:none;">
-                            Total Cost: <strong id="totalPrice"></strong>
-                        </div>
-                        {% if form.errors %}
-  <div class="alert alert-danger">
-    {{ form.errors }}
-  </div>
-{% endif %}
-
-
-                        <button type="submit" class="btn btn-primary w-100 mt-3 py-2">
-                            Complete Booking
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- FEATURED PROPERTIES SECTION -->
-<div class="container-fluid py-5">
-    <div class="container">
-
-        <h3 class="mb-4">Featured in {{ property.property_type|title }}</h3>
-
-        <div class="tab-content">
-            <div class="tab-pane fade show p-0 active">
-                <div class="row g-4">
-
-                    {% for property in featured_properties %}
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0|add:"1" }}s">
-                        <div class="property-item rounded overflow-hidden">
-
-                            <div class="position-relative overflow-hidden">
-                                <a href="{% url 'book_property' property.pk %}">
-                                    {% if property.photos.first %}
-                                        <img class="img-fluid" src="{{ property.photos.first.image.url }}" alt="{{ property.property_name }}">
-                                    {% else %}
-                                        <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ property.property_name }}">
-                                    {% endif %}
-                                </a>
-
-                                <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3"></div>
-
-                                <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                                    {{ property.property_type|title }}
-                                </div>
-                            </div>
-
-                            <div class="p-4 pb-0">
-                                <h5 class="text-primary mb-3">
-                                    TZS {{ property.bookingpropertypricing.base_price_per_night|floatformat:0|intcomma }}/Night
-                                </h5>
-                                <a class="d-block h5 mb-2"
-                                   href="{% url 'book_property' property.pk %}">{{ property.property_name|title }}</a>
-                                <p><i class="fa fa-map-marker-alt text-primary me-2"></i>
-                                    {{ property.address }}, {{ property.region }}
-                                </p>
-                            </div>
-
-                            <div class="d-flex border-top">
-                                <small class="flex-fill text-center border-end py-2">
-                                    <i class="fa fa-ruler-combined text-primary me-2"></i>
-                                    {{ property.property_size_sqm|default:"N/A" }} Sqft
-                                </small>
-                                <small class="flex-fill text-center border-end py-2">
-                                    <i class="fa fa-bed text-primary me-2"></i>
-                                    {{ property.bookingpropertysetup.total_beds|default:"N/A" }} Bed
-                                </small>
-                                <small class="flex-fill text-center py-2">
-                                    <i class="fa fa-bath text-primary me-2"></i>
-                                    {{ property.bookingpropertysetup.number_of_bathrooms|default:"N/A" }} Bath
-                                </small>
-                            </div>
-
-                            <div class="p-4 pt-2">
-                                <a href="{% url 'book_property' property.pk %}"
-                                   class="btn btn-primary w-100">
-                                   See Availability
-                                </a>
-                            </div>
-
+                        <div>
+                            <label class="block mb-1 font-medium">Check-out</label>
+                            {{ form.check_out|add_class:"w-full border-gray-300 rounded-lg p-2" }}
                         </div>
                     </div>
-                    {% empty %}
-                        <p class="text-center text-danger">No featured properties found.</p>
-                    {% endfor %}
 
-                </div>
+                    <!-- Guests -->
+                    <div>
+                        <label class="block mb-1 font-medium">Guests</label>
+                        {{ form.guests|add_class:"w-full border-gray-300 rounded-lg p-2" }}
+                    </div>
+
+                    <!-- Total Cost -->
+                    <div x-data="{ showTotal: false, total: 0 }" id="totalBox" class="bg-blue-100 text-blue-800 text-center py-2 rounded mt-2 hidden">
+                        Total Cost: <strong id="totalPrice"></strong>
+                    </div>
+
+                    {% if form.errors %}
+                    <div class="bg-red-100 text-red-800 p-2 rounded">
+                        {{ form.errors }}
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="w-full py-2 bg-[#1591bc] text-white font-semibold rounded-lg hover:bg-[#1591bc] transition">
+                        Complete Booking
+                    </button>
+                </form>
+
             </div>
+
         </div>
 
     </div>
 </div>
+ >
+{% include 'customer/footer.html' %}
 
-<!-- AUTO CALCULATE PRICE JS -->
+
+<!-- Alpine.js for carousel -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<!-- Auto Calculate Price JS -->
 <script>
     const pricePerNight = {{ property.bookingpropertypricing.base_price_per_night }};
     const checkIn = document.getElementById("id_check_in");
@@ -199,15 +151,5 @@
     checkIn.addEventListener("change", calcTotal);
     checkOut.addEventListener("change", calcTotal);
 </script>
-
-<!-- FIX CAROUSEL IMAGE HEIGHT -->
-<style>
-.custom-carousel-img {
-    height: 420px;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-}
-</style>
 
 {% endblock %}

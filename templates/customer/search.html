@@ -1,80 +1,47 @@
 {% load static %}
 
 <form method="GET" action="">
-    <div class="container-fluid mb-5 wow fadeIn custom-search-bg" data-wow-delay="0.1s">
-        <div class="container py-4">
-            <div class="row g-2 align-items-center">
+  <div class="bg-[#1591bc] mb-12">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
-                <!-- Keyword Search -->
-                <div class="col-12 col-md-3">
-                    <input type="text" name="keyword" value="{{ request.GET.keyword }}"
-                           class="form-control rounded-pill border-0 py-3 px-4"
-                           placeholder="Search Keyword">
-                </div>
+      <!-- Center Wrapper -->
+      <div class="flex justify-center">
+        <div class="w-full lg:w-3/4 grid grid-cols-1 md:grid-cols-3 gap-4">
 
-                <!-- Property Type -->
-                <div class="col-12 col-md-3">
-                    <select name="property_type_filter" 
-                            class="form-select rounded-pill border-0 py-3 px-4">
-                        <option value="">Property Type</option>
-                        {% for key, value in property_type_choices %}
-                            <option value="{{ key }}"
-                                {% if request.GET.property_type_filter == key %}selected{% endif %}>
-                                {{ value }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+          <!-- Keyword Search -->
+          <div>
+            <input type="text"
+                   name="keyword"
+                   value="{{ request.GET.keyword }}"
+                   placeholder="Search Keyword"
+                   class="w-full py-3 px-4 rounded-[10px] text-center shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+          </div>
 
-                <!-- Region -->
-                <div class="col-12 col-md-3">
-                    <select name="region" 
-                            class="form-select rounded-pill border-0 py-3 px-4">
-                        <option value="">Select Region</option>
-                        {% for reg in tanzania_regions %}
-                            <option value="{{ reg }}"
-                                {% if request.GET.region == reg %}selected{% endif %}>
-                                {{ reg }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+          <!-- Region Select -->
+          <div>
+            <select name="region"
+                    class="w-full py-3 px-4 rounded-[10px] text-center shadow-md bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+              <option value="">Select Region</option>
+              {% for reg in tanzania_regions %}
+                <option value="{{ reg }}"
+                  {% if request.GET.region == reg %}selected{% endif %}>
+                  {{ reg }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
 
-                <!-- Search Button -->
-                <div class="col-12 col-md-3">
-                    <button type="submit" class="btn btn-warning w-100 py-3 rounded-pill">
-                        Search
-                    </button>
-                </div>
+          <!-- Search Button -->
+          <div>
+            <button type="submit"
+                    class="w-full py-3 rounded-[10px] bg-white text-black font-semibold hover:bg-white transition">
+              Search
+            </button>
+          </div>
 
-            </div>
         </div>
+      </div>
+
     </div>
+  </div>
 </form>
-
-<style>
-/* Custom background for search section */
-.custom-search-bg {
-    background-color: #174376;
-}
-
-/* Input fields and select styling */
-.form-control,
-.form-select {
-    color: #212529;
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-/* Add hover/focus effect like Booking.com */
-.form-control:focus,
-.form-select:focus {
-    outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(255,255,255,0.25);
-}
-
-/* Button hover */
-.btn-dark:hover {
-    background-color: #0f2f59;
-}
-</style>

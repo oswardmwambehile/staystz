@@ -1,4 +1,5 @@
 {% load static %}
+
 <style>
 /* Prevent horizontal scroll */
 body {
@@ -15,14 +16,13 @@ body {
     overflow: visible !important;
 }
 
-/* Dropdown menu properly positioned and full visible */
+/* Dropdown menu properly positioned */
 .navbar .dropdown-menu {
     position: absolute !important;
-    top: 100%;       /* below the toggle */
-    right: 0;        /* align right */
+    top: 100%;
+    right: 0;
     left: auto;
-    display: block;
-    min-width: 220px; /* adjust width */
+    min-width: 220px;
     z-index: 1050;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
 }
@@ -32,7 +32,7 @@ body {
 .navbar .dropdown-menu .btn {
     width: 100%;
     text-align: left;
-    white-space: nowrap; /* prevent wrapping */
+    white-space: nowrap;
     padding: 8px 16px;
 }
 
@@ -50,10 +50,12 @@ body {
 
 <div class="container-fluid nav-bar bg-transparent">
     <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
+
         <!-- Brand -->
         <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center text-center">
             <div class="icon p-2 me-2">
-               <img class="img-fluid" src="{% static 'customer/img/logo.png' %}" alt="Logo" style="width: 180px; height: 40px;">
+                <img src="{% static 'customer/img/logo.png' %}" alt="Logo" class="img-fluid"
+                     style="max-height: 50px; width: auto;">
             </div>
         </a>
 
@@ -64,9 +66,9 @@ body {
 
         <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto align-items-center">
 
-                <a href="{% url 'residence' %}" class="nav-item nav-link active">
+                <a href="{% url 'residence' %}" class="nav-item nav-link">
                     <i class="fa fa-building me-1"></i> Residences
                 </a>
 
@@ -78,27 +80,45 @@ body {
                     <i class="fa fa-car me-1"></i> Car Rental
                 </a>
 
+                <div class="nav-item dropdown ms-3">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
+        <i class="fa fa-globe me-1"></i> Language
+    </a>
+
+    <div class="dropdown-menu rounded-0 m-0">
+        <a href="" class="dropdown-item">
+            🇺🇸 English
+        </a>
+        <a href="" class="dropdown-item">
+            🇹🇿 Kiswahili
+        </a>
+    </div>
+</div>
+
+
                 {% if user.is_authenticated %}
-                <div class="nav-item dropdown">
+                <div class="nav-item dropdown ms-3">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
-                        <i class="fa fa-user me-1"></i> {% if user.username %}{{ user.username }}{% endif %}
-        {% if user.first_name or user.last_name %}
-            {% if user.username %} - {% endif %}
-            {{ user.first_name }} {{ user.last_name }}
-        {% endif %}
+                        <i class="fa fa-user me-1"></i>
+                        {{ user.username }}
+                        {% if user.first_name or user.last_name %}
+                            - {{ user.first_name }} {{ user.last_name }}
+                        {% endif %}
                     </a>
+
                     <div class="dropdown-menu rounded-0 m-0">
-                        <a href="{% url 'change_password' %}" class="dropdown-item">
-                            <i class="fa fa-key me-1"></i> Change Password
-                        </a>
+
                         <a href="{% url 'user_profile' %}" class="dropdown-item">
                             <i class="fa fa-id-badge me-1"></i> My Profile
                         </a>
-                        <a href="{% url 'my_bookings' %}" class="dropdown-item">
+                        <a href="{% url 'bookings-services' %}" class="dropdown-item">
                             <i class="fa fa-book me-1"></i> My Bookings
                         </a>
+                        <a href="{% url 'dashboard' %}" class="dropdown-item">
+                            <i class="fa fa-chart-line me-1"></i> Go to Dashboard
+                        </a>
                         <a href="{% url 'add_attachment' %}" class="dropdown-item">
-                            <i class="fa fa-book me-1"></i> List Your Property
+                            <i class="fa fa-home me-1"></i> List Your Property
                         </a>
                         <a href="{% url 'logout' %}" class="btn btn-primary mt-2 d-flex align-items-center justify-content-center">
                             <i class="fa fa-sign-out-alt me-1"></i> Logout
@@ -110,7 +130,8 @@ body {
             </div>
 
             {% if not user.is_authenticated %}
-            <a href="{% url 'signin' %}" class="btn  px-3 d-flex align-items-center" style="background-color: #174376; color: white;">
+            <a href="{% url 'signin' %}" class="btn px-3 d-flex align-items-center ms-3"
+               style="background-color: #1591bc; color: white;">
                 <i class="fa fa-user-plus me-1"></i> Sign Up
             </a>
             {% endif %}

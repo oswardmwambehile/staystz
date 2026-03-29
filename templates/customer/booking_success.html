@@ -1,124 +1,115 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-<div class="container-fluid p-0 bg-light">
-    <!-- Spinner -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
+<div class="bg-gray-50 min-h-screen relative">
+
+    
 
     <!-- Navbar -->
-    {% include 'customer/nav.html' %}
+    {% include 'customers/nav.html' %}
 
-    <!-- Hero Section -->
-    <div class="py-5 text-center text-white position-relative" style="background-color: #174376;">
-        <div class="container">
-            <div class="display-1 mb-3 animate__animated animate__bounceIn">
-                <i class="bi bi-check-circle-fill"></i>
-            </div>
-            <h1 class="fw-bold animate__animated animate__fadeInDown" style="color: white;">Booking Confirmed!</h1>
-            <p class="lead mb-0 animate__animated animate__fadeInUp">
-                Congratulations, {{ user.first_name }} {{ user.last_name }}! Your stay is officially booked.
-            </p>
+   <!-- Hero Section -->
+<section class="relative py-20 text-center bg-blue-900">
+    <div class="container mx-auto px-4">
+        <div class="text-white mb-6 text-6xl animate-bounce">
+            <i class="bi bi-check-circle-fill"></i>
         </div>
+        <h1 class="text-4xl md:text-5xl font-bold animate-fadeInDown mb-4 text-white mt-4">
+            Booking Confirmed!
+        </h1>
+        <p class="text-lg md:text-xl animate-fadeInUp text-white">
+            Congratulations, <strong>{{ user.first_name }} {{ user.last_name }}</strong>! Your stay is officially booked.
+        </p>
     </div>
+</section>
 
     <!-- Success Card -->
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
+    <section class="container mx-auto px-4 md:px-8 py-12">
+        <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row animate-fadeInUp">
 
-                <div class="card shadow-lg border-0 rounded-5 overflow-hidden animate__animated animate__fadeInUp">
-                    <div class="row g-0">
+            <!-- Property Image -->
+            <div class="md:w-5/12 h-80 md:h-auto relative">
+                {% if booking and booking.property.photos.first %}
+                    <img src="{{ booking.property.photos.first.image.url }}" 
+                         alt="{{ booking.property.property_name }}" 
+                         class="w-full h-full object-cover">
+                {% else %}
+                    <img src="{% static 'images/no-image.png' %}" 
+                         alt="Property Image" 
+                         class="w-full h-full object-cover">
+                {% endif %}
+            </div>
 
-                        <!-- Left: Property Image -->
-                        {% if booking and booking.property.photos.first %}
-                        <div class="col-md-5">
-                            <img src="{{ booking.property.photos.first.image.url }}" 
-                                 class="img-fluid h-100 w-100 object-fit-cover" 
-                                 alt="{{ booking.property.property_name }}">
-                        </div>
-                        {% else %}
-                        <div class="col-md-5">
-                            <img src="{% static 'images/no-image.png' %}" 
-                                 class="img-fluid h-100 w-100 object-fit-cover" 
-                                 alt="Property Image">
-                        </div>
+            <!-- Booking Details -->
+            <div class="md:w-7/12 p-8 md:p-10 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-semibold mb-2">Hello, {{ user.first_name }}!</h2>
+                    <p class="text-gray-600 mb-6">We are thrilled to host you. Here are your booking details:</p>
+
+                    {% if booking %}
+                    <ul class="space-y-2 mb-6">
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Property:</span> {{ booking.property.property_name }}</li>
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Room Type:</span> {{ booking.room_type }}</li>
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Check-in:</span> {{ booking.check_in|date:"M d, Y" }}</li>
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Check-out:</span> {{ booking.check_out|date:"M d, Y" }}</li>
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Nights:</span> {{ booking.nights }}</li>
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Guest(s):</span> {{ booking.guests }}</li>
+                        <li class="bg-gray-100 rounded-lg p-3 flex justify-between"><span class="font-medium">Total Cost:</span> {{ booking.total_price|intcomma }} TZS</li>
+                    </ul>
+                    {% endif %}
+
+                    <p class="text-gray-700 mb-6">
+                        Your booking is confirmed and your room is ready! 🎉<br>
+                        We can’t wait to give you an unforgettable experience.
+                    </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/" class="px-6 py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition">Return to Home</a>
+                        {% if booking %}
+                        <a href="{% url 'my_bookings' %}" class="px-6 py-3 border border-green-600 text-green-600 rounded-full font-semibold hover:bg-green-50 transition">View Your Bookings</a>
                         {% endif %}
-
-                        <!-- Right: Booking Details -->
-                        <div class="col-md-7">
-                            <div class="card-body p-5">
-                                <h2 class="card-title fw-bold mb-3">Hello, {{ user.first_name }}!</h2>
-                                <p class="text-muted mb-4">We are thrilled to host you. Here are your booking details:</p>
-
-                                {% if booking %}
-                                <ul class="list-group list-group-flush mb-4 shadow-sm rounded-3">
-                                    <li class="list-group-item"><strong>Property:</strong> {{ booking.property.property_name }}</li>
-                                    <li class="list-group-item"><strong>Room Type:</strong> {{ booking.room_type }}</li>
-                                    <li class="list-group-item"><strong>Check-in:</strong> {{ booking.check_in|date:"M d, Y" }}</li>
-                                    <li class="list-group-item"><strong>Check-out:</strong> {{ booking.check_out|date:"M d, Y" }}</li>
-                                    <li class="list-group-item"><strong>Nights:</strong> {{ booking.nights }}</li>
-                                     <li class="list-group-item"><strong>Guest:</strong> {{ booking.guests }}</li>
-                                    <li class="list-group-item"><strong>Total Cost:</strong> {{ booking.total_price|intcomma }} TZS</li>
-                                </ul>
-                                {% endif %}
-
-                                <p class="mb-4">
-                                    Your booking is confirmed and your room is ready! 🎉<br>
-                                    We can’t wait to give you an unforgettable experience.
-                                </p>
-
-                                <a href="/" class="btn btn-success btn-lg rounded-pill px-4 me-2 mb-2">Return to Home</a>
-                                {% if booking %}
-                                <a href="{% url 'my_bookings' %}" 
-                                   class="btn btn-outline-success btn-lg rounded-pill px-4 mb-2">View Your Bookings</a>
-                                {% endif %}
-                            </div>
-                        </div>
-
                     </div>
                 </div>
+            </div>
 
-                <!-- Social Sharing -->
-                <div class="text-center mt-4">
-                    <p class="text-muted mb-2">Share your excitement with friends:</p>
-                    <a href="#" class="btn btn-outline-primary btn-sm me-2"><i class="bi bi-facebook"></i> Facebook</a>
-                    <a href="#" class="btn btn-outline-info btn-sm me-2"><i class="bi bi-twitter"></i> Twitter</a>
-                    <a href="#" class="btn btn-outline-danger btn-sm"><i class="bi bi-envelope"></i> Email</a>
-                </div>
+        </div>
 
+        <!-- Social Sharing -->
+        <div class="text-center mt-8">
+            <p class="text-gray-500 mb-3">Share your excitement with friends:</p>
+            <div class="flex justify-center gap-4">
+                <a href="#" class="px-4 py-2 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-50 transition flex items-center gap-2">
+                    <i class="bi bi-facebook"></i> Facebook
+                </a>
+                <a href="#" class="px-4 py-2 border border-cyan-500 text-cyan-500 rounded-full hover:bg-cyan-50 transition flex items-center gap-2">
+                    <i class="bi bi-twitter"></i> Twitter
+                </a>
+                <a href="#" class="px-4 py-2 border border-red-500 text-red-500 rounded-full hover:bg-red-50 transition flex items-center gap-2">
+                    <i class="bi bi-envelope"></i> Email
+                </a>
             </div>
         </div>
-    </div>
+
+    </section>
 
     <!-- Footer -->
     {% include 'customer/footer.html' %}
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-success btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" class="fixed bottom-6 right-6 w-12 h-12 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shadow-lg transition">
+        <i class="bi bi-arrow-up"></i>
+    </a>
 
 </div>
 
-{% endblock %}
+<!-- Optional Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 <style>
-.object-fit-cover {
-    object-fit: cover;
-    height: 100%;
-}
-.card-body ul.list-group-item {
-    background-color: #f8f9fa;
-    border: none;
-}
-.card-body ul.list-group-item strong {
-    color: #495057;
-}
+/* Spinner hide logic (optional) */
+#spinner.show { display: flex; }
+#spinner { display: none; }
 </style>
-
-<!-- Optional: Animate.css for entrance effects -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{%endblock%}

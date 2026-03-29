@@ -1,0 +1,83 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+{% include 'customers/nav.html' %}
+
+<!-- HERO / BANNER -->
+<section class="relative w-full h-96 md:h-[350px] bg-cover bg-center" style="background-image: url('{% static "customer/img/a8.jpg" %}');">
+    <div class="absolute inset-0" style="background-color: rgba(21,145,188,0.6);">
+        <div class="flex items-center justify-center h-full px-4">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white">Our Mission & Vision</h1>
+                <p class="mt-4 text-lg md:text-xl text-white">
+                    Driving innovation and opportunity in housing and business solutions.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MISSION, VISION, CORE VALUES -->
+<section class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 md:px-0 space-y-16">
+
+        <!-- Mission -->
+        <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-600 relative inline-block">
+                Our Mission
+                <span class="absolute left-0 -bottom-2 w-20 h-1 bg-gradient-to-r from-[#1591bc] to-[#174376] rounded-full"></span>
+            </h2>
+            <p class="text-gray-700 text-lg mt-6 leading-relaxed">
+                To revolutionize access to housing, business premises, and accommodation by providing seamless, affordable, and secure online services, while empowering Tanzanian communities through job creation and technological innovation.
+            </p>
+        </div>
+
+        <!-- Vision -->
+        <div class="text-center max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-600 relative inline-block">
+                Our Vision
+                <span class="absolute left-0 -bottom-2 w-20 h-1 bg-gradient-to-r from-[#1591bc] to-[#174376] rounded-full"></span>
+            </h2>
+            <p class="text-gray-700 text-lg mt-6 leading-relaxed">
+                To become the leading platform in East Africa for finding, booking, and managing properties, enhancing convenience and quality of life for every user.
+            </p>
+        </div>
+
+        <!-- Core Values -->
+        <div class="text-center max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-600 relative inline-block">
+                Core Values
+                <span class="absolute left-0 -bottom-2 w-20 h-1 bg-gradient-to-r from-[#1591bc] to-[#174376] rounded-full"></span>
+            </h2>
+            <div class="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                <div class="p-6 border rounded-2xl hover:shadow-xl transition duration-300">
+                    <h5 class="text-2xl font-semibold text-gray-800 mb-2">Customer-Centricity</h5>
+                    <p class="text-gray-600">Prioritizing user convenience and satisfaction.</p>
+                </div>
+                <div class="p-6 border rounded-2xl hover:shadow-xl transition duration-300">
+                    <h5 class="text-2xl font-semibold text-gray-800 mb-2">Innovation</h5>
+                    <p class="text-gray-600">Leveraging technology to deliver cutting-edge solutions.</p>
+                </div>
+                <div class="p-6 border rounded-2xl hover:shadow-xl transition duration-300">
+                    <h5 class="text-2xl font-semibold text-gray-800 mb-2">Transparency</h5>
+                    <p class="text-gray-600">Ensuring honesty and clarity in all transactions.</p>
+                </div>
+                <div class="p-6 border rounded-2xl hover:shadow-xl transition duration-300">
+                    <h5 class="text-2xl font-semibold text-gray-800 mb-2">Empowerment</h5>
+                    <p class="text-gray-600">Creating opportunities for Tanzanian youth.</p>
+                </div>
+                <div class="p-6 border rounded-2xl hover:shadow-xl transition duration-300">
+                    <h5 class="text-2xl font-semibold text-gray-800 mb-2">Quality</h5>
+                    <p class="text-gray-600">Providing reliable and secure property listings.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% include 'customer/footer.html' %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}

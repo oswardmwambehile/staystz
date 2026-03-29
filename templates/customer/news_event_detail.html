@@ -1,0 +1,17 @@
+{% extends "customer/base.html" %}
+{% block content %}
+<div class="news-event-detail">
+    <h1>{{ post.title }}</h1>
+    {% if post.is_event %}
+        <p><strong>Event Date:</strong> {{ post.event_date|date:"F d, Y H:i" }}</p>
+    {% else %}
+        <p><strong>Published:</strong> {{ post.publish_date|date:"F d, Y" }}</p>
+    {% endif %}
+
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; margin-bottom:20px;">
+    {% endif %}
+
+    <p>{{ post.content|linebreaks }}</p>
+</div>
+{% endblock %}

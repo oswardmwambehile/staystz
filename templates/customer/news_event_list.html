@@ -1,0 +1,128 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+{% include 'customers/nav.html' %}
+
+<!-- HERO SECTION -->
+<section class="pt-24 pb-16">
+  <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+
+    <!-- Text -->
+    <div>
+      <h1 class="text-4xl md:text-5xl font-semibold leading-tight text-gray-900">
+        Find your perfect home in
+        <span class="text-blue-900">the right location</span>
+      </h1>
+
+      <p class="mt-5 text-gray-600 text-lg">
+        Explore available residences, apartments, and rental properties tailored to your lifestyle and budget. 
+        Discover listings in your preferred area, compare options, and book your ideal home with ease. 
+        Stay updated with the latest property opportunities and housing events happening near you.
+      </p>
+
+      <!-- CTA Buttons -->
+      
+    </div>
+
+    <!-- Image -->
+    <div>
+      <img src="{% static 'customer/img/v8.jpeg' %}"
+           class="rounded-2xl shadow-lg w-full object-cover"
+           alt="Property Listings">
+    </div>
+
+  </div>
+</section>
+
+<!-- BLOG SECTION -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <!-- Title -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-semibold text-gray-900">
+        Latest News & Events
+      </h2>
+      <p class="text-gray-500 mt-2">
+        Stay updated with our latest announcements and insights
+      </p>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      {% for post in posts %}
+      <div class="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition duration-300 overflow-hidden">
+
+        <!-- Image -->
+        <div class="overflow-hidden">
+          {% if post.image %}
+          <img src="{{ post.image.url }}"
+               class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+          {% else %}
+          <img src="{% static 'customer/img/default-news.jpg' %}"
+               class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+          {% endif %}
+        </div>
+
+        <!-- Content -->
+        <div class="p-6">
+
+          <!-- Badge -->
+          {% if post.is_event %}
+          <span class="inline-block text-xs font-medium bg-green-100 text-green-700 px-3 py-1 rounded-full mb-3">
+            Event
+          </span>
+          {% else %}
+          <span class="inline-block text-xs font-medium bg-blue-100 text-blue-700 px-3 py-1 rounded-full mb-3">
+            News
+          </span>
+          {% endif %}
+
+          <!-- Title -->
+          <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-900 transition">
+            {{ post.title }}
+          </h3>
+
+          <!-- Date -->
+          <p class="text-sm text-gray-500 mt-2">
+            {{ post.get_display_date|naturaltime }}
+          </p>
+
+          <!-- Content -->
+          <p class="text-gray-600 mt-3 text-sm leading-relaxed">
+            {{ post.content|truncatewords:20 }}
+          </p>
+
+          <!-- Button -->
+          <a href="#"
+             class="inline-block mt-4 text-sm font-medium text-blue-900 hover:underline">
+            Read more →
+          </a>
+
+        </div>
+
+      </div>
+      {% empty %}
+      <div class="col-span-full text-center">
+        <p class="text-gray-500">No news or events available.</p>
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+{% include 'customer/footer.html' %}
+
+<!-- BACK TO TOP -->
+<button onclick="window.scrollTo({top:0, behavior:'smooth'})"
+        class="fixed bottom-6 right-6 bg-blue-900 text-white p-3 rounded-full shadow-lg hover:bg-blue-800 transition">
+  ↑
+</button>
+
+{% endblock %}

@@ -1,233 +1,202 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-<div class="container-fluid bg-white p-0">
+<div class="bg-white min-h-screen">
 
     <!-- Navbar -->
-    {% include 'customer/nav.html' %}
+    {% include 'customers/nav.html' %}
 
-    <div class="container mt-5">
-        <div class="page-inner">
+    <div class="max-w-7xl mx-auto mt-24 md:mt-28 px-4 sm:px-6 lg:px-8">
 
-            <!-- Property Title -->
-            <h2 class="mb-2">{{ property.property_name }}</h2>
-            <p class="text-muted">{{ property.property_type|title }} | {{ property.address }}, {{ property.district }}, {{ property.region }}, {{ property.country }}</p>
+        <div class="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8">
 
-            <!-- Main Content Grid -->
-            <div class="row">
+            <!-- LEFT: Carousel & Description -->
+            <div class="lg:col-span-4 space-y-4">
 
-                <!-- Left: Custom Image Carousel -->
-                <div class="col-lg-7 mb-4">
-                    {% if photos %}
-                    <div class="carousel-container mb-2">
-                        <button class="carousel-nav left" onclick="prevImage()">‹</button>
-                        <img src="{{ photos.0.image.url }}" id="mainImage" class="img-fluid rounded shadow-sm">
-                        <button class="carousel-nav right" onclick="nextImage()">›</button>
+        <!-- Property Header -->
+        <!-- Property Header -->
+<div class="w-full bg-[#1591bc] text-white py-6 px-6 mb-6">
+
+    <h2 class="text-3xl font-bold">
+        {{ property.property_name }}
+    </h2>
+
+    <p class="text-sm text-green-100 mt-1">
+        {{ property.property_type|title }} |
+        {{ property.address }},
+        {{ property.district }},
+        {{ property.region }},
+        {{ property.country }}
+    </p>
+
+</div>
+
+                {% if photos %}
+                <!-- Alpine Carousel -->
+                <div x-data="{
+                        current: 0,
+                        slides: {{ photos|length }},
+                        images: [
+                            {% for photo in photos %}
+                            '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        ],
+                        setImage(i) { this.current = i; },
+                        next() { this.current = (this.current + 1) % this.slides; },
+                        prev() { this.current = (this.current - 1 + this.slides) % this.slides; }
+                    }" class="relative w-full overflow-hidden rounded-xl shadow-lg">
+
+                    <!-- Main Image -->
+                    <template x-for="(img, index) in images" :key="index">
+                        <img :src="img" x-show="current === index" class="w-full h-[450px] object-cover rounded-xl transition-all duration-500 cursor-zoom-in">
+                    </template>
+
+                    <!-- Prev/Next Buttons -->
+                    <button @click="prev()" class="absolute top-1/2 -translate-y-1/2 left-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
+                        &#10094;
+                    </button>
+                    <button @click="next()" class="absolute top-1/2 -translate-y-1/2 right-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
+                        &#10095;
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+                        <template x-for="(img, index) in images" :key="index">
+                            <span @click="current = index" :class="current === index ? 'bg-blue-600' : 'bg-gray-400'" class="w-3 h-3 rounded-full cursor-pointer"></span>
+                        </template>
                     </div>
 
                     <!-- Thumbnails -->
-                    <div class="d-flex flex-wrap gap-2 thumbs-container">
-                        {% for photo in photos %}
-                        <img src="{{ photo.image.url }}" class="thumb" onclick="setImage({{ forloop.counter0 }})">
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
-                    {% if property.property_description %}
-                    <div class="mb-3 mt-3">
-                        <h5>Property Description</h5>
-                        <p>{{ property.property_description }}</p>
-                    </div>
-                    {% endif %}
-
-                    <div class="mb-3">
-                        <a href="" class="btn btn-primary w-100 py-2">Book Now</a>
+                    <div class="flex gap-2 mt-2 overflow-x-auto px-1">
+                        <template x-for="(img, index) in images" :key="index">
+                            <img :src="img" @click="setImage(index)" class="w-24 h-16 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition transform hover:scale-105" :class="current === index ? 'border-blue-600' : ''">
+                        </template>
                     </div>
                 </div>
+                {% endif %}
 
-                <!-- Right: Cards -->
-                <div class="col-lg-5">
-
-                    <!-- Property Info Card -->
-                    <div class="card mb-3 shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h5 class="card-title">Property Info</h5>
-                            <p><strong>Property Size (sqm):</strong> {{ property.property_size_sqm|default:"N/A" }}</p>
-                            <p><strong>Floors:</strong> {{ property.floors|default:"N/A" }}</p>
-                            <p><strong>Parking:</strong> {{ property.parking_spaces|default:"N/A" }}</p>
-                            {% if property.status %}
-                            <p>
-                                <strong>Status:</strong>
-                                {% if property.status|lower == "open" %}
-                                    <span class="badge bg-success">{{ property.status|title }}</span>
-                                {% elif property.status|lower == "hold" %}
-                                    <span class="badge bg-warning text-dark">{{ property.status|title }}</span>
-                                {% elif property.status|lower == "closed" %}
-                                    <span class="badge bg-danger">{{ property.status|title }}</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">{{ property.status|title }}</span>
-                                {% endif %}
-                            </p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Setup Card -->
-                    {% if setup %}
-                    <div class="card mb-3 shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h5 class="card-title">Setup & Rooms</h5>
-                            <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds|default:"N/A" }}</p>
-                            <p>Bathrooms: {{ setup.number_of_bathrooms|default:"N/A" }}</p>
-                            <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}</p>
-                            <p>Amenities: {{ setup.amenities|join:", " }}</p>
-                            <p>Room Types: {{ setup.room_types|join:", " }}</p>
-                            <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- Pricing Card -->
-                    {% if pricing %}
-                    <div class="card mb-3 shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h5 class="card-title">Pricing</h5>
-                            <p>Base Price: {{ pricing.base_price|floatformat:0|intcomma }} TZS / night</p>
-                            <p>Weekly Discount: {{ pricing.weekly_discount|default:"0" }}%</p>
-                            <p>Monthly Discount: {{ pricing.monthly_discount|default:"0" }}%</p>
-                            <p>Cleaning Fee: {{ pricing.cleaning_fee|default:"0" }}</p>
-                            <p>Tax: {{ pricing.tax_percentage|default:"0" }}%</p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- Legal Card -->
-                    {% if legal %}
-                    <div class="card mb-3 shadow-sm border-0">
-                        <div class="card-body p-3">
-                            <h5 class="card-title">Legal & Policies</h5>
-                            <p><strong>Terms and Condition:</strong> {{ legal.terms_and_conditions|default:"N/A" }}</p>
-                            <p><strong>House Rules:</strong> {{ legal.house_rules|default:"N/A" }}</p>
-                            <p><strong>Cancellation Policy:</strong> {{ legal.cancellation_policy|default:"N/A" }}</p>
-                            <p><strong>Deposit Policy:</strong> {{ legal.deposit_policy|default:"N/A" }}</p>
-                            <p><strong>Refund Rules:</strong> {{ legal.refund_rules|default:"N/A" }}</p>
-                            <p><strong>Insurance:</strong> {{ legal.insurance_details|default:"N/A" }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-
+                <!-- Description -->
+                {% if property.property_description %}
+                <div class="mt-4 p-4 bg-gray-50 rounded-xl shadow">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-2">Property Description</h5>
+                    <p class="text-gray-700">{{ property.property_description }}</p>
                 </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="" class="block w-full text-center py-3 bg-[#1591bc] hover:bg-[#1591bc] text-white font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-1">Book Now</a>
+                </div>
+
             </div>
+
+            <!-- RIGHT: Cards -->
+            <div class="lg:col-span-3 space-y-4">
+
+                <!-- Property Info -->
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-800 mb-2">Property Info</h5>
+                    <p><strong>Property Size (sqm):</strong> {{ property.property_size_sqm|default:"N/A" }}</p>
+                    <p><strong>Floors:</strong> {{ property.floors|default:"N/A" }}</p>
+                    <p><strong>Parking:</strong> {{ property.parking_spaces|default:"N/A" }}</p>
+                    {% if property.status %}
+                    <p><strong>Status:</strong>
+                        {% if property.status|lower == "open" %}
+                        <span class="inline-block bg-green-600 text-white px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% elif property.status|lower == "hold" %}
+                        <span class="inline-block bg-yellow-600 text-gray-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% elif property.status|lower == "closed" %}
+                        <span class="inline-block bg-red-700 text-white px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% else %}
+                        <span class="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Residence Setup -->
+                {% if setup %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-800 mb-2">Residence Setup & Rooms</h5>
+                    <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds|default:"N/A" }}</p>
+                    <p>Bathrooms: {{ setup.number_of_bathrooms|default:"N/A" }}</p>
+                    <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}</p>
+                    <p>Amenities: {{ setup.amenities|join:", " }}</p>
+                    <p>Room Types: {{ setup.room_types|join:", " }}</p>
+                    <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
+                    <p>Balcony: {{ setup.has_balcony|yesno:"Yes,No" }}, Storage Room: {{ setup.has_storage_room|yesno:"Yes,No" }}, Laundry Room: {{ setup.has_laundry_room|yesno:"Yes,No" }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Office Setup -->
+                {% if office_setup %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-800 mb-2">Office Setup</h5>
+                    <p>Building Condition: {{ office_setup.building_condition|title }}</p>
+                    <p>Floor Finish: {{ office_setup.floor_finish|title }}</p>
+                    <p>Door Type: {{ office_setup.door_type|title }}</p>
+                    <p>Office Size: {{ office_setup.office_size_sqm }} sqm</p>
+                    <p>Number of Tenants: {{ office_setup.number_of_tenants }}</p>
+                    <p>Toilet Type: {{ office_setup.toilet_type|title }}</p>
+                    <p>Building Level: {{ office_setup.building_level|title }}{% if office_setup.floor_number %} (Floor {{ office_setup.floor_number }}){% endif %}</p>
+                    <p>Water Available: {{ office_setup.has_water|yesno:"Yes,No" }}</p>
+                    <p>Electricity Available: {{ office_setup.has_electricity|yesno:"Yes,No" }}</p>
+                    <p>Fan / AC: {{ office_setup.fan_or_ac|title }}</p>
+                    <p>Ceiling Type: {{ office_setup.ceiling_type|title }}</p>
+                    <p>Security Guard: {{ office_setup.has_security_guard|yesno:"Yes,No" }}</p>
+                    <p>Window Type: {{ office_setup.window_type|title }}</p>
+                    <p>Door Lock Condition: {{ office_setup.door_lock_condition|title }}</p>
+                    <p>Road Type: {{ office_setup.road_type|title }}</p>
+                    <p>Environment: {{ office_setup.environment|title }}</p>
+                    <p>Location Category: {{ office_setup.location_category|title }}</p>
+                    <p>Number of Offices: {{ office_setup.number_of_offices }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Pricing -->
+                {% if pricing %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-800 mb-2">Pricing</h5>
+                    <p>Base Price: {{ pricing.base_price|floatformat:0|intcomma }} TZS</p>
+                    <p>Cleaning Fee: {{ pricing.cleaning_fee|default:"0" }} TZS</p>
+                    <p>Rent Duration: {{ pricing.get_rent_duration_display }}</p>
+                    {% if property.property_type == "office_space" %}
+                        <p>Min Months: {{ pricing.min_months|default:"N/A" }}</p>
+                        <p>Max Months: {{ pricing.max_months|default:"N/A" }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Legal -->
+                {% if legal %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-800 mb-2">Legal & Policies</h5>
+                    <p><strong>Terms and Conditions:</strong> {{ legal.terms_and_conditions|default:"N/A" }}</p>
+                    <p><strong>House Rules:</strong> {{ legal.house_rules|default:"N/A" }}</p>
+                    <p><strong>Cancellation Policy:</strong> {{ legal.cancellation_policy|default:"N/A" }}</p>
+                    <p><strong>Deposit Policy:</strong> {{ legal.deposit_policy|default:"N/A" }}</p>
+                    <p><strong>Refund Rules:</strong> {{ legal.refund_rules|default:"N/A" }}</p>
+                    <p><strong>Insurance:</strong> {{ legal.insurance_details|default:"N/A" }}</p>
+                </div>
+                {% endif %}
+
+            </div>
+
         </div>
     </div>
+     <div class="h-40 md:h-24"></div>
 
     {% include 'customer/footer.html' %}
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- Back to top button -->
+    <a href="#" class="fixed bottom-6 right-6 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition transform hover:-translate-y-1">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
 </div>
 
-<!-- Carousel Styles -->
-<style>
-.carousel-container {
-    position: relative;
-    width: 100%;
-    height: 420px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #f1f1f1;
-}
-.carousel-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.3s ease;
-}
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
-    color: #fff;
-    border: none;
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-}
-.carousel-nav.left { left: 10px; }
-.carousel-nav.right { right: 10px; }
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-.thumbs-container {
-    gap: 10px;
-    overflow-x: auto;
-}
-.thumb {
-    width: 80px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all .2s;
-}
-.thumb:hover { border-color: #0d6efd; transform: scale(1.05); }
-
-@media(max-width:768px){
-    .carousel-container { height: 260px; }
-    .thumb { width: 60px; height: 50px; }
-}
-</style>
-
-<!-- Carousel Script -->
-<script>
-const images = [
-    {% for photo in photos %}
-    "{{ photo.image.url }}",
-    {% endfor %}
-];
-
-let current = 0;
-const mainImage = document.getElementById('mainImage');
-
-// Auto slide every 3 seconds
-function autoSlide() {
-    current = (current + 1) % images.length;
-    mainImage.style.opacity = 0;
-    setTimeout(() => {
-        mainImage.src = images[current];
-        mainImage.style.opacity = 1;
-    }, 150);
-}
-let slideInterval = setInterval(autoSlide, 3000);
-
-// Manual navigation
-function nextImage() { current = (current + 1) % images.length; updateImage(); }
-function prevImage() { current = (current - 1 + images.length) % images.length; updateImage(); }
-function setImage(i) { current = i; updateImage(); }
-
-function updateImage() {
-    mainImage.style.opacity = 0;
-    setTimeout(() => {
-        mainImage.src = images[current];
-        mainImage.style.opacity = 1;
-    }, 150);
-}
-
-// Optional: swipe support on mobile
-let startX = 0;
-mainImage.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-mainImage.addEventListener('touchend', e => {
-    let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) { nextImage(); resetAutoSlide(); }
-    if (endX - startX > 50) { prevImage(); resetAutoSlide(); }
-});
-
-function resetAutoSlide() {
-    clearInterval(slideInterval);
-    slideInterval = setInterval(autoSlide, 3000);
-}
-</script>
 {% endblock %}

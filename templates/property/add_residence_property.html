@@ -97,6 +97,9 @@ select {
     background: #eef5ff;
     border-color: #0066ff;
 }
+
+/* ✅ Airbnb hidden by default */
+#airbnb-wrapper { display: none; }
 </style>
 
 <div class="main-panel">
@@ -126,7 +129,8 @@ select {
                 </div>
                 {% endif %}
 
-                <form method="POST" enctype="multipart/form-data">
+               <form method="POST" enctype="multipart/form-data" novalidate>
+
                     {% csrf_token %}
 
                     <!-- STEP 1 -->
@@ -134,26 +138,42 @@ select {
                         <h3 class="step-title">Step 1: Basic Information</h3>
 
                         {% for field in property_form %}
-                        <div class="mb-3">
-                            <label class="form-label">{{ field.label }}</label><br>
 
-                            {% if field.is_checkbox %}
-                            <div class="checkbox-group">
-                                {% for subwidget in field %}
-                                <div class="form-check">
-                                    {{ subwidget.tag }}
-                                    <label class="form-check-label">{{ subwidget.choice_label }}</label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% else %}
+                            {# ✅ ONLY Airbnb field gets wrapper id #}
+                            {% if field.name == "airbnb_available" %}
+                            <div class="mb-3" id="airbnb-wrapper">
+                                <label class="form-label">{{ field.label }}</label><br>
+
                                 {{ field|add_class:"form-control" }}
+
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            {% else %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ field.label }}</label><br>
+
+                                {% if field.is_checkbox %}
+                                <div class="checkbox-group">
+                                    {% for subwidget in field %}
+                                    <div class="form-check">
+                                        {{ subwidget.tag }}
+                                        <label class="form-check-label">{{ subwidget.choice_label }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                    {{ field|add_class:"form-control" }}
+                                {% endif %}
+
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
                             {% endif %}
 
-                            {% if field.errors %}
-                                <div class="text-danger small">{{ field.errors }}</div>
-                            {% endif %}
-                        </div>
                         {% endfor %}
 
                         <div class="d-flex gap-2 mt-4">
@@ -161,38 +181,42 @@ select {
                         </div>
                     </div>
 
-                    <!-- STEP 2 -->
-                    <div class="step d-none" id="step2">
-                        <h3 class="step-title">Step 2: Property Setup</h3>
+                   <!-- STEP 2 -->
+<div class="step d-none" id="step2">
+    <h3 class="step-title">Step 2: Property Setup</h3>
 
-                        {% for field in setup_form %}
-                        <div class="mb-3">
-                            <label class="form-label">{{ field.label }}</label><br>
+    <!-- Residence setup -->
+    <div id="residence-setup">
+        {% for field in residence_setup_form %}
+        <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label><br>
+            {{ field|add_class:"form-control" }}
+            {% if field.errors %}
+                <div class="text-danger small">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
 
-                            {% if field.is_checkbox %}
-                            <div class="checkbox-group">
-                                {% for subwidget in field %}
-                                <div class="form-check">
-                                    {{ subwidget.tag }}
-                                    <label class="form-check-label">{{ subwidget.choice_label }}</label>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            {% else %}
-                                {{ field|add_class:"form-control" }}
-                            {% endif %}
+    <!-- Office setup -->
+    <div id="office-setup">
+        {% for field in office_setup_form %}
+        <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label><br>
+            {{ field|add_class:"form-control" }}
+            {% if field.errors %}
+                <div class="text-danger small">{{ field.errors }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
 
-                            {% if field.errors %}
-                                <div class="text-danger small">{{ field.errors }}</div>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
+    <div class="d-flex gap-2 mt-4">
+        <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
+    </div>
+</div>
 
-                        <div class="d-flex gap-2 mt-4">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
-                        </div>
-                    </div>
 
                     <!-- STEP 3 -->
                     <div class="step d-none" id="step3">
@@ -214,7 +238,7 @@ select {
                         <h3 class="step-title">Step 4: Pricing</h3>
 
                         {% for field in pricing_form %}
-                        <div class="mb-3">
+                        <div class="mb-3 pricing-field" data-field="{{ field.name }}">
                             <label class="form-label">{{ field.label }}</label><br>
                             {{ field|add_class:"form-control" }}
 
@@ -261,67 +285,220 @@ select {
 <script>
 let currentStep = 1;
 
+// ============================
+// STEP NAVIGATION
+// ============================
 function showStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.classList.add('d-none'));
-    document.getElementById('step' + step).classList.remove('d-none');
-}
+    document.querySelectorAll(".step").forEach((s, idx) => {
+        const active = idx + 1 === step;
+        s.classList.toggle("d-none", !active);
 
-function nextStep() { currentStep++; showStep(currentStep); }
-function prevStep() { currentStep--; showStep(currentStep); }
-
-const dropzone = document.getElementById("dropzone");
-const fileInput = document.getElementById("imageUpload");
-const preview = document.createElement("div");
-preview.id = "preview";
-preview.style.display = "flex";
-preview.style.flexWrap = "wrap";
-preview.style.marginTop = "10px";
-dropzone.appendChild(preview);
-
-dropzone.addEventListener("click", () => fileInput.click());
-
-dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropzone.classList.add("dragover");
-});
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
-
-dropzone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropzone.classList.remove("dragover");
-
-    const dtFiles = e.dataTransfer.files;
-    const fileList = new DataTransfer();
-
-    for (let i = 0; i < fileInput.files.length; i++) {
-        fileList.items.add(fileInput.files[i]);
-    }
-
-    for (let i = 0; i < dtFiles.length; i++) {
-        fileList.items.add(dtFiles[i]);
-    }
-
-    fileInput.files = fileList.files;
-    updatePreview();
-});
-
-fileInput.addEventListener("change", () => updatePreview());
-
-function updatePreview() {
-    preview.innerHTML = "";
-    Array.from(fileInput.files).forEach(file => {
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.style.height = "100px";
-        img.style.marginRight = "10px";
-        img.style.marginBottom = "10px";
-        img.style.border = "1px solid #ccc";
-        img.style.borderRadius = "5px";
-        preview.appendChild(img);
+        // Only toggle 'required' on visible fields, do not disable
+        s.querySelectorAll("input, select, textarea").forEach(el => {
+            if (el.type === "checkbox" || el.type === "radio") {
+                // Checkboxes/radios: required only if step visible
+                el.required = active;
+            } else {
+                el.required = active;
+            }
+        });
     });
 }
 
+function nextStep() {
+    if (currentStep < 5) {
+        currentStep++;
+        showStep(currentStep);
+    }
+}
+
+function prevStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
+
+// ============================
+// DROPZONE IMAGE UPLOAD
+// ============================
+const dropzone = document.getElementById("dropzone");
+const fileInput = document.getElementById("imageUpload");
+
+if (dropzone && fileInput) {
+    const preview = document.createElement("div");
+    preview.style.display = "flex";
+    preview.style.flexWrap = "wrap";
+    preview.style.marginTop = "10px";
+    dropzone.appendChild(preview);
+
+    dropzone.addEventListener("click", () => fileInput.click());
+
+    dropzone.addEventListener("dragover", e => {
+        e.preventDefault();
+        dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+        dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", e => {
+        e.preventDefault();
+        dropzone.classList.remove("dragover");
+        fileInput.files = e.dataTransfer.files;
+        updatePreview();
+    });
+
+    fileInput.addEventListener("change", updatePreview);
+
+    function updatePreview() {
+        preview.innerHTML = "";
+        Array.from(fileInput.files).forEach(file => {
+            const img = document.createElement("img");
+            img.src = URL.createObjectURL(file);
+            img.style.height = "100px";
+            img.style.margin = "5px";
+            img.style.border = "1px solid #ccc";
+            img.style.borderRadius = "5px";
+            preview.appendChild(img);
+        });
+    }
+}
+
+// ============================
+// DYNAMIC FORM CONTROL
+// ============================
+const propertyTypeSelect = document.getElementById("id_property_type");
+const residenceSetup = document.getElementById("residence-setup");
+const officeSetup = document.getElementById("office-setup");
+const pricingFields = document.querySelectorAll(".pricing-field");
+const buildingLevelSelect = document.getElementById("id_building_level");
+const floorsInput = document.getElementById("id_floors");
+
+function setSectionState(section, show) {
+    if (!section) return;
+
+    section.style.display = show ? "block" : "none";
+
+    section.querySelectorAll("input, select, textarea").forEach(el => {
+        // Only remove required when hidden
+        el.required = show;
+
+        // Reset values for hidden fields
+        if (!show) {
+            if (el.type === "checkbox" || el.type === "radio") {
+                el.checked = false;
+            } else {
+                el.value = "";
+            }
+        }
+    });
+}
+
+function updateSetupPricing() {
+    if (!propertyTypeSelect) return;
+
+    const type = propertyTypeSelect.value;
+
+    // ============================
+    // AIRBNB
+    // ============================
+    const airbnbWrapper = document.getElementById("airbnb-wrapper");
+    const airbnbField = document.getElementById("id_airbnb_available");
+
+    if (airbnbWrapper && airbnbField) {
+        if (type === "apartment") {
+            airbnbWrapper.style.display = "block";
+            airbnbField.required = true;
+        } else {
+            airbnbWrapper.style.display = "none";
+            airbnbField.required = false;
+            airbnbField.value = "";
+        }
+    }
+
+    // ============================
+    // SETUP SECTIONS
+    // ============================
+    if (type === "office_space") {
+        setSectionState(officeSetup, true);
+        setSectionState(residenceSetup, false);
+    } else {
+        setSectionState(officeSetup, false);
+        setSectionState(residenceSetup, true);
+    }
+
+    // ============================
+    // PRICING
+    // ============================
+    const officePricingFields = [
+        "base_price",
+        "min_months",
+        "max_months",
+        "rent_duration",
+        "currency",
+        "cleaning_fee"
+    ];
+
+    pricingFields.forEach(wrapper => {
+        const fieldName = wrapper.dataset.field;
+        const input = wrapper.querySelector("input, select, textarea");
+        if (!input) return;
+
+        if (type === "office_space") {
+            if (officePricingFields.includes(fieldName)) {
+                wrapper.style.display = "block";
+                input.required = true;
+            } else {
+                wrapper.style.display = "none";
+                input.required = false;
+                if (input.type === "checkbox" || input.type === "radio") {
+                    input.checked = false;
+                } else {
+                    input.value = "";
+                }
+            }
+        } else {
+            wrapper.style.display = "block";
+            input.required = true;
+        }
+    });
+
+    // ============================
+    // FLOORS
+    // ============================
+    if (buildingLevelSelect && floorsInput) {
+        const wrapper = floorsInput.closest(".mb-3");
+        if (!wrapper) return;
+
+        if (buildingLevelSelect.value === "storey_building") {
+            wrapper.style.display = "block";
+            floorsInput.required = true;
+        } else {
+            wrapper.style.display = "none";
+            floorsInput.required = false;
+            floorsInput.value = "";
+        }
+    }
+}
+
+// ============================
+// INIT
+// ============================
 showStep(currentStep);
+updateSetupPricing();
+
+if (propertyTypeSelect) {
+    propertyTypeSelect.addEventListener("change", updateSetupPricing);
+}
+
+if (buildingLevelSelect) {
+    buildingLevelSelect.addEventListener("change", updateSetupPricing);
+}
 </script>
+
+
+
 
 {% endblock %}

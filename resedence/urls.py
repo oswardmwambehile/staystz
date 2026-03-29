@@ -22,3 +22,4 @@ urlpatterns = [
       path('residence-property/<int:pk>/', views.residence_property_details, name='residence_property_details'),
      path('residences/<str:property_type>/', views.residence_properties, name='residence_properties_type'),
 ]
+

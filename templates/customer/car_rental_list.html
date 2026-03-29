@@ -1,107 +1,116 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-<div class="container-fluid bg-white p-0">
+<div class="min-h-screen bg-white relative">
 
-    {% include 'customer/nav.html' %}
+    <!-- Navbar -->
+    {% include 'customers/nav.html' %}
+    <br><br>
 
-    <!-- Header Start -->
-    <div class="container-fluid header bg-white p-0">
-        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-            <div class="col-md-6 p-5 mt-lg-5">
-                <h1 class="display-5 animated fadeIn mb-4">Car Rentals in <span class="text-primary">{{ car_type_selected }}</span></h1> 
-                <nav aria-label="breadcrumb animated fadeIn">
-                    <ol class="breadcrumb text-uppercase">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item text-body active" aria-current="page">Car Rentals</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="col-md-6 animated fadeIn wow zoomIn" data-wow-delay="0.2s">
-                <img class="img-fluid" src="{% static 'customer/img/c1.jpg' %}" alt="">
-            </div>
+    <!-- Header Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
+
+        <!-- Text -->
+        <div class="md:w-1/2 md:pr-8">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl  mb-4" style="font-family: 'Montserrat', sans-serif;">
+                Car Rentals in <span class="text-green-800">{{ car_type_selected }}</span>
+            </h1>
+            <p class="text-gray-600 text-base sm:text-lg">
+                Explore a curated list of vehicles available in {{ car_type_selected }}. Filter by type, capacity, and price to find the right ride for your travel or transport needs.
+                Each listing includes detailed information about vehicle features, seating capacity, luggage space, and fuel type.
+                Whether you are looking for a comfortable shuttle, a moving truck, or a fast piki piki/bajaji, our platform helps you compare options easily.
+                Check availability, view high-quality images, and book your ride with confidence. Start your journey today with the perfect vehicle.
+            </p>
+        </div>
+
+        <!-- Image -->
+        <div class="md:w-1/2 mb-8 md:mb-0">
+            {% if car_type_selected == "moving_logistic" %}
+                <img src="{% static 'customer/img/logistic.jpeg' %}" alt="Moving Car" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+            {% elif car_type_selected == "shuffle" %}
+                <img src="{% static 'customer/img/red.jpeg' %}" alt="Shuffle Car" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+            {% elif car_type_selected == "piki_piki_bajaji" %}
+                <img src="{% static 'customer/img/bajaji.jpeg' %}" alt="Bajaji" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+            {% else %}
+                <img src="{% static 'customer/img/travel.jpeg' %}" alt="Car Rentals" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+            {% endif %}
         </div>
     </div>
-    <!-- Header End -->
 
-    <!-- Search Start -->
+    <!-- Search Section -->
     {% include 'customer/search.html' %}
-    <!-- Search End -->
 
-    <!-- Car Rental List Start -->
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="row g-4">
-                {% for car in cars %}
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.{{ forloop.counter0|add:"1" }}s">
-                    <div class="property-item rounded overflow-hidden">
+    <!-- Car Rental List Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                        <div class="position-relative overflow-hidden">
-                            <a href="{% url 'car_rental_detail' car.pk %}">
-                                {% if car.photos.first %}
-                                    <img class="img-fluid" src="{{ car.photos.first.image.url }}" alt="{{ car.car_name }}">
-                                {% else %}
-                                    <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ car.car_name }}">
-                                {% endif %}
-                            </a>
-                            <div class="bg-primary rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">
-                                {{ car.get_car_type_display }}
-                            </div>
-                        </div>
+            {% for car in cars %}
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col property-item">
 
-                        <div class="p-4 pb-0">
-                            <h5 class="text-primary mb-3">
-                                 {{ car.car_name}}
-                            </h5>
-                            <h5 class="text-primary mb-3">
-                                TZS {{ car.carrentalpricing.base_price_per_day|default:"N/A"|floatformat:0|intcomma }}/Day
-                            </h5>
-                            
-                            
-                            <p><i class="fa fa-car text-primary me-2"></i> Manufacturer :
-                                {{ car.manufacturer }} | {{ car.model_year }}
-                            </p>
-                        </div>
-
-                        <div class="d-flex border-top">
-                            <small class="flex-fill text-center border-end py-2">
-                                <i class="fa fa-users text-primary me-2"></i>
-                                {{ car.seats }} Seats
-                            </small>
-                            <small class="flex-fill text-center py-2">
-                                <i class="fa fa-paint-brush text-primary me-2"></i>Color 
-                                {{ car.color|default:"N/A" }}
-                            </small>
-                        </div>
-
-                        <div class="p-4 pt-2">
-                            <a href="{% url 'car_rental_details' car.id %}" class="btn btn-primary w-100">
-                                See Availability
-                            </a>
-                        </div>
-
+                <!-- Car Image -->
+                <div class="relative overflow-hidden">
+                    <a href="{% url 'book_car' car.id %}">
+                        {% if car.photos.first %}
+                            <img src="{{ car.photos.first.image.url }}" alt="{{ car.car_name }}" class="w-full h-64 sm:h-72 md:h-80 object-cover transition-transform duration-500 hover:scale-105">
+                        {% else %}
+                            <img src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ car.car_name }}" class="w-full h-64 sm:h-72 md:h-80 object-cover transition-transform duration-500 hover:scale-105">
+                        {% endif %}
+                    </a>
+                    <!-- Vehicle Type Badge -->
+                    <div class="absolute bottom-0 left-4 bg-white text-[#00b20d] rounded-t-lg px-3 py-1 text-sm">
+                        {{ car.car_type|title }}
                     </div>
                 </div>
-                {% empty %}
-<div class="col-12">
-    <div class="alert alert-warning text-center py-3" role="alert">
-        <h5 class="mb-2">No properties found</h5>
-        <p class="mb-0">Sorry, there are no properties available in this property type at the moment. Thank you for browsing our listings.</p>
-    </div>
-</div>
-{% endfor %}
+
+                <!-- Car Details -->
+                <div class="p-4 flex-grow">
+                    <h5 class="text-[#ffc200] mb-2 font-semibold">
+                        TZS {{ car.carrentalpricing.base_price_per_day|floatformat:0|intcomma }}/Day
+                    </h5>
+                    <a href="{% url 'book_car' car.id %}" class="block text-lg font-semibold mb-1 hover:text-[#1591bc]">
+                        {{ car.car_name }}
+                    </a>
+                    <p class="text-gray-500 text-sm">
+                        <i class="fa fa-car text-[#00b20d] mr-1"></i>
+                        {{ car.car_description }}
+                    </p>
+                </div>
+
+
+
+                <!-- Call to Action -->
+                <div class="p-4 pt-3">
+                    <a href="{% url 'book_car' car.id %}" class="w-full inline-block bg-[#1591bc] text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-[#1591bc] transition">
+                        Book Now
+                    </a>
+                </div>
+
             </div>
+            {% empty %}
+            <div class="col-span-full">
+                <div class="bg-yellow-100 text-yellow-800 p-6 rounded-lg text-center">
+                    <h5 class="font-semibold mb-2">No cars found</h5>
+                    <p>Sorry, there are no cars available in this category at the moment. Please check back later.</p>
+                </div>
+            </div>
+            {% endfor %}
+
         </div>
     </div>
-    <!-- Car Rental List End -->
 
+    <!-- Footer -->
     {% include 'customer/footer.html' %}
 
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- Back to Top -->
+    <a href="#" class="fixed bottom-6 right-6 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
 </div>
 
+<!-- Styles -->
 <style>
 .property-item img {
     height: 260px;
@@ -109,13 +118,16 @@
     object-fit: cover;
 }
 .property-item {
-    height: 100%;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 .property-item .p-4 {
     flex-grow: 1;
 }
 </style>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
 
 {% endblock %}

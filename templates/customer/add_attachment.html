@@ -1,185 +1,151 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-
-
 {% load humanize %}
 
-
-
 {% block content %}
- <div class="container-fluid bg-white p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
 
+<div class="w-full bg-white">
 
-        <!-- Navbar Start -->
-        {% include 'customer/nav.html' %}
+<!-- Navbar -->
+{% include 'customers/nav.html' %}
 
-        <!-- Navbar End -->
+<!-- Page Wrapper -->
+<div class="min-h-screen pt-28 px-6 bg-gray-50 flex items-center justify-center">
 
-<br><br>
-    <div class="d-flex justify-content-center align-items-start" style="min-height: calc(100vh - 70px);">
-        <div class="card shadow-sm p-5" style="width: 100%; max-width: 650px; border-radius: 12px;">
+<div class="max-w-6xl w-full grid md:grid-cols-2 gap-10 items-center">
 
-            <!-- Header -->
-            <div class="text-center mb-4">
-                <h1 class=" mb-2" animated fadeIn mb-3" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 1.5rem;">Property Ownership Verification</h1>
-                <p class="text-muted mb-2">
-                    Only <strong>property owners</strong> can upload attachments for the properties they own.
-                </p>
-                <p class="text-muted">
-                    All documents are reviewed for verification purposes, so your property can be visible in our system.
-                </p>
-            </div>
+    <!-- LEFT SIDE IMAGE -->
+    <div class="flex justify-center">
 
-            <!-- Info Alert -->
-            <div class="alert alert-primary d-flex align-items-center mb-4" role="alert" style="border-radius: 8px;">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:">
-                    <use xlink:href="#info-fill"/>
-                </svg>
-                <div>
-                    Upload clear images only. Accepted formats: JPG, PNG. NIDA number is required when selecting NIDA.
-                </div>
-            </div>
+        <img src="{% static 'customer/img/undraw_reviewed-docs_tng3.svg' %}"
+             alt="Verification Illustration"
+             class="w-full max-w-md">
 
-            <!-- Form -->
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-
-                <!-- Attachment Type (normal select) -->
-                <div class="mb-4">
-                    <label for="id_attachment_type" class="form-label fw-bold">Attachment Type</label>
-                    {{ form.attachment_type|add_class:"form-select" }}
-                    <div class="form-text">Select the type of document you want to upload</div>
-                </div>
-
-                <!-- NIDA Number (floating label) -->
-                <div class="form-floating mb-4" id="nida-wrapper" style="display: none;">
-                    {{ form.nida_number|add_class:"form-control" }}
-                    <label for="id_nida_number">NIDA Number</label>
-                    <div class="form-text">Enter your NIDA number exactly as on your card</div>
-                </div>
-
-                <!-- Document Upload -->
-                <div class="mb-4">
-                    <label for="id_document" class="form-label fw-bold">Upload Document Image</label>
-                    {{ form.document|add_class:"form-control" }}
-                    <div class="form-text">Accepted formats: JPG, PNG</div>
-                </div>
-
-                <!-- Submit Button -->
-                <button type="submit" class="btn w-100 py-2 fw-bold" style="background-color: #0b5ed7; color: white;">
-                    Submit for Verification
-                </button>
-            </form>
-        </div>
     </div>
+
+
+    <!-- RIGHT SIDE FORM CARD -->
+    <div class="bg-gray-50 shadow-lg rounded-xl p-8">
+
+        <h1 class="text-xl font-medium mb-3"
+            style="font-family:'Montserrat', sans-serif;">
+            Property Ownership Verification
+        </h1>
+
+        <p class="text-gray-500 mb-2">
+            Only <strong>property owners</strong> can upload attachments for the properties they own.
+        </p>
+
+        <p class="text-gray-500 mb-6">
+            All documents are reviewed for verification purposes, so your property can be visible in our system.
+        </p>
+
+        <!-- Info Alert -->
+        <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-lg mb-6">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5 mt-0.5 flex-shrink-0"
+                 fill="currentColor"
+                 viewBox="0 0 16 16">
+
+                <path d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1zm0 4a.905.905 0 1 0 0-1.81A.905.905 0 0 0 8 5zm1 2H7v5h2V7z"/>
+
+            </svg>
+
+            <p class="text-sm">
+                Upload clear images only. Accepted formats: JPG, PNG.
+                NIDA number is required when selecting NIDA.
+            </p>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="post" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
+
+            <!-- Attachment Type -->
+            <div>
+                <label class="block font-semibold mb-2">
+                    Attachment Type
+                </label>
+
+                {{ form.attachment_type|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Select the type of document you want to upload
+                </p>
+            </div>
+
+            <!-- NIDA -->
+            <div id="nida-wrapper" class="hidden">
+
+                <label class="block font-semibold mb-2">
+                    NIDA Number
+                </label>
+
+                {{ form.nida_number|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Enter your NIDA number exactly as on your card
+                </p>
+
+            </div>
+
+            <!-- Upload -->
+            <div>
+
+                <label class="block font-semibold mb-2">
+                    Upload Document Image
+                </label>
+
+                {{ form.document|add_class:"w-full border border-gray-300 rounded-lg file:bg-black file:text-white file:px-4 file:py-2 file:border-0 file:mr-4 file:rounded-md cursor-pointer" }}
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Accepted formats: JPG, PNG
+                </p>
+
+            </div>
+
+            <!-- Button -->
+            <button
+                type="submit"
+                class="w-full bg-blue-700 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+
+                Submit for Verification
+
+            </button>
+
+        </form>
+
+    </div>
+
 </div>
+
+</div>
+
+</div>
+
 
 <!-- NIDA Toggle Script -->
 <script>
-    const attachmentSelect = document.getElementById("id_attachment_type");
-    const nidaWrapper = document.getElementById("nida-wrapper");
 
-    function toggleNidaField() {
-        if (attachmentSelect.value.toLowerCase() === "nida") {
-            nidaWrapper.style.display = "block";
-        } else {
-            nidaWrapper.style.display = "none";
-        }
+const attachmentSelect = document.getElementById("id_attachment_type");
+const nidaWrapper = document.getElementById("nida-wrapper");
+
+function toggleNidaField(){
+    if(attachmentSelect.value.toLowerCase() === "nida"){
+        nidaWrapper.classList.remove("hidden");
+    } else {
+        nidaWrapper.classList.add("hidden");
     }
+}
 
-    attachmentSelect.addEventListener("change", toggleNidaField);
-    toggleNidaField();
+attachmentSelect.addEventListener("change", toggleNidaField);
+toggleNidaField();
+
 </script>
 
-<!-- Styles -->
-<style>
-/* Body font and background */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f6f8fa;
-}
-
-/* Card shadow and hover effect */
-.card {
-    background-color: #fff;
-    transition: all 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 10px 25px;
-}
-
-/* Floating labels */
-.form-floating>.form-control {
-    height: 50px;
-    padding: 12px;
-    background-color: #fff !important;
-}
-.form-floating>.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
-}
-.form-floating>label {
-    padding-left: 12px;
-}
-
-/* Select dropdown styling (normal, fully visible) */
-select.form-select {
-    background-color: #fff !important;
-    color: #212529 !important;
-    border-color: #ced4da;
-    box-shadow: none;
-    cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-select.form-select:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
-    outline: none;
-}
-
-/* File input styling */
-input[type="file"].form-control {
-    background-color: #fff !important;
-    color: #212529;
-    cursor: pointer;
-}
-input[type="file"].form-control::file-selector-button {
-    background-color: black;
-    color: #fff;
-    border: none;
-    padding: 6px 14px;
-    margin-right: 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-input[type="file"].form-control::file-selector-button:hover {
-    background-color: black;
-}
-
-/* Text muted adjustments */
-.form-text {
-    font-size: 0.875rem;
-    color: #6c757d !important;
-}
-
-/* Button hover effect */
-.btn-primary {
-    transition: all 0.2s ease;
-}
-.btn-primary:hover {
-    background-color: #0b5ed7;
-}
-</style>
-<!-- Google Fonts: Montserrat with 300, 400, 700 -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
 {% endblock %}

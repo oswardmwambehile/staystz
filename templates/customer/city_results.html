@@ -1,156 +1,132 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-<div class="container-fluid bg-white p-0">
+<div class="bg-white min-h-screen">
 
     <!-- Navbar -->
-    {% include 'customer/nav.html' %}
+    {% include 'customers/nav.html' %}
+    <div class="h-40 md:h-24"></div>
 
     <!-- Header Start -->
-    <div class="container-fluid header bg-white p-0">
-        <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
+<div class="container mx-auto py-12 px-4 md:px-8 flex flex-col-reverse md:flex-row items-center gap-8">
 
-            <!-- Text Section -->
-            <div class="col-md-6 p-5 mt-lg-5">
-                <h1 class="animated fadeIn mb-3" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 3rem; line-height: 1.2;">
-                    Property List in <span style="color: #174376;">{{ property_type }}</span>
-                </h1>
+    <!-- Text Section -->
+    <div class="md:w-1/2">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl mb-4" style="font-family: 'Montserrat', sans-serif;">
+            Property List in <span class="text-green-800">{{ property_type }}</span>
+        </h1>
 
-                <p class="text-muted animated fadeIn mb-4" style="font-size: 16px;">
-                    Explore a curated list of properties available in {{ property_type }} Browse through a variety of homes, apartments, and car rentals. Use our filters to refine your search by type, location, price, and other amenities.
-                </p>
+        <p class="text-gray-700 mb-4 leading-relaxed">
+            Explore a curated list of properties available in <strong>{{ property_type }}</strong>. Whether you're looking for cozy apartments, modern homes, luxury villas, or convenient car rentals, Stayz TZ provides a wide range of options to suit every lifestyle and budget.
+        </p>
 
-                <nav aria-label="breadcrumb" class="animated fadeIn">
-                    <ol class="breadcrumb text-uppercase mb-0">
-                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Pages</a></li>
-                        <li class="breadcrumb-item text-body active" aria-current="page">Property List</li>
-                    </ol>
-                </nav>
-            </div>
+        <p class="text-gray-700 mb-4 leading-relaxed">
+            Our platform offers easy-to-use filters to refine your search by location, price, property type, and amenities. From city escapes to beachfront retreats, we ensure you find the perfect stay or vehicle for your trip.
+        </p>
 
-            <!-- Image Section -->
-            <div class="col-md-6 animated fadeIn text-center">
-                <img class="img-fluid rounded" src="{% static 'customer/img/s6.jpg' %}" alt="Property Image">
-            </div>
+        <p class="text-gray-700 mb-4 leading-relaxed">
+            Booking with Stays Tanzania is simple and secure. Check availability, view high-quality photos, and compare prices for residences and booking properties, or book your car rental instantly. We strive to make your travel planning seamless and stress-free.
+        </p>
 
-        </div>
+
+
+
     </div>
-    <!-- Header End -->
+
+    <!-- Image Section -->
+    <div class="md:w-1/2 text-center">
+        <img class="rounded-lg shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover" src="{% static 'customer/img/s6.jpg' %}" alt="Property Image">
+    </div>
+</div>
+<!-- Header End -->
 
     <!-- Property List Start -->
-    <div class="container-fluid py-5">
-        <div class="container">
-            <div class="tab-content">
-                <div id="tab-1" class="tab-pane fade show p-0 active">
-                    <div class="row g-4">
+    <div class="container mx-auto py-12 px-4 md:px-8">
 
-                        <!-- Global empty warning if all categories are empty -->
-                        {% if not residence_results and not booking_results and not car_results %}
-                        <div class="col-12">
-                            <div class="alert alert-warning text-center py-4">
-                                <h5 class="mb-2">No properties found in {{ city }}</h5>
-                                <p class="mb-0">
-                                    Sorry, there are no booking, residence, or car rental properties available in this city right now.
-                                </p>
-                            </div>
-                        </div>
-                        {% endif %}
+        {% if not residence_results and not booking_results and not car_results %}
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 mb-6 rounded">
+            <h5 class="font-semibold mb-1">No properties found in {{ city }}</h5>
+            <p>Sorry, there are no booking, residence, or car rental properties available in this city right now.</p>
+        </div>
+        {% endif %}
 
-                        {# Residence Properties #}
-                        {% if residence_results %}
-                        <h3 class="mb-4">Residence Properties</h3>
-                        <div class="row g-4">
-                            {% for property in residence_results %}
-                            <div class="col-lg-4 col-md-6">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="{% url 'residence_property_detail' property.id %}">
-                                            {% if property.photos.first %}
-                                                <img class="img-fluid" src="{{ property.photos.first.image.url }}">
-                                            {% else %}
-                                                <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}">
-                                            {% endif %}
-                                        </a>
-                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                                            {{ property.property_type|title }}
-                                        </div>
-                                    </div>
-                                    <div class="p-4">
-                                        <h5 class="text-primary">
-                                            TZS {{ property.residencepropertypricing.base_price|intcomma }}/Month
-                                        </h5>
-                                        <a class="d-block h5 mb-2">{{ property.property_name }}</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary"></i> {{ property.region }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        {# Booking Properties #}
-                        {% if booking_results %}
-                        <h3 class="mt-5 mb-4">Booking Properties</h3>
-                        <div class="row g-4">
-                            {% for property in booking_results %}
-                            <div class="col-lg-4 col-md-6">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="{% url 'booking_property_detail' property.id %}">
-                                            {% if property.photos.first %}
-                                                <img class="img-fluid" src="{{ property.photos.first.image.url }}">
-                                            {% else %}
-                                                <img class="img-fluid" src="{% static 'customer/img/property-placeholder.jpg' %}">
-                                            {% endif %}
-                                        </a>
-                                        <div class="bg-white rounded-top text-primary position-absolute start-0 bottom-0 mx-4 pt-1 px-3">
-                                            {{ property.property_type|title }}
-                                        </div>
-                                    </div>
-                                    <div class="p-4">
-                                        <h5 class="text-primary">
-                                            TZS {{ property.bookingpropertypricing.base_price_per_night|intcomma }}/Night
-                                        </h5>
-                                        <a class="d-block h5 mb-2">{{ property.property_name }}</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary"></i> {{ property.region }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        {# Car Rentals #}
-                        {% if car_results %}
-                        <h3 class="mt-5 mb-4">Car Rentals</h3>
-                        <div class="row g-4">
-                            {% for car in car_results %}
-                            <div class="col-lg-4 col-md-6">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        {% if car.photos.first %}
-                                            <img class="img-fluid" src="{{ car.photos.first.image.url }}">
-                                        {% else %}
-                                            <img class="img-fluid" src="{% static 'customer/img/car-placeholder.jpg' %}">
-                                        {% endif %}
-                                    </div>
-                                    <div class="p-4">
-                                        <h5 class="text-primary">{{ car.car_name }}</h5>
-                                        <p>{{ car.get_car_type_display }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-
+        {# Residence Properties #}
+        {% if residence_results %}
+        <h3 class="text-2xl font-semibold mb-6">Residence Properties</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for property in residence_results %}
+            <div class="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+                <a href="" class="relative">
+                    {% if property.photos.first %}
+                        <img class="w-full h-64 object-cover" src="{{ property.photos.first.image.url }}">
+                    {% else %}
+                        <img class="w-full h-64 object-cover" src="{% static 'customer/img/property-placeholder.jpg' %}">
+                    {% endif %}
+                    <div class="absolute bottom-0 left-0 bg-white/90 text-green-600 font-semibold px-3 py-1 rounded-tr-lg">
+                        {{ property.property_type|title }}
                     </div>
+                </a>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h5 class="text-green-600 font-semibold mb-2">TZS {{ property.residencepropertypricing.base_price|intcomma }}/Month</h5>
+                    <a href="{% url 'residence_property_detail' property.id %}" class="text-lg font-semibold mb-2 hover:text-green-600">{{ property.property_name }}</a>
+                    <p class="text-gray-600 mb-4"><i class="fa fa-map-marker-alt text-green-600 mr-1"></i>{{ property.region }}</p>
+                    <a href="{% url 'residence_property_details' property.id %}" class="mt-auto bg-[#1591bc] text-white text-center py-2 rounded-lg hover:bg-[#1591bc] font-medium">Check Availability</a>
                 </div>
             </div>
+            {% endfor %}
         </div>
+        {% endif %}
+
+        {# Booking Properties #}
+        {% if booking_results %}
+        <h3 class="text-2xl font-semibold mt-12 mb-6">Booking Properties</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for property in booking_results %}
+            <div class="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+                <a href="{% url 'booking_property_detail' property.id %}" class="relative">
+                    {% if property.photos.first %}
+                        <img class="w-full h-64 object-cover" src="{{ property.photos.first.image.url }}">
+                    {% else %}
+                        <img class="w-full h-64 object-cover" src="{% static 'customer/img/property-placeholder.jpg' %}">
+                    {% endif %}
+                    <div class="absolute bottom-0 left-0 bg-white/90 text-green-600 font-semibold px-3 py-1 rounded-tr-lg">
+                        {{ property.property_type|title }}
+                    </div>
+                </a>
+                <div class="p-4 flex flex-col flex-grow">
+                    <h5 class="text-green-600 font-semibold mb-2">TZS {{ property.bookingpropertypricing.base_price_per_night|intcomma }}/Night</h5>
+                    <a href="{% url 'booking_property_detail' property.id %}" class="text-lg font-semibold mb-2 hover:text-green-600">{{ property.property_name }}</a>
+                    <p class="text-gray-600 mb-4"><i class="fa fa-map-marker-alt text-green-600 mr-1"></i>{{ property.region }}</p>
+                    <a href="{% url 'booking_property_detail' property.id %}" class="mt-auto bg-[#1591bc] text-white text-center py-2 rounded-lg hover:bg-[#1591bc] font-medium">Check Availability</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {# Car Rentals #}
+        {% if car_results %}
+        <h3 class="text-2xl font-semibold mt-12 mb-6">Car Rentals</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for car in car_results %}
+            <div class="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+                {% if car.photos.first %}
+                    <img class="w-full h-64 object-cover" src="{{ car.photos.first.image.url }}">
+                {% else %}
+                    <img class="w-full h-64 object-cover" src="{% static 'customer/img/car-placeholder.jpg' %}">
+                {% endif %}
+                <div class="p-4 flex flex-col flex-grow">
+                    <h5 class="text-green-600 font-semibold mb-2">{{ car.car_name }}</h5>
+                    <p class="text-gray-600 mb-4">{{ car.get_car_type_display }}</p>
+                    <a href="{% url 'book_car' car.id %}" class="mt-auto bg-[#1591bc] text-white text-center py-2 rounded-lg hover:bg-[#1591bc] font-medium">Book Now</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
     </div>
     <!-- Property List End -->
 
@@ -158,27 +134,5 @@
     {% include 'customer/footer.html' %}
     <!-- Footer End -->
 
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-
 </div>
-
-<style>
-.property-item img {
-    height: 260px;        
-    width: 100%;
-    object-fit: cover;    
-}
-.property-item {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-.property-item .p-4 {
-    flex-grow: 1; 
-}
-</style>
-<!-- Google Fonts: Montserrat with 300, 400, 700 -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-
 {% endblock %}

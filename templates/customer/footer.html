@@ -1,74 +1,156 @@
 {% load static %}
 
-<div class="container-fluid text-white-50 footer pt-5  wow fadeIn" data-wow-delay="0.1s" style=" background-color: #174376;">
-    <div class="container py-5">
-        <div class="row g-5">
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4">Get In Touch</h5>
-                <p class="mb-2" style="color: white;"><i class="fa fa-map-marker-alt me-3" style="color: white;"></i>123 Street, Dar es Salaam, Tanzania</p>
-                <p class="mb-2" style="color: white;"><i class="fa fa-phone-alt me-3" style="color: white;"></i>+255 745 67890</p>
-                <p class="mb-2" style="color: white;"><i class="fa fa-envelope me-3" style="color: white;"></i>staytanzania@gmail.com.com</p>
-                <div class="d-flex pt-2">
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4" style="color: white;">Quick Links</h5>
-                <a class="btn btn-link " href="" style="color: white;">About Us</a>
-                <a class="btn btn-link " href="" style="color: white;">Contact Us</a>
-                <a class="btn btn-link " href="" style="color: white;">Our Services</a>
-                <a class="btn btn-link " href="" style="color: white;">Privacy Policy</a>
-                <a class="btn btn-link " href="" style="color: white;">Terms & Condition</a>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4">Photo Gallery</h5>
-                <div class="row g-2 pt-2">
-                    <div class="col-4">
-                        <img class="img-fluid rounded bg-light p-1" src="{% static 'customer/img/property-1.jpg' %}" alt="">
-                    </div>
-                    <div class="col-4">
-                        <img class="img-fluid rounded bg-light p-1" src="{% static 'customer/img/property-2.jpg' %}" alt="">
-                    </div>
-                    <div class="col-4">
-                        <img class="img-fluid rounded bg-light p-1" src="{% static 'customer/img/property-3.jpg' %}" alt="">
-                    </div>
-                    <div class="col-4">
-                        <img class="img-fluid rounded bg-light p-1" src="{% static 'customer/img/property-4.jpg' %}" alt="">
-                    </div>
-                    <div class="col-4">
-                        <img class="img-fluid rounded bg-light p-1" src="{% static 'customer/img/property-5.jpg' %}" alt="">
-                    </div>
-                    <div class="col-4">
-                        <img class="img-fluid rounded bg-light p-1" src="{% static 'customer/img/property-6.jpg' %}" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4" style="color: white;">Newsletter</h5>
-                <p style="color: white;">Subscribe to get latest property listings and updates directly to your inbox.</p>
-                <div class="position-relative mx-auto" style="max-width: 400px;">
-                    <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5 text-white" type="text" placeholder="Your email" style="color: white;">
-                    <button type="button" class="btn btn-light py-2 position-absolute top-0 end-0 mt-2 me-2" style="color: #174376; ">Sign Up</button>
-                </div>
-            </div>
+<footer class="text-white pt-12" style="background-color:#1591bc;">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-10">
+
+      <!-- ABOUT -->
+      <div>
+        <h5 class="text-lg font-semibold mb-4">About</h5>
+
+
+        <ul class="space-y-2 text-sm">
+          <li><a href="{%url 'about-stays' %}" class="hover:underline">About Stays Tanzania</a></li>
+          <li><a href="#" class="hover:underline">How we work</a></li>
+          <li><a href="#" class="hover:underline">Sustainability</a></li>
+          <li><a href="#" class="hover:underline">Careers</a></li>
+          <li><a href="{%url 'mission' %}" class="hover:underline">Our Mission</a></li>
+          <li><a href="#" class="hover:underline">Corporate contact</a></li>
+          <li><a href="{% url 'events-list' %}" class="hover:underline">News & Events</a></li>
+        </ul>
+      </div>
+
+
+      <!-- SUPPORT -->
+      <div>
+        <h5 class="text-lg font-semibold mb-4">Support</h5>
+
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Help Center</a></li>
+          <li><a href="#" class="hover:underline">Contact Us</a></li>
+          <li><a href="#" class="hover:underline">Manage your trips</a></li>
+          <li><a href="#" class="hover:underline">Booking Support</a></li>
+        </ul>
+
+        <div class="mt-4 text-sm space-y-2">
+          <p class="flex items-center">
+            <i class="fa fa-map-marker-alt mr-2"></i>Dar es Salaam, Tanzania
+          </p>
+          <p class="flex items-center">
+            <i class="fa fa-phone-alt mr-2"></i>+255 745 67890
+          </p>
+          <p class="flex items-center">
+            <i class="fa fa-envelope mr-2"></i>staytanzania@gmail.com
+          </p>
         </div>
-    </div>
-    <div class="container">
-        <div class="copyright">
-            <div class="row">           
-                
-                <div class="col-md-6 text-center text-md-end">
-                    <div class="footer-menu">
-                        <a href="" class="text-white">Home</a>
-                        <a href="" class="text-white">Cookies</a>
-                        <a href="" class="text-white">Help</a>
-                        <a href="" class="text-white">FQAs</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </div>
+
+
+     <!-- SOCIAL MEDIA -->
+<div>
+  <h5 class="text-lg font-semibold mb-4">Follow Us</h5>
+
+  <div class="flex space-x-3 mt-3">
+
+    <a href="https://www.instagram.com/stays_shoppingtz?igsh=aWE3Z3VvdWw3MHh5&utm_source=qr"
+       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+      <i class="fab fa-instagram"></i>
+    </a>
+
+    <a href="https://www.facebook.com/share/1DcaQ8x6pE/?mibextid=wwXIfr"
+       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+      <i class="fab fa-facebook"></i>
+    </a>
+
+    <a href="https://www.linkedin.com/in/frank-nestory-699102355"
+       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+      <i class="fab fa-linkedin-in"></i>
+    </a>
+
+    <a href="https://x.com/stays_tz?s=21"
+       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+      <i class="fab fa-twitter"></i>
+    </a>
+
+    <a href="https://youtube.com/@stays_tz"
+       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+      <i class="fab fa-youtube"></i>
+    </a>
+
+  </div>
+
+  <!-- SUBSCRIBE FORM -->
+  <div class="mt-6">
+    <p class="text-sm mb-2">Subscribe to our newsletter</p>
+
+    <form method="POST" action="#">
+      {% csrf_token %}
+
+      <input type="text"
+             name="name"
+             placeholder="Your Name"
+             class="w-full mb-2 px-3 py-2 rounded text-gray-800 text-sm focus:outline-none">
+
+      <input type="email"
+             name="email"
+             placeholder="Your Email"
+             class="w-full mb-3 px-3 py-2 rounded text-gray-800 text-sm focus:outline-none">
+
+      <button type="submit"
+              class="w-full bg-[#ffc200] text-white font-semibold py-2 rounded hover:bg-[#ffc200] transition">
+        Subscribe
+      </button>
+
+    </form>
+  </div>
+
 </div>
+
+
+      <!-- PARTNERS -->
+      <div>
+        <h5 class="text-lg font-semibold mb-4">Partners</h5>
+
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:underline">Property Owners</a></li>
+          <li><a href="#" class="hover:underline">Car Rental Partners</a></li>
+          <li><a href="#" class="hover:underline">Travel Agencies</a></li>
+          <li><a href="#" class="hover:underline">Become a Partner</a></li>
+        </ul>
+      </div>
+
+
+      <!-- TERMS -->
+      <div>
+        <h5 class="text-lg font-semibold mb-4">Terms & Conditions</h5>
+
+        <ul class="space-y-2 text-sm">
+          <li><a href="{%url 'privacy'%}" class="hover:underline">Privacy Policy</a></li>
+          <li><a href="{%url 'terms'%}" class="hover:underline">Terms of Service</a></li>
+          <li><a href="{%url 'cookies'%}" class="hover:underline">Cookies Policy</a></li>
+          <li><a href="{%url 'security_policy' %}" class="hover:underline">Security Policy</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER BOTTOM -->
+    <div class="mt-10 border-t border-white/30 pt-5 text-sm flex flex-col md:flex-row justify-between items-center">
+
+      <p class="text-center md:text-left">
+        &copy; 2026 Stay Tanzania. All rights reserved.
+      </p>
+
+      <div class="flex space-x-4 mt-2 md:mt-0">
+        <a href="{% url 'index' %}" class="hover:underline">Home</a>
+        <a href="#" class="hover:underline">Cookies</a>
+        <a href="#" class="hover:underline">Help</a>
+        <a href="#" class="hover:underline">FAQs</a>
+      </div>
+
+    </div>
+
+  </div>
+</footer>

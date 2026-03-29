@@ -1,0 +1,143 @@
+{% extends 'customers/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+{% include 'customers/nav.html' %}
+<div class="bg-white min-h-screen">
+
+    <!-- Navbar -->
+
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto pt-24 md:pt-28 pb-6 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+            <!-- LEFT: IMAGE CAROUSEL -->
+            <div x-data="{ current: 0, slides: {{ car.photos.all|length }} }" class="relative w-full overflow-hidden rounded-lg">
+
+                <!-- Slides -->
+                {% if car.photos.all %}
+                    {% for photo in car.photos.all %}
+                        <img
+                            x-show="current === {{ forloop.counter0 }}"
+                            src="{{ photo.image.url }}"
+                            class="w-full h-[420px] object-cover rounded-lg transition-all duration-500"
+                            alt="Car image {{ forloop.counter }}">
+                    {% endfor %}
+                {% else %}
+                    <img src="{% static 'images/no-image.png' %}" class="w-full h-[420px] object-cover rounded-lg" alt="No image available">
+                {% endif %}
+
+                <!-- Previous Button -->
+                <button @click="current = (current === 0 ? slides - 1 : current - 1)"
+                        class="absolute top-1/2 -translate-y-1/2 left-2 bg-gray-100 rounded-full p-2 text-gray-600 hover:bg-gray-200">
+                    &#10094;
+                </button>
+
+                <!-- Next Button -->
+                <button @click="current = (current === slides - 1 ? 0 : current + 1)"
+                        class="absolute top-1/2 -translate-y-1/2 right-2 bg-gray-100 rounded-full p-2 text-gray-600 hover:bg-gray-200">
+                    &#10095;
+                </button>
+
+                <!-- Indicators -->
+                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+                    {% for photo in car.photos.all %}
+                        <span @click="current = {{ forloop.counter0 }}"
+                              :class="current === {{ forloop.counter0 }} ? 'bg-blue-600' : 'bg-gray-400'"
+                              class="w-3 h-3 rounded-full cursor-pointer"></span>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- RIGHT: FORM CARD -->
+            <div class="w-full p-6 border border-gray-300 rounded-lg bg-transparent shadow-none">
+
+                <h3 class="text-center text-xl font-semibold mb-4">{{ car.car_name|title }}</h3>
+
+                <!-- Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="text-center mt-4 p-2 rounded-md {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %} django-message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Price per day -->
+                {% if car.carrentalpricing %}
+                    <div class="text-center bg-green-100 text-green-700 py-2 px-4 rounded-md mt-2">
+                        Price per day:
+                        <strong>{{ car.carrentalpricing.base_price_per_day|intcomma }} {{ car.carrentalpricing.currency }}</strong>
+                    </div>
+                {% endif %}
+
+                <form method="POST" class="mt-4 space-y-4">
+                    {% csrf_token %}
+
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Customer Phone Number</label>
+                        {{ form.customer_phone_number|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+                    </div>
+
+                    <!-- Pickup Date + Time -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
+                            {{ form.pickup_date|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
+                            {{ form.pickup_time|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+                        </div>
+                    </div>
+
+                    <!-- Pickup + Drop-off Location -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
+                            {{ form.pickup_location|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Drop-off Location</label>
+                            {{ form.dropoff_location|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
+                        </div>
+                    </div>
+
+                    <!-- Errors -->
+                    {% if form.errors %}
+                        <div class="bg-red-100 text-red-700 p-2 rounded-md mt-3">
+                            {{ form.errors }}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="w-full bg-[#1591bc] hover:bg-[#1591bc] text-white font-medium py-2 mt-3 rounded-lg">
+                        Complete Booking
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% include 'customer/footer.html' %}
+
+<!-- Alpine.js for carousel -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<script>
+    setTimeout(function () {
+        document.querySelectorAll(".django-message").forEach(function (msg) {
+            msg.style.transition = "opacity 0.6s ease";
+            msg.style.opacity = "0";
+            setTimeout(function () { msg.remove(); }, 600);
+        });
+    }, 3000);
+</script>
+{% endblock %}

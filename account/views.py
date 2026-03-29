@@ -14,7 +14,7 @@ def home(request):
         "Rukwa","Ruvuma","Shinyanga","Simiyu","Singida","Songwe","Tabora",
         "Tanga","Zanzibar Central/South","Zanzibar North","Zanzibar Urban/West"
     ]
-    return render(request, 'customer/home.html', {"regions": regions})
+    return render(request, 'customers/home.html', {"regions": regions})
 
 
 def about(request):
@@ -120,24 +120,39 @@ def verify_email(request, username):
 def resend_otp(request):
     if request.method == 'POST':
         user_email = request.POST["otp_email"]
-        
+
         if get_user_model().objects.filter(email=user_email).exists():
             user = get_user_model().objects.get(email=user_email)
             otp = OtpToken.objects.create(user=user, otp_expires_at=timezone.now() + timezone.timedelta(minutes=5))
-            
-            
+
+
             # email variables
             subject="Email Verification"
             message = f"""
-                                Hi {user.username}, here is your OTP {otp.otp_code} 
-                                it expires in 5 minute, use the url below to redirect back to the website
-                                http://127.0.0.1:8000/verify-email/{user.username}
-                                
+                               Hi {user.username},
+
+Welcome to StaySTZ!
+
+Your One-Time Password (OTP) is: **{otp.otp_code}**
+
+This OTP will expire in **5 minutes**, so please make sure to use it soon.
+
+To verify your email and complete your account setup, click the link below or copy it into your browser:
+
+https://staystz.pythonanywhere.com/verify-email/{user.username}
+
+If you did not request this verification, please ignore this email. No changes have been made to your account.
+
+Thank you for joining StaySTZ! We're excited to have you on board.
+
+Best regards,
+**The StaySTZ Team**
+
                                 """
             sender = "clintonmatics@gmail.com"
             receiver = [user.email, ]
-        
-        
+
+
             # send email
             send_mail(
                     subject,
@@ -146,15 +161,15 @@ def resend_otp(request):
                     receiver,
                     fail_silently=False,
                 )
-            
+
             messages.success(request, "A new OTP has been sent to your email-address")
             return redirect("verify-email", username=user.username)
 
         else:
             messages.warning(request, "This email dosen't exist in the database")
             return redirect("resend-otp")
-        
-           
+
+
     context = {}
     return render(request, "customer/resend_otp.html", context)
 
@@ -163,21 +178,21 @@ def resend_otp(request):
 
 def signin(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['email']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        
-        if user is not None:    
+
+        if user is not None:
             login(request, user)
             messages.success(request, f"Hi {request.user.username}, you are now logged-in")
             return redirect("index")
-        
+
         else:
             messages.warning(request, "Invalid credentials")
             return redirect("signin")
-        
+
     return render(request, "customer/login.html")
-    
+
 
 
 

@@ -1,144 +1,116 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 
-
-
 {% block content %}
- <div class="container-fluid bg-white p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
 
+{% include 'customers/nav.html' %}
 
-        <!-- Navbar Start -->
-        {% include 'customer/nav.html' %}
+<!-- PAGE WRAPPER (fix navbar overlap if navbar is fixed) -->
+<div class="pt-24"></div>
 
-        <!-- Navbar End -->
+<section class="bg-white py-12">
+<div class="max-w-6xl mx-auto px-6">
 
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
 
-        <!-- Header Start -->
-        <div class="container-fluid header bg-white p-0">
-            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-                <div class="col-md-6 p-5 mt-lg-5">
-                    <h1 class="display-5 animated fadeIn mb-4"><span class="text-primary">View your Profile</span></h1> 
-                        <nav aria-label="breadcrumb animated fadeIn">
-                        <ol class="breadcrumb text-uppercase">
-                            <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                            <li class="breadcrumb-item text-body active" aria-current="page">Profile</li>
-                        </ol>
-                    </nav>
-                </div>
-                <div class="col-md-6 animated fadeIn">
-                   <img class="img-fluid" src="{% static 'customer/img/header.jpg' %}" alt="">
-                </div>
-            </div>
-        </div>
+<!-- LEFT PROFILE SIDEBAR -->
+<div>
 
-    <!-- Banner -->
-    
+<div class="flex flex-col items-center md:items-start">
 
-    <div class="container mt-n5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+<!-- Avatar -->
+<div class="w-40 h-40 rounded-full bg-gray-200 flex items-center justify-center text-5xl font-semibold text-gray-700">
+{{ user.first_name|default:user.username|slice:":1"|upper }}
+</div>
 
-                <!-- Profile Card -->
-<div class="card shadow-lg border-0" 
-     style="border-radius: 15px; margin-top: -80px; background:#174376; color:white;">
-                    
-    <div class="card-body p-4">
+<!-- Username -->
+{% if user.username %}
+<h2 class="mt-4 text-2xl font-semibold text-gray-900">
+{{ user.username }}
+</h2>
+{% endif %}
 
-        <div class="text-center mb-4">
-            <div style="
-                width: 120px;
-                height: 120px;
-                background-color: rgba(255,255,255,0.2);
-                border-radius: 50%;
-                margin: 0 auto;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 45px;
-                font-weight: bold;
-                color: white;
-            ">
-                {{ user.first_name|default:"?"|slice:":1" }}
-            </div>
+<!-- Full Name -->
+{% if user.first_name or user.last_name %}
+<p class="text-gray-600 text-lg">
+{{ user.first_name }} {{ user.last_name }}
+</p>
+{% endif %}
 
-            <h3 class="mt-3" style="color:white;">
-                {{ user.get_full_name|default:"Unnamed User" }}
-            </h3>
+<!-- Join Date -->
+{% if user.date_joined %}
+<p class="text-sm text-gray-500 mt-2">
+Joined {{ user.date_joined|date:"F Y" }}
+</p>
+{% endif %}
 
-           <p style="color:white;"><Strong>User Type : </Strong> 
-                {{ user.user_type|title }}
-            </p>
-        </div>
+<!-- Change Password Button -->
+<
 
-        <hr style="border-color: rgba(255,255,255,0.4);">
-
-        <!-- Profile Details -->
-        <div class="row g-3">
-
-            <div class="col-md-6">
-                <strong>Email:</strong><br>
-                <span>{{ user.email }}</span>
-            </div>
-
-            <div class="col-md-6">
-                <strong>Phone:</strong><br>
-                <span>{{ user.phone_number|default:"—" }}</span>
-            </div>
-
-            <div class="col-md-6">
-                <strong>Region:</strong><br>
-                <span>{{ user.location|default:"Not set" }}</span>
-            </div>
-
-            <div class="col-md-12 mt-4">
-                <strong>Member Since:</strong><br>
-                <span>{{ user.date_joined|date:"F j, Y" }}</span>
-            </div>
-
-        </div>
-
-        <!-- Buttons in one row, small width -->
-        <div class="mt-4 d-flex gap-2">
-            <a href="{% url 'change_password' %}" 
-               class="btn btn-light"
-               style="flex:0 0 auto; white-space:nowrap;">
-                Change Password
-            </a>
-
-            
-        </div>
-
-    </div>
+</div>
 
 </div>
 
 
-                <br><br>
-            </div>
-        </div>
-    </div>
+<!-- RIGHT PROFILE DETAILS -->
+<div class="md:col-span-2">
 
+<div class="border border-gray-200 rounded-lg">
 
+<div class="border-b px-6 py-4">
+<h3 class="text-lg font-semibold text-gray-900">
+Profile Information
+</h3>
+</div>
 
+<div class="p-6 space-y-6">
 
+{% if user.first_name %}
+<div>
+<p class="text-sm text-gray-500">First Name</p>
+<p class="text-gray-900 font-medium">{{ user.first_name }}</p>
+</div>
+{% endif %}
 
-       
-        <!-- Footer Start -->
-           {% include 'customer/footer.html' %}
-        <!-- Footer End -->
+{% if user.last_name %}
+<div>
+<p class="text-sm text-gray-500">Last Name</p>
+<p class="text-gray-900 font-medium">{{ user.last_name }}</p>
+</div>
+{% endif %}
 
-     
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
+{% if user.email %}
+<div>
+<p class="text-sm text-gray-500">Email</p>
+<p class="text-gray-900 font-medium">{{ user.email }}</p>
+</div>
+{% endif %}
 
+{% if user.phone_number %}
+<div>
+<p class="text-sm text-gray-500">Phone</p>
+<p class="text-gray-900 font-medium">{{ user.phone_number }}</p>
+</div>
+{% endif %}
+
+{% if user.location %}
+<div>
+<p class="text-sm text-gray-500">Location</p>
+<p class="text-gray-900 font-medium">{{ user.location }}</p>
+</div>
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+</section>
+
+{% include 'customer/footer.html' %}
 
 {% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+   {% include 'customers/nav.html' %}
+
+    <!-- SPACE after navbar -->
+    <div class="h-24"></div>
+
+<div class="min-h-screen bg-gray-50">
+
+    <!-- Navbar -->
+ 
+
+    <!-- Main Section -->
+    <div class="max-w-7xl mx-auto px-6 pb-16">
+
+        <!-- Title -->
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <h1 class="text-3xl md:text-4xl font-semibold text-gray-800">
+                Track Your Bookings
+            </h1>
+            <p class="mt-4 text-gray-500 leading-relaxed">
+                Keep track of all your reservations in one place. Whether it's hotels, lodges,
+                guest houses, apartments, residences, or car rentals — stay updated with
+                booking status, locations, and schedules effortlessly.
+            </p>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            <!-- BOOKINGS -->
+            <a href="{% url 'my_bookings' %}" class="group">
+                <div class="border border-gray-300 rounded-xl p-8 text-center 
+                            hover:border-[#174376] hover:-translate-y-1 transition duration-300">
+
+                    <div class="text-[#174376] text-5xl mb-4 group-hover:scale-110 transition">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Bookings</h4>
+
+                    <p class="text-gray-500 text-sm">
+                        Track all your bookings for hotels, lodges, and guest houses.
+                    </p>
+
+                    <div class="mt-5 text-sm font-medium text-[#174376] group-hover:underline">
+                        View your bookings →
+                    </div>
+                </div>
+            </a>
+
+            <!-- RESIDENCES -->
+            <a href="" class="group">
+                <div class="border border-gray-300 rounded-xl p-8 text-center 
+                            hover:border-[#174376] hover:-translate-y-1 transition duration-300">
+
+                    <div class="text-[#174376] text-5xl mb-4 group-hover:scale-110 transition">
+                        <i class="bi bi-house-door"></i>
+                    </div>
+
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Residences</h4>
+
+                    <p class="text-gray-500 text-sm">
+                        Track apartments, houses, farms, or land bookings easily.
+                    </p>
+
+                    <div class="mt-5 text-sm font-medium text-[#174376] group-hover:underline">
+                        View your bookings →
+                    </div>
+                </div>
+            </a>
+
+            <!-- CAR RENTAL -->
+            <a href="{% url 'my_bookings-car' %}" class="group">
+                <div class="border border-gray-300 rounded-xl p-8 text-center 
+                            hover:border-[#174376] hover:-translate-y-1 transition duration-300">
+
+                    <div class="text-[#174376] text-5xl mb-4 group-hover:scale-110 transition">
+                        <i class="bi bi-car-front"></i>
+                    </div>
+
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Car Rental</h4>
+
+                    <p class="text-gray-500 text-sm">
+                        Track all your car rentals with pickup and drop-off details.
+                    </p>
+
+                    <div class="mt-5 text-sm font-medium text-[#174376] group-hover:underline">
+                        View your bookings →
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</div>
+
+<!-- Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+{% endblock %}

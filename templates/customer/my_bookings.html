@@ -1,98 +1,134 @@
-{% extends "customer/base.html" %}
+{% extends "customers/base.html" %}
 {% load static %}
 {% load humanize %}
 
 {% block content %}
-<!-- Spinner -->
-<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
+
+
 
 <!-- Navbar -->
-{% include 'customer/nav.html' %}
+{% include 'customers/nav.html' %}
 
 <!-- Page Heading -->
-<div class="container mt-5">
-    <h2 style="font-family: 'Amazon Ember', Arial, sans-serif; font-weight: 700; font-size: 2.25rem; color: #111; margin-bottom: 0.5rem;">
-        <i class="bi bi-box-seam" style="font-size: 2.25rem; vertical-align: -3px; margin-right: 0.4rem;"></i>
+<div class="max-w-7xl mx-auto px-4 pt-24">
+
+    <h2 class="flex items-center text-3xl font-bold text-gray-900 mb-2"
+        style="font-family: 'Amazon Ember', Arial, sans-serif;">
+        <i class="bi bi-box-seam text-3xl mr-2"></i>
         My Bookings
     </h2>
-    <p style="font-family: Arial, sans-serif; font-size: 1.05rem; color: #555; margin-bottom: 1.8rem;">
+
+    <p class="text-gray-600 mb-8 text-base">
         Track your bookings and check the status of each stay.
     </p>
 
     {% if bookings %}
         {% for booking in bookings %}
-        <div class="card mb-4 shadow-sm" style="border-radius: 8px;">
+
+        <div class="bg-white rounded-lg shadow mb-6 overflow-hidden">
+
             <!-- Card Header -->
-            <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #f8f9fa;">
-                <div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between bg-gray-50 px-6 py-4 text-sm">
+
+                <div class="mb-2 md:mb-0">
                     <strong>Booking ID:</strong> ST-B-{{ booking.id|stringformat:"04d" }}
                 </div>
-                <div>
+
+                <div class="mb-2 md:mb-0">
                     <strong>Status:</strong>
+
                     {% if booking.status == 'pending' %}
-                        <span class="badge bg-warning text-dark">{{ booking.status|title }}</span>
+                        <span class="ml-1 px-2 py-1 text-xs font-semibold bg-yellow-200 text-yellow-800 rounded">
+                            {{ booking.status|title }}
+                        </span>
                     {% elif booking.status == 'confirmed' %}
-                        <span class="badge bg-success">{{ booking.status|title }}</span>
+                        <span class="ml-1 px-2 py-1 text-xs font-semibold bg-green-200 text-green-800 rounded">
+                            {{ booking.status|title }}
+                        </span>
                     {% elif booking.status == 'cancelled' %}
-                        <span class="badge bg-danger">{{ booking.status|title }}</span>
+                        <span class="ml-1 px-2 py-1 text-xs font-semibold bg-red-200 text-red-800 rounded">
+                            {{ booking.status|title }}
+                        </span>
                     {% elif booking.status == 'completed' %}
-                        <span class="badge bg-primary">{{ booking.status|title }}</span>
+                        <span class="ml-1 px-2 py-1 text-xs font-semibold bg-blue-200 text-blue-800 rounded">
+                            {{ booking.status|title }}
+                        </span>
                     {% else %}
-                        <span class="badge bg-secondary">{{ booking.status|title }}</span>
+                        <span class="ml-1 px-2 py-1 text-xs font-semibold bg-gray-200 text-gray-800 rounded">
+                            {{ booking.status|title }}
+                        </span>
                     {% endif %}
                 </div>
+
                 <div>
-                    <strong>Booking Date:</strong> <small>{{ booking.created_at|date:"D, d M Y H:i" }}</small>
+                    <strong>Booking Date:</strong>
+                    <small>{{ booking.created_at|date:"D, d M Y H:i" }}</small>
                 </div>
+
             </div>
 
             <!-- Card Body -->
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <!-- Left: Property Image -->
-                    <div class="col-md-2 text-center">
+            <div class="p-6">
+                <div class="grid md:grid-cols-12 gap-6 items-center">
+
+                    <!-- Property Image -->
+                    <div class="md:col-span-2 flex justify-center">
                         {% if booking.property.photos.first %}
-                            <img src="{{ booking.property.photos.first.image.url }}" alt="{{ booking.property.property_name }}" class="img-fluid" style="max-height: 100px; border-radius: 5px;">
+                            <img src="{{ booking.property.photos.first.image.url }}"
+                                 alt="{{ booking.property.property_name }}"
+                                 class="max-h-24 rounded">
                         {% else %}
-                            <img src="{% static 'images/no-image.png' %}" class="img-fluid" style="max-height: 100px; border-radius: 5px;">
+                            <img src="{% static 'images/no-image.png' %}"
+                                 class="max-h-24 rounded">
                         {% endif %}
                     </div>
 
-                    <!-- Middle: Booking Details -->
-                    <div class="col-md-7">
-                        <h5>{{ booking.property.property_name }}</h5>
+                    <!-- Booking Details -->
+                    <div class="md:col-span-7 text-gray-700 text-sm space-y-1">
+
+                        <h5 class="text-lg font-semibold text-gray-900 mb-2">
+                            {{ booking.property.property_name }}
+                        </h5>
+
                         <p><strong>Room Type:</strong> {{ booking.room_type }}</p>
                         <p><strong>Check-in:</strong> {{ booking.check_in|date:"M d, Y" }}</p>
                         <p><strong>Check-out:</strong> {{ booking.check_out|date:"M d, Y" }}</p>
                         <p><strong>Nights:</strong> {{ booking.nights }}</p>
                         <p><strong>Guests:</strong> {{ booking.guests }}</p>
+
                     </div>
 
-                    <!-- Right: Total & Action -->
-                    <div class="col-md-3 text-end">
-                        <p><strong>Total Cost:</strong> {{ booking.total_price|intcomma }} TZS</p>
-                        <a href="" ></a>
+                    <!-- Total & Action -->
+                    <div class="md:col-span-3 md:text-right text-gray-800">
+
+                        <p class="font-semibold mb-2">
+                            Total Cost: {{ booking.total_price|intcomma }} TZS
+                        </p>
+
+                        <a href=""
+                           class="inline-block mt-2 bg-blue-800 text-white px-4 py-2 rounded-lg hover:bg-blue-900 transition">
+                           View Details
+                        </a>
+
                     </div>
+
                 </div>
             </div>
+
         </div>
+
         {% endfor %}
     {% else %}
-        <div class="alert alert-info">
-            You have no bookings yet. <a href="{% url 'booking_properties' 'all' %}">Book a stay now!</a>
-        </div>
-    {% endif %}
-</div>
 
-<!-- Styles -->
-<style>
-.card-body p { margin-bottom: 5px; }
-.badge { font-size: 0.9rem; padding: 0.4em 0.7em; }
-.card-header { font-size: 0.95rem; }
-</style>
+        <div class="bg-blue-100 text-blue-800 px-6 py-4 rounded">
+            You have no bookings yet.
+            <a href="{% url 'booking_properties' 'all' %}" class="font-semibold underline">
+                Book a stay now!
+            </a>
+        </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

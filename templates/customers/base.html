@@ -1,0 +1,123 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Staystz.com</title>
+<link rel="icon" href="{% static 'customer/img/STAYS SVG Fav.svg' %}" type="image/x-icon" />
+
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<!-- Flowbite -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet"/>
+
+<!-- 🔥 STRONG GOOGLE TRANSLATE FIX -->
+<style>
+
+/* 🚫 Hide ALL Google Translate UI */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.goog-te-gadget,
+.goog-te-gadget-simple,
+.goog-te-gadget-icon,
+.goog-tooltip,
+.goog-text-highlight,
+.goog-logo-link {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    opacity: 0 !important;
+}
+
+/* 🚫 Hide iframe injected by Google */
+iframe.goog-te-banner-frame {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden !important;
+}
+
+/* 🚫 Prevent body shifting */
+body {
+    top: 0px !important;
+    position: static !important;
+}
+
+/* Optional spacing for fixed navbar */
+.navbar-spacing {
+    padding-top: 4rem;
+}
+
+</style>
+
+</head>
+
+<body class="bg-white navbar-spacing">
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Hidden Google Translate -->
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <!-- Google Translate Init -->
+    <script>
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,sw',
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
+    </script>
+
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- 🔥 STRONG FIX SCRIPT -->
+    <script>
+
+    function translateTo(lang) {
+        const interval = setInterval(() => {
+            const select = document.querySelector(".goog-te-combo");
+            if (select) {
+                select.value = lang;
+                select.dispatchEvent(new Event("change"));
+                clearInterval(interval);
+            }
+        }, 300);
+    }
+
+    /* 🚫 FORCE REMOVE GOOGLE TOP BAR */
+    function removeGoogleBar() {
+        const iframe = document.querySelector('.goog-te-banner-frame');
+        if (iframe) {
+            iframe.remove();
+        }
+
+        const banner = document.querySelector('.goog-te-banner-frame.skiptranslate');
+        if (banner) {
+            banner.remove();
+        }
+
+        document.body.style.top = "0px";
+    }
+
+    /* Run aggressively */
+    setInterval(removeGoogleBar, 30);
+
+    /* Also run on load */
+    window.addEventListener('load', removeGoogleBar);
+
+    </script>
+
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+</body>
+</html>

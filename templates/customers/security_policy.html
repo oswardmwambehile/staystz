@@ -1,0 +1,127 @@
+{% extends "customers/base.html" %}
+{% block content %}
+{% include "customers/nav.html" %}
+
+<section class="py-10">
+  <div class="max-w-4xl mx-auto px-4 text-gray-700 text-lg leading-relaxed">
+
+    <h1 class="text-3xl font-bold text-blue-900 mb-6">
+      Security Policy
+    </h1>
+
+    <div class="shadow rounded-lg p-6 space-y-6">
+
+      <p>
+        We are committed to protecting the integrity, confidentiality, and availability of our platform and user data. 
+        This Security Policy explains the technical and organizational measures we implement to safeguard information 
+        and ensure a secure digital environment for all users. We continuously improve our systems to defend against 
+        evolving security threats and vulnerabilities.
+      </p>
+
+      <!-- Data Protection -->
+      <h2 class="text-xl font-semibold text-gray-900">Data Protection and Privacy</h2>
+      <p>
+        Protecting user data is one of our highest priorities. We apply strict controls to prevent unauthorized access, 
+        disclosure, or misuse of personal and system data. All sensitive information is handled in accordance with 
+        recognized security standards and best practices.
+      </p>
+
+      <ul class="list-disc pl-6">
+        <li>All data transmitted between users and our platform is encrypted using secure HTTPS/SSL protocols.</li>
+        <li>Sensitive data is stored securely and protected against unauthorized access.</li>
+        <li>Access to user data is restricted to authorized personnel only.</li>
+        <li>We regularly review and update our data handling procedures to maintain high security standards.</li>
+      </ul>
+
+      <!-- Account Security -->
+      <h2 class="text-xl font-semibold text-gray-900">Account and Authentication Security</h2>
+      <p>
+        We implement secure authentication systems to protect user accounts from unauthorized access. Users also play 
+        an important role in maintaining the security of their accounts.
+      </p>
+
+      <ul class="list-disc pl-6">
+        <li>Strong password policies are encouraged for all user accounts.</li>
+        <li>User authentication systems are designed to prevent unauthorized access attempts.</li>
+        <li>We monitor login activities and may take action if suspicious behavior is detected.</li>
+        <li>Users are responsible for maintaining the confidentiality of their login credentials.</li>
+      </ul>
+
+      <!-- System Security -->
+      <h2 class="text-xl font-semibold text-gray-900">System Security Measures</h2>
+      <p>
+        Our platform is built with multiple layers of protection to prevent, detect, and respond to security threats. 
+        We use modern technologies and follow industry best practices to secure our systems.
+      </p>
+
+      <ul class="list-disc pl-6">
+        <li>Regular updates and security patches are applied to all systems and software.</li>
+        <li>Protection mechanisms are in place against common web vulnerabilities such as SQL Injection and Cross-Site Scripting (XSS).</li>
+        <li>Firewalls and server-level protections are used to prevent unauthorized access.</li>
+        <li>Continuous monitoring and logging help us detect and respond to potential threats quickly.</li>
+      </ul>
+
+      <!-- Operational Security -->
+      <h2 class="text-xl font-semibold text-gray-900">Operational Security Practices</h2>
+      <p>
+        We maintain internal procedures and controls to ensure that our operations remain secure and reliable at all times.
+      </p>
+
+      <ul class="list-disc pl-6">
+        <li>Access to systems is granted based on roles and responsibilities.</li>
+        <li>Regular backups are performed to prevent data loss.</li>
+        <li>Security audits and testing are conducted periodically.</li>
+        <li>Only authorized personnel are allowed to manage critical systems.</li>
+      </ul>
+
+      <!-- User Responsibilities -->
+      <h2 class="text-xl font-semibold text-gray-900">User Responsibilities</h2>
+      <p>
+        While we implement strong security measures, users also have a responsibility to maintain a secure environment.
+      </p>
+
+      <ul class="list-disc pl-6">
+        <li>Keep login credentials confidential and secure.</li>
+        <li>Use strong and unique passwords.</li>
+        <li>Log out from accounts when using shared or public devices.</li>
+        <li>Report any suspicious activities or security concerns immediately.</li>
+      </ul>
+
+      <!-- Third Party -->
+      <h2 class="text-xl font-semibold text-gray-900">Third-Party Services</h2>
+      <p>
+        Our platform may integrate with third-party services to enhance functionality. While we carefully select trusted 
+        partners, we do not control their systems and are not responsible for their independent security practices.
+      </p>
+
+      <!-- Incident Response -->
+      <h2 class="text-xl font-semibold text-gray-900">Incident Response</h2>
+      <p>
+        In the event of a security incident, we take immediate action to investigate, contain, and resolve the issue. 
+        We aim to minimize impact and restore normal operations as quickly as possible.
+      </p>
+
+      <ul class="list-disc pl-6">
+        <li>Rapid identification and containment of threats.</li>
+        <li>Investigation and resolution of security incidents.</li>
+        <li>Continuous improvement based on lessons learned.</li>
+      </ul>
+
+      <!-- Updates -->
+      <h2 class="text-xl font-semibold text-gray-900">Policy Updates</h2>
+      <p>
+        This Security Policy may be updated periodically to reflect changes in technology, legal requirements, or our 
+        security practices. Updates will be posted on this page, and continued use of the platform indicates acceptance 
+        of the updated policy.
+      </p>
+
+      <p class="text-sm text-gray-500">
+        Last updated: {{ now|date:"F Y" }}
+      </p>
+
+    </div>
+  </div>
+</section>
+
+{% include "customer/footer.html" %}
+{% endblock %}

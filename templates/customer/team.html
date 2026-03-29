@@ -1,150 +1,34 @@
 {% load static %}
 
-<style>
-/* Fade In Up Animation */
-.fade-in-up {
-    animation: fadeInUp 1.5s ease forwards;
-}
+<!-- Google Font -->
 
-.fade-delay {
-    animation-delay: 0.3s;
-}
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>
+<section class="bg-white pt-24 pb-16">
+  <div class="max-w-7xl mx-auto px-6">
 
-<div class="container-fluid header p-0">
-    <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-        <div class="col-md-6 p-5 mt-lg-5">
-            <br><br><br>
+    <div class="grid md:grid-cols-2 gap-10 items-center">
 
-            <!-- Hero Text Section -->
-            <div>
+      <!-- LEFT CONTENT -->
+      <div>
+        <h3 class="text-xl md:text-2xl font-semibold mb-8">
+          Find a perfect home<br>
+          Where your family can live comfortably
+        </h3>
 
-                <h1 class="animated fadeIn mb-3" style="font-family: 'Montserrat', sans-serif; font-weight: 500; font-size: 1.5rem; line-height: 1.2;">
-                    Find A
-                    
-                        Perfect Home
-                    
-                    
-                        Where Your Family Can Live Comfortably
-                    
-                </h1>
+        <p class="mt-6 text-gray-600 text-base md:text-lg leading-relaxed max-w-xl">
+          Discover your ideal home from our carefully curated selection of residential properties
+          designed for every lifestyle.
+        </p>
+      </div>
 
-                <!-- Description -->
-                <p class="mb-4 fade-in-up fade-delay"
-                   style="
-                   color:#555;
-                   font-weight:400;
-                   font-size:1.1rem;
-                   line-height:1.9;
-                   max-width:750px;
-                   ">
-                    Discover your ideal home from our carefully curated selection of residential properties
-                    designed for every lifestyle. From modern apartments and cozy family houses to luxurious
-                    villas, lodges, and spacious living environments, we help you find a place that truly feels
-                    like home. Our platform makes it easy to explore, compare, and confidently choose properties
-                    that match your needs, preferences, and budget.
-                </p>
+      <!-- RIGHT IMAGE -->
+      <div class="w-full">
+        <img
+          src="{% static 'customer/img/a1.jpg' %}"
+          class="w-full h-[300px] md:h-[400px] object-cover rounded-xl shadow-lg"
+          alt="Property">
+      </div>
 
-            </div>
-
-            <!-- Call to action -->
-            <a href="{% url 'register' %}"
-               class="btn py-3 px-5 fw-bold fade-in-up fade-delay"
-               style="
-               background-color:#174376;
-               color:#fff;
-               border-radius:6px;
-               letter-spacing:1px;
-               box-shadow:0 10px 25px rgba(23,67,118,0.3);
-               transition:0.3s;
-               ">
-                Get Started Now
-            </a>
-        </div>
-
-        <div class="col-md-6 animated fadeIn">
-            <div class="owl-carousel header-carousel">
-                <div class="owl-carousel-item">
-                    <img class="img-fluid" src="{% static 'customer/img/a1.jpg' %}" alt="">
-                </div>
-                <div class="owl-carousel-item">
-                    <img class="img-fluid" src="{% static 'customer/img/a2.jpg' %}" alt="">
-                </div>
-                <div class="owl-carousel-item">
-                    <img class="img-fluid" src="{% static 'customer/img/a3.jpg' %}" alt="">
-                </div>
-                <div class="owl-carousel-item">
-                    <img class="img-fluid" src="{% static 'customer/img/a4.jpg' %}" alt="">
-                </div>
-                <div class="owl-carousel-item">
-                    <img class="img-fluid" src="{% static 'customer/img/a5.jpg' %}" alt="">
-                </div>
-            </div>
-        </div>
     </div>
-</div>
-
-<style>
-/* Spacing fix */
-.header {
-    margin-top: 80px;
-}
-
-/* Carousel height */
-.header-carousel,
-.owl-carousel-item {
-    height: 500px;
-}
-
-/* Force same image size */
-.owl-carousel-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Fade In Animation */
-.fade-in-up {
-    animation: fadeInUp 1.2s ease forwards;
-}
-
-.fade-delay {
-    animation-delay: 0.3s;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Button hover */
-.hero-btn:hover {
-    transform: translateY(-3px);
-    box-shadow:0 15px 30px rgba(23,67,118,0.4);
-}
-
-
-
-
-</style>
-
-<!-- Google Fonts: Montserrat with 300, 400, 700 -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
-
+  </div>
+</section>

@@ -41,12 +41,13 @@
                 <select name="property_type" required>
                     <option value="">Property type</option>
                     <option value="apartment" {% if request.GET.property_type == "apartment" %}selected{% endif %}>Apartment</option>
-                    <option value="house" {% if request.GET.property_type == "house" %}selected{% endif %}>House</option>
+                    <option value="homes" {% if request.GET.property_type == "homes" %}selected{% endif %}>Homes</option>
                     <option value="villa" {% if request.GET.property_type == "villa" %}selected{% endif %}>Villa</option>
                     <option value="lodge" {% if request.GET.property_type == "lodge" %}selected{% endif %}>Lodge</option>
                     <option value="hotel" {% if request.GET.property_type == "hotel" %}selected{% endif %}>Hotel</option>
-                    <option value="office" {% if request.GET.property_type == "office" %}selected{% endif %}>Office</option>
-                    <option value="commercial" {% if request.GET.property_type == "commercial" %}selected{% endif %}>Commercial</option>
+                    <option value="office_space" {% if request.GET.property_type == "office_space" %}selected{% endif %}>Offices Space</option>
+
+                    <option value="shuffle" {% if request.GET.property_type == "shuffle" %}selected{% endif %}>Shuffle</option>
                 </select>
             </div>
 
@@ -148,7 +149,7 @@
 
 /* Button */
 .search-btn {
-    background: #003580;
+    background: #1591bc;
     color: #fff;
     font-weight: bold;
     border-radius: 6px;
@@ -160,7 +161,7 @@
 }
 
 .search-btn:hover {
-    background: #0050c8;
+    background: #1591bc;
 }
 
 /* Responsive for small screens */
@@ -209,7 +210,7 @@
     40%  { background-image: url('{% static "customer/img/a2.jpg" %}'); transform: scale(1.1); }
     60%  { background-image: url('{% static "customer/img/a3.jpg" %}'); transform: scale(1.05); }
     80%  { background-image: url('{% static "customer/img/a4.jpg" %}'); transform: scale(1); }
-    100% { background-image: url('{% static "customer/img/a.jpg" %}'); transform: scale(1); }
+    100% { background-image: url('{% static "customer/img/a5.jpg" %}'); transform: scale(1); }
 }
 
 @keyframes contentFade {

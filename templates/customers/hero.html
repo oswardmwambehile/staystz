@@ -1,0 +1,119 @@
+{% load static %}
+
+<!-- HERO SECTION -->
+<div class="relative min-h-[640px] md:min-h-[560px] w-full overflow-hidden">
+
+  <!-- Background Image -->
+  <img
+    class="absolute inset-0 w-full h-full object-cover"
+    src="{% static 'customer/img/a3.jpg' %}"
+    alt="Hero Image">
+
+
+
+  <!-- HERO CONTENT -->
+  <div class="relative flex items-center justify-center text-center text-white px-6 pt-52 pb-10">
+
+    <div class="max-w-3xl">
+
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+
+{% if user.is_authenticated %}
+{% if user.username %}
+Where to next, {{ user.username }}?
+{% elif user.first_name or user.last_name %}
+Where to next, {{ user.first_name }} {{ user.last_name }}?
+{% else %}
+Where to next?
+{% endif %}
+{% else %}
+Where to next?
+{% endif %}
+
+      </h1>
+
+      <p class="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-gray-100">
+        Discover exclusive properties and Genius rewards across the country.
+        Whether you're planning a quick city escape or a relaxing beach holiday.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+<!-- HERO END -->
+
+
+<!-- SEARCH BAR -->
+<div class="relative -mt-5 md:-mt-10 px-3 z-10">
+
+  <form method="GET" action="{% url 'global_search' %}">
+
+    <div class="shadow-2xl p-5 flex flex-col md:flex-row gap-4 items-center rounded-xl w-full max-w-6xl mx-auto bg-[#1591bc]">
+
+      <!-- Region -->
+      <div class="flex items-center  px-4 rounded-lg w-full">
+
+        <i class="fa-solid fa-location-dot text-white text-2xl  mr-3"></i>
+
+        <select name="region"
+        class="w-full h-12 pl-2 py-2 outline-none text-gray-700 text-base md:text-sm rounded-lg">
+
+          <option value="">Select Region</option>
+
+          {% for region in regions %}
+          <option value="{{ region }}"
+          {% if request.GET.region == region %}selected{% endif %}>
+          {{ region }}
+          </option>
+          {% endfor %}
+
+        </select>
+
+      </div>
+
+      <!-- Property Type -->
+      <div class="flex items-center  px-4 rounded-lg w-full">
+
+        <i class="fa-solid fa-building text-white text-2xl  mr-3"></i>
+
+        <select name="property_type"
+        class="w-full h-12 pl-2 py-2 outline-none text-gray-700 text-base md:text-sm rounded-lg">
+
+          <option value="">Property type</option>
+          <option value="apartment" {% if request.GET.property_type == "apartment" %}selected{% endif %}>Apartment</option>
+          <option value="homes" {% if request.GET.property_type == "Homes" %}selected{% endif %}>Homes</option>
+          <option value="villa" {% if request.GET.property_type == "villa" %}selected{% endif %}>Villa</option>
+          <option value="lodge" {% if request.GET.property_type == "lodge" %}selected{% endif %}>Lodge</option>
+          <option value="hotel" {% if request.GET.property_type == "hotel" %}selected{% endif %}>Hotel</option>
+          <option value="office_space" {% if request.GET.property_type == "office_space" %}selected{% endif %}>Office Spcae</option>
+          <option value="resort" {% if request.GET.property_type == "resort" %}selected{% endif %}>Resort</option>
+          <option value="gest_house" {% if request.GET.property_type == "gest_house" %}selected{% endif %}>Guest House</option>
+          <option value="shuffle" {% if request.GET.property_type == "shuffles" %}selected{% endif %}>Shuffles</option>
+          <option value="moving_logistic" {% if request.GET.property_type == "moving_logistic" %}selected{% endif %}>Moving Logistic</option>
+          <option value="piki_piki_bajaji" {% if request.GET.property_type == "piki_piki_bajaji" %}selected{% endif %}>Bjaji/Pikipiki</option>
+          <option value="tent or campsite" {% if request.GET.property_type == "tent or campsite" %}selected{% endif %}>Tent/Camp Site</option>
+
+        </select>
+
+      </div>
+
+      <!-- Search Button -->
+      <button
+      type="submit"
+      class="px-8 h-12 font-semibold text-gray-900 text-lg rounded-lg w-full md:w-auto hover:opacity-90 transition"
+      style="background-color:#ffc200">
+
+      Search
+
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+
+<!-- SPACE AFTER SEARCH -->

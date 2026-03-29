@@ -1,375 +1,163 @@
-{% extends 'customer/base.html' %}
+{% extends 'customers/base.html' %}
 {% load static %}
 
 {% block content %}
-<div class="container-fluid bg-white p-0">
+<div class="bg-white min-h-screen">
 
     <!-- Navbar -->
-    {% include 'customer/nav.html' %}
+    {% include 'customers/nav.html' %}
 
-    <div class="container mt-5">
-        <div class="page-inner">
-            <h2 class="mb-1 display-6 fw-bold">{{ property.property_name }}</h2>
-            <p class="text-muted small">{{ property.property_type|title }} | {{ property.address }}, {{ property.district }}, {{ property.region }}, {{ property.country }}</p>
+    <div class="max-w-7xl mx-auto mt-24 md:mt-28 px-4 sm:px-6 lg:px-8">
 
-            <div class="row mt-4">
-                <!-- LEFT: Carousel & Description -->
-                <div class="col-lg-7 mb-4">
 
-                    {% if photos %}
-                    <!-- Carousel -->
-                    <div class="carousel-container shadow-sm rounded">
-                        <button class="carousel-nav left" onclick="prevImage()">‹</button>
-                        <img src="{{ photos.0.image.url }}" id="mainImage" class="img-fluid rounded">
-                        <button class="carousel-nav right" onclick="nextImage()">›</button>
+
+        <div class="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8">
+
+            <!-- LEFT: Carousel & Description -->
+            <div class="lg:col-span-4 space-y-4">
+                 <!-- Property Header -->
+        <div class="w-full bg-[#1591bc] text-white py-6 px-6 mb-6">
+            <h2 class="text-3xl font-bold">{{ property.property_name }}</h2>
+            <p class="text-sm text-green-100 mt-1">{{ property.property_type|title }} | {{ property.address }}, {{ property.district }}, {{ property.region }}, {{ property.country }}</p>
+        </div>
+
+                {% if photos %}
+                <!-- Carousel -->
+                <div x-data="{
+                        current: 0,
+                        slides: {{ photos|length }},
+                        images: [
+                            {% for photo in photos %}
+                            '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        ],
+                        setImage(i) { this.current = i; },
+                        next() { this.current = (this.current + 1) % this.slides; },
+                        prev() { this.current = (this.current - 1 + this.slides) % this.slides; }
+                    }" class="relative w-full overflow-hidden rounded-xl shadow-lg">
+
+                    <!-- Main Image -->
+                    <template x-for="(img, index) in images" :key="index">
+                        <img :src="img" x-show="current === index" class="w-full h-[450px] object-cover rounded-xl transition-all duration-500 cursor-zoom-in">
+                    </template>
+
+                    <!-- Prev/Next Buttons -->
+                    <button @click="prev()" class="absolute top-1/2 -translate-y-1/2 left-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
+                        &#10094;
+                    </button>
+                    <button @click="next()" class="absolute top-1/2 -translate-y-1/2 right-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
+                        &#10095;
+                    </button>
+
+                    <!-- Indicators -->
+                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
+                        <template x-for="(img, index) in images" :key="index">
+                            <span @click="current = index" :class="current === index ? 'bg-blue-600' : 'bg-gray-400'" class="w-3 h-3 rounded-full cursor-pointer"></span>
+                        </template>
                     </div>
 
                     <!-- Thumbnails -->
-                    <div class="d-flex gap-2 mt-2 overflow-auto thumbs-container">
-                        {% for photo in photos %}
-                        <img src="{{ photo.image.url }}" class="thumb{% if forloop.first %} active-thumb{% endif %}" onclick="setImage({{ forloop.counter0 }})">
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-
-                    <!-- Description -->
-                    {% if property.property_description %}
-                    <div class="mt-4 p-3 bg-light rounded shadow-sm">
-                        <h5 class="fw-bold">Property Description</h5>
-                        <p class="mb-0">{{ property.property_description }}</p>
-                    </div>
-                    {% endif %}
-
-                    <div class="mt-3">
-                        <a href="{% url 'book_property' property.id %}" class="btn btn-primary btn-lg w-100">Book Now</a>
+                    <div class="flex gap-2 mt-2 overflow-x-auto px-1">
+                        <template x-for="(img, index) in images" :key="index">
+                            <img :src="img" @click="setImage(index)" class="w-24 h-16 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition transform hover:scale-105" :class="current === index ? 'border-blue-600' : ''">
+                        </template>
                     </div>
                 </div>
+                {% endif %}
 
-                <!-- RIGHT: Cards -->
-                <div class="col-lg-5">
-
-                    <!-- Property Info -->
-                    <div class="card mb-3 shadow-sm border-0 rounded">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Property Info</h5>
-                            <p><strong>Property Size:</strong> {{ property.property_size_sqm }} sqm</p>
-                            <p><strong>Languages:</strong> {{ property.languages_spoken }}</p>
-                            {% if property.status %}
-                            <p><strong>Status:</strong>
-                                {% if property.status|lower == "open" %}
-                                <span class="badge bg-success">{{ property.status|title }}</span>
-                                {% elif property.status|lower == "hold" %}
-                                <span class="badge bg-warning text-dark">{{ property.status|title }}</span>
-                                {% elif property.status|lower == "closed" %}
-                                <span class="badge bg-danger">{{ property.status|title }}</span>
-                                {% else %}
-                                <span class="badge bg-secondary">{{ property.status|title }}</span>
-                                {% endif %}
-                            </p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Setup & Rooms -->
-                    {% if setup %}
-                    <div class="card mb-3 shadow-sm border-0 rounded">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Setup & Rooms</h5>
-                            <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds }}</p>
-                            <p>Bathrooms: {{ setup.number_of_bathrooms }}</p>
-                            <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}</p>
-                            <p>Amenities: {{ setup.amenities|join:", " }}</p>
-                            <p>Room Types: {{ setup.room_types|join:", " }}</p>
-                            <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- Pricing -->
-                    {% if pricing %}
-                    <div class="card mb-3 shadow-sm border-0 rounded">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Pricing</h5>
-                            <p>Base Price: <strong>{{ pricing.base_price_per_night }}</strong> / night</p>
-                            <p>Available: {{ pricing.available_from }} to {{ pricing.available_to }}</p>
-                            <p>Minimum stay: {{ pricing.minimum_stay_nights }} nights</p>
-                            <p>Maximum stay: {{ pricing.maximum_stay_nights|default:"No limit" }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <!-- Legal -->
-                    {% if legal %}
-                    <div class="card mb-3 shadow-sm border-0 rounded">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">Legal & Policies</h5>
-                            <p><strong>Terms & Conditions:</strong> {{ legal.terms_and_conditions }}</p>
-                            <p><strong>House Rules:</strong> {{ legal.house_rules }}</p>
-                            <p><strong>Cancellation:</strong> {{ legal.cancellation_policy }}</p>
-                            <p><strong>Check-in:</strong> {{ legal.check_in_policy }}</p>
-                            <p><strong>Smoking:</strong> {{ legal.smoking_policy }}</p>
-                            <p><strong>Pets:</strong> {{ legal.pet_policy }}</p>
-                        </div>
-                    </div>
-                    {% endif %}
+                <!-- Description -->
+                {% if property.property_description %}
+                <div class="mt-4 p-4 bg-gray-50 rounded-xl shadow">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-2">Property Description</h5>
+                    <p class="text-gray-700 break-words whitespace-pre-line">
+    {{ property.property_description }}
+</p>
                 </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{% url 'book_property' property.id %}" class="block w-full text-center py-3 bg-[#1591bc] hover:bg-[#1591bc] text-white font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-1">Book Now</a>
+                </div>
+
             </div>
+
+            <!-- RIGHT: Cards -->
+            <div class="lg:col-span-3 space-y-4">
+
+                <!-- Property Info -->
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-600 mb-2">Property Info</h5>
+                    <p><strong>Property Size:</strong> {{ property.property_size_sqm }} sqm</p>
+                    <p><strong>Languages:</strong> {{ property.languages_spoken }}</p>
+                    {% if property.status %}
+                    <p><strong>Status:</strong>
+                        {% if property.status|lower == "open" %}
+                        <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% elif property.status|lower == "hold" %}
+                        <span class="inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% elif property.status|lower == "closed" %}
+                        <span class="inline-block bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% else %}
+                        <span class="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Setup & Rooms -->
+                {% if setup %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-600 mb-2">Setup & Rooms</h5>
+                    <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds }}</p>
+                    <p>Bathrooms: {{ setup.number_of_bathrooms }}</p>
+                    <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}</p>
+                    <p>Amenities: {{ setup.amenities|join:", " }}</p>
+                    <p>Room Types: {{ setup.room_types|join:", " }}</p>
+                    <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Pricing -->
+                {% if pricing %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-600 mb-2">Pricing</h5>
+                    <p>Base Price: <strong>{{ pricing.base_price_per_night }}</strong> / night</p>
+                    <p>Available: {{ pricing.available_from }} to {{ pricing.available_to }}</p>
+                    <p>Minimum stay: {{ pricing.minimum_stay_nights }} nights</p>
+                    <p>Maximum stay: {{ pricing.maximum_stay_nights|default:"No limit" }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Legal -->
+                {% if legal %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+                    <h5 class="text-lg font-semibold text-green-600 mb-2">Legal & Policies</h5>
+                    <p><strong>Terms & Conditions:</strong> {{ legal.terms_and_conditions }}</p>
+                    <p><strong>House Rules:</strong> {{ legal.house_rules }}</p>
+                    <p><strong>Cancellation:</strong> {{ legal.cancellation_policy }}</p>
+                    <p><strong>Check-in:</strong> {{ legal.check_in_policy }}</p>
+                    <p><strong>Smoking:</strong> {{ legal.smoking_policy }}</p>
+                    <p><strong>Pets:</strong> {{ legal.pet_policy }}</p>
+                </div>
+                {% endif %}
+
+            </div>
+
         </div>
     </div>
 
-    <!-- IMAGE MODAL (Booking-style, WHITE) -->
-<div class="image-modal" id="imageModal">
-    <span class="modal-close" onclick="closeModal()">×</span>
-
-    <button class="modal-nav left" onclick="modalPrev()">‹</button>
-
-    <img id="modalImage">
-
-    <button class="modal-nav right" onclick="modalNext()">›</button>
-
-    <div class="modal-thumbs">
-        {% for photo in photos %}
-        <img src="{{ photo.image.url }}"
-             onclick="openModal({{ forloop.counter0 }})">
-        {% endfor %}
-    </div>
-</div>
-
+    <div class="h-40 md:h-24"></div>
 
     {% include 'customer/footer.html' %}
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- Back to top button -->
+    <a href="#" class="fixed bottom-6 right-6 w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition transform hover:-translate-y-1">
+        <i class="bi bi-arrow-up"></i>
+    </a>
+
 </div>
 
-<!-- Styles -->
-<style>
-/* Carousel */
-.carousel-container {
-    position: relative;
-    width: 100%;
-    height: 450px;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #e9ecef;
-}
-.carousel-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.4);
-    color: #fff;
-    border: none;
-    width: 45px;
-    height: 45px;
-    font-size: 1.8rem;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    transition: background 0.3s;
-}
-
-
-
-/* IMAGE MODAL */
-.image-modal {
-    position: fixed;
-    inset: 0;
-    background: #ffffff;
-    display: none;
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.image-modal img#modalImage {
-    max-width: 90%;
-    max-height: 75vh;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.modal-close {
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    font-size: 36px;
-    cursor: pointer;
-    color: #000;
-}
-
-.modal-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: #fff;
-    border: 1px solid #ddd;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    font-size: 26px;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,.2);
-}
-
-.modal-nav.left { left: 30px; }
-.modal-nav.right { right: 30px; }
-
-.modal-thumbs {
-    display: flex;
-    gap: 8px;
-    margin-top: 20px;
-    overflow-x: auto;
-}
-
-.modal-thumbs img {
-    width: 80px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 6px;
-    cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.modal-thumbs img:hover {
-    border-color: #003580;
-}
-
-.carousel-nav:hover { background: rgba(0,0,0,0.7); }
-.carousel-nav.left { left: 10px; }
-.carousel-nav.right { right: 10px; }
-
-/* Thumbnails */
-.thumbs-container {
-    display: flex;
-    overflow-x: auto;
-    padding: 5px 0;
-}
-.thumb {
-    width: 100px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-right: 6px;
-    border: 2px solid transparent;
-    transition: transform 0.3s, border-color 0.3s;
-}
-.thumb:hover, .thumb.active-thumb { border-color: #0d6efd; transform: scale(1.05); }
-
-/* Cards */
-.card { border-radius: 12px; }
-.card-title { color: #003580; }
-
-/* Buttons */
-.btn-primary { background-color: #003580; border-color: #003580; transition: background 0.3s, transform 0.2s; }
-.btn-primary:hover { background-color: #0050c8; transform: translateY(-2px); }
-
-/* Responsive */
-@media(max-width: 768px){
-    .carousel-container { height: 280px; }
-    .thumb { width: 70px; height: 50px; }
-}
-</style>
-
-<!-- Carousel Script -->
-<script>
-/* ================= GLOBAL STATE ================= */
-let images = [];
-let current = 0;
-let modalIndex = 0;
-let modalOpen = false;
-
-/* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", function () {
-
-    images = [
-        {% for photo in photos %}
-        "{{ photo.image.url }}",
-        {% endfor %}
-    ];
-
-    if (!images.length) return;
-
-    window.mainImage = document.getElementById("mainImage");
-    window.thumbs = document.querySelectorAll(".thumb");
-    window.modal = document.getElementById("imageModal");
-    window.modalImage = document.getElementById("modalImage");
-
-    // Thumbnail click
-    thumbs.forEach((thumb, i) => {
-        thumb.addEventListener("click", () => window.setImage(i));
-    });
-
-    // Main image click → open modal
-    mainImage.style.cursor = "zoom-in";
-    mainImage.addEventListener("click", () => window.openModal(current));
-
-    // ESC to close modal
-    document.addEventListener("keydown", e => {
-        if (e.key === "Escape" && modalOpen) window.closeModal();
-    });
-
-    // Click outside image to close
-    modal.addEventListener("click", e => {
-        if (e.target === modal) window.closeModal();
-    });
-
-    // Auto slide
-    setInterval(() => {
-        if (!modalOpen) window.nextImage();
-    }, 4000);
-});
-
-/* ================= CAROUSEL ================= */
-window.setImage = function (i) {
-    current = i;
-    mainImage.style.opacity = 0;
-
-    setTimeout(() => {
-        mainImage.src = images[i];
-        thumbs.forEach(t => t.classList.remove("active-thumb"));
-        if (thumbs[i]) thumbs[i].classList.add("active-thumb");
-        mainImage.style.opacity = 1;
-    }, 150);
-};
-
-window.nextImage = function () {
-    window.setImage((current + 1) % images.length);
-};
-
-window.prevImage = function () {
-    window.setImage((current - 1 + images.length) % images.length);
-};
-
-/* ================= MODAL ================= */
-window.openModal = function (i) {
-    modalIndex = i;
-    modalImage.src = images[i];
-    modal.style.display = "flex";
-    modalOpen = true;
-};
-
-window.closeModal = function () {
-    modal.style.display = "none";
-    modalOpen = false;
-};
-
-window.modalNext = function () {
-    modalIndex = (modalIndex + 1) % images.length;
-    modalImage.src = images[modalIndex];
-};
-
-window.modalPrev = function () {
-    modalIndex = (modalIndex - 1 + images.length) % images.length;
-    modalImage.src = images[modalIndex];
-};
-</script>
-
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 {% endblock %}

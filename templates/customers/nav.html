@@ -1,0 +1,150 @@
+{% load static %}
+<!-- NAVBAR -->
+<nav class="bg-white shadow-md fixed w-full top-0 z-50">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto px-4 py-5">
+
+    <!-- LOGO -->
+    <a href="{% url 'index' %}" class="flex items-center">
+      <img src="{% static 'customer/img/logo.png' %}" class="h-12 mr-3" alt="Logo">
+    </a>
+
+    <!-- MOBILE BUTTON -->
+    <button data-collapse-toggle="navbar-menu"
+            type="button"
+            class="inline-flex items-center p-3 w-12 h-12 justify-center text-gray-700 text-2xl font-bold md:hidden rounded-lg hover:bg-gray-200">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- MENU -->
+    <div class="hidden w-full md:block md:w-auto" id="navbar-menu">
+      <ul class="flex flex-col md:flex-row md:items-center md:space-x-8 mt-4 md:mt-0 text-lg font-semibold">
+
+        <!-- Residences -->
+        <li>
+          <a href="{% url 'residence' %}"
+             class="flex items-center text-gray-900 hover:text-green-600 py-2 transition-colors duration-300">
+            <i class="fa-solid fa-building mr-2 text-gray-900"></i> Residences
+          </a>
+        </li>
+
+        <!-- Bookings -->
+        <li>
+          <a href="{% url 'book' %}"
+             class="flex items-center text-gray-900 hover:text-green-600 py-2 transition-colors duration-300">
+            <i class="fa-solid fa-bed mr-2 text-gray-900"></i> Bookings
+          </a>
+        </li>
+
+        <!-- Car Rental -->
+        <li>
+          <a href="{% url 'car' %}"
+             class="flex items-center text-gray-900 hover:text-green-600 py-2 transition-colors duration-300">
+            <i class="fa-solid fa-car mr-2 text-gray-900"></i> Car Rental
+          </a>
+        </li>
+
+        <!-- LANGUAGE DROPDOWN -->
+        <li class="relative">
+          <button id="languageDropdownButton"
+                  data-dropdown-toggle="languageDropdown"
+                  class="flex items-center text-gray-900 hover:text-green-600 py-2 transition-colors duration-300">
+            <i class="fa-solid fa-globe mr-2 text-gray-900"></i> Language
+            <i class="fa-solid fa-chevron-down ml-2 text-xs text-gray-900"></i>
+          </button>
+          <div id="languageDropdown"
+               class="hidden z-10 bg-white rounded-lg shadow w-40 absolute mt-2">
+            <ul class="py-2 text-sm text-gray-900">
+              <li>
+  <button onclick="translateTo('en')"
+    class="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-green-600">
+    🇺🇸 English
+  </button>
+</li>
+<li>
+  <button onclick="translateTo('sw')"
+    class="w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-green-600">
+    🇹🇿 Kiswahili
+  </button>
+</li>
+            </ul>
+          </div>
+        </li>
+
+        <!-- AUTHENTICATED USER DROPDOWN -->
+        {% if user.is_authenticated %}
+        <li class="relative">
+          <button id="userDropdownButton"
+                  data-dropdown-toggle="userDropdown"
+                  class="flex items-center text-gray-900 hover:text-green-600 py-2 transition-colors duration-300">
+            <i class="fa-solid fa-user mr-2 text-gray-900"></i>Hello, {{ user.username }}
+            <i class="fa-solid fa-chevron-down ml-2 text-xs text-gray-900"></i>
+          </button>
+          <div id="userDropdown"
+               class="hidden z-10 bg-white rounded-lg shadow w-48 absolute mt-2">
+            <ul class="py-2 text-sm text-gray-900">
+              <li>
+                <a href="{% url 'user_profile' %}" class="block px-4 py-2 hover:bg-gray-100 hover:text-green-600 transition-colors duration-300">
+                  <i class="fa-solid fa-id-card mr-2 text-gray-900"></i> My Profile
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'bookings-services' %}" class="block px-4 py-2 hover:bg-gray-100 hover:text-green-600 transition-colors duration-300">
+                  <i class="fa-solid fa-book mr-2 text-gray-900"></i> My Bookings
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'dashboard' %}" class="block px-4 py-2 hover:bg-gray-100 hover:text-green-600 transition-colors duration-300">
+                  <i class="fa-solid fa-chart-line mr-2 text-gray-900"></i> Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'add_attachment' %}" class="block px-4 py-2 hover:bg-gray-100 hover:text-green-600 transition-colors duration-300">
+                  <i class="fa-solid fa-house mr-2 text-gray-900"></i> List Property
+                </a>
+              </li>
+            </ul>
+            <div class="p-3 border-t">
+              <a href="{% url 'logout' %}" class="block text-center bg-green-600 text-white rounded-lg px-4 py-2 hover:bg-green-700 transition-colors duration-300">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+              </a>
+            </div>
+          </div>
+        </li>
+        {% else %}
+        <!-- SIGN IN & SIGN UP BUTTONS -->
+        <li class="flex flex-col sm:flex-row sm:space-x-2 mt-2 md:mt-0">
+          <a href="{% url 'signin' %}"
+             class="bg-white border border-green-600 text-gray-900 px-4 py-2 rounded-lg hover:bg-[#1591bc] hover:text-white text-sm md:text-base text-center mb-2 sm:mb-0 transition-colors duration-300">
+            <i class="fa-solid fa-right-to-bracket mr-1"></i> Sign In
+          </a>
+          <a href="{% url 'register' %}"
+             class="bg-[#1591bc] text-white px-4 py-2 rounded-lg hover:bg-[#1591bc] text-sm md:text-base text-center transition-colors duration-300">
+            <i class="fa-solid fa-user-plus mr-1"></i> Sign Up
+          </a>
+        </li>
+        {% endif %}
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Scripts for toggles -->
+<script>
+  const mobileMenuButton = document.querySelector('[data-collapse-toggle="navbar-menu"]');
+  const navbarMenu = document.getElementById('navbar-menu');
+  const languageButton = document.getElementById('languageDropdownButton');
+  const languageMenu = document.getElementById('languageDropdown');
+  const userButton = document.getElementById('userDropdownButton');
+  const userMenu = document.getElementById('userDropdown');
+
+  // Mobile menu toggle
+  mobileMenuButton.addEventListener('click', () => {
+    navbarMenu.classList.toggle('hidden');
+  });
+
+  // Dropdown toggles
+  languageButton?.addEventListener('click', () => languageMenu.classList.toggle('hidden'));
+  userButton?.addEventListener('click', () => userMenu.classList.toggle('hidden'));
+</script>

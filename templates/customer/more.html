@@ -1,131 +1,157 @@
 {% load static %}
 
-<!-- Google Fonts (Classic & Elegant) -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<!-- AOS Animation Library -->
-<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
-<style>
-  .offers {
-    font-family: 'Inter', sans-serif;
-  }
+<section class="py-12 bg-white">
+<div class="max-w-7xl mx-auto px-6">
 
-  .offers h3 {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1.4px;
-    color: #6c757d;
-  }
+<h3 class="text-xl md:text-2xl font-semibold mb-8">Browse more property type</h3>
 
-  .offers h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
-    font-weight: 600;
-    color: #1a1a1a;
-  }
 
-  .offers p {
-    line-height: 1.8;
-    font-size: 0.95rem;
-    color: #555;
-  }
+<!-- Cards Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-  .offers .highlight {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0d6efd;
-  }
+<!-- Office Space -->
+<a href="{% url 'residence_properties_type' 'office_space' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
 
-  .offers .btn-primary {
-    padding: 12px 34px;
-    border-radius: 30px;
-    font-weight: 500;
-  }
+<img
+src="{% static 'customer/img/a1.jpg' %}"
+alt="Office Space"
+class="w-full h-64 object-cover">
 
-  .offers .card {
-    border: none;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 10px 26px rgba(0,0,0,0.06);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-  }
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Office Space
+</h5>
+</div>
 
-  .offers .card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 38px rgba(0,0,0,0.12);
-  }
+</div>
+</a>
 
-  .offers .card img {
-    height: 350px;
-    object-fit: cover;
-  }
 
-  .offers .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1a1a1a;
-  }
-</style>
+<!-- Shuffle -->
+<a href="{% url 'car_rental_list_by_type' 'shuffle' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
 
-<!-- Offers Section -->
-<section class="offers py-5">
-  <div class="container">
+<img
+src="{% static 'customer/img/v8.jpeg' %}"
+alt="Shuffle"
+class="w-full h-64 object-cover">
 
-    <h3 class="mb-4">Browse more property type</h3>
-    <div class="row g-4">
-      <!-- Hotels -->
-      <div class="col-md-3 col-sm-6">
-        <a href="{% url 'booking_properties' 'hotel' %}" class="text-decoration-none">
-          <div class="card h-100">
-            <img src="{% static 'customer/img/a1.jpg' %}" class="card-img-top" alt="Hotels">
-            <div class="card-body text-center">
-              <h5 class="card-title">Office Space</h5>
-              
-            </div>
-          </div>
-        </a>
-      </div>
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Shuffle
+</h5>
+</div>
 
-      <!-- Apartments -->
-      <div class="col-md-3 col-sm-6">
-        <a href="{% url 'residence_properties_type' 'apartment' %}" class="text-decoration-none">
-          <div class="card h-100">
-            <img src="{% static 'customer/img/c.jpg' %}" class="card-img-top" alt="Apartments">
-            <div class="card-body text-center">
-              <h5 class="card-title">Shuffle</h5>
-             
-            </div>
-          </div>
-        </a>
-      </div>
+</div>
+</a>
 
-      <!-- House -->
-      <div class="col-md-3 col-sm-6">
-        <a href="{% url 'residence_properties_type' 'house' %}" class="text-decoration-none">
-          <div class="card h-100">
-            <img src="{% static 'customer/img/s1.jpg' %}" class="card-img-top" alt="House">
-            <div class="card-body text-center">
-              <h5 class="card-title">Lodge</h5>
-              
-            </div>
-          </div>
-        </a>
-      </div>
 
-      <!-- Lodge -->
-      <div class="col-md-3 col-sm-6">
-        <a href="{% url 'booking_properties' 'guest_house' %}" class="text-decoration-none">
-          <div class="card h-100">
-            <img src="{% static 'customer/img/s2.jpg' %}" class="card-img-top" alt="Lodge">
-            <div class="card-body text-center">
-              <h5 class="card-title">campsites</h5>
-              
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
+<!-- Lodge -->
+<a href="{% url 'booking_properties' 'lodge' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+<img
+src="{% static 'customer/img/lodge.jpeg' %}"
+alt="Lodge"
+class="w-full h-64 object-cover">
+
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Lodge
+</h5>
+</div>
+
+</div>
+</a>
+
+
+<!-- Homes -->
+<a href="{% url 'residence_properties_type' 'homes' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+<img
+src="{% static 'customer/img/houses.jpeg' %}"
+alt="Homes"
+class="w-full h-64 object-cover">
+
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Homes
+</h5>
+</div>
+
+</div>
+</a>
+
+<a href="{% url 'booking_properties' 'villa' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+<img
+src="{% static 'customer/img/villa.jpeg' %}"
+alt="Homes"
+class="w-full h-64 object-cover">
+
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Villa
+</h5>
+</div>
+
+</div>
+</a>
+<a href="{% url 'booking_properties' 'resort' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+<img
+src="{% static 'customer/img/a5.jpg' %}"
+alt="Homes"
+class="w-full h-64 object-cover">
+
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Resort
+</h5>
+</div>
+
+</div>
+</a>
+<a href="{% url 'booking_properties' 'tent or campsite' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+<img
+src="{% static 'customer/img/s6.jpg' %}"
+alt="Homes"
+class="w-full h-64 object-cover">
+
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Tent/Camp site
+</h5>
+</div>
+
+</div>
+</a>
+<a href="{% url 'car_rental_list_by_type' 'moving_logistic' %}" class="block">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+<img
+src="{% static 'customer/img/canter.jpeg' %}"
+alt="Homes"
+class="w-full h-64 object-cover">
+
+<div class="p-4 text-center">
+<h5 class="text-lg font-semibold text-gray-900 font-playfair">
+Moving Logistic
+</h5>
+</div>
+
+</div>
+</a>
+
+</div>
+
+</div>
 </section>

@@ -6,49 +6,49 @@
 {% include "property/sidebar.html" %}
 
 <style>
-.step-title { 
-    font-size: 22px; 
-    font-weight: 600; 
-    margin-bottom: 15px; 
-    color: #222; 
-    border-left: 4px solid #0066ff; 
-    padding-left: 10px; 
+.step-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #222;
+    border-left: 4px solid #0066ff;
+    padding-left: 10px;
 }
 
-input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="date"], textarea, select { 
-    width: 50% !important; 
-    background: transparent !important; 
-    border: 2px solid #999 !important; 
-    border-radius: 5px; 
-    padding: 6px 12px; 
-    color: #000; 
+input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="date"], textarea, select {
+    width: 50% !important;
+    background: transparent !important;
+    border: 2px solid #999 !important;
+    border-radius: 5px;
+    padding: 6px 12px;
+    color: #000;
 }
 
 .checkbox-group { display: flex; flex-wrap: wrap; gap: 10px; }
 .checkbox-group .form-check { margin-bottom: 0; display: flex; align-items: center; }
-.checkbox-group input[type="checkbox"] { 
-    width: 18px; height: 18px; border: 2px solid #999; border-radius: 3px; 
-    accent-color: #999; cursor: pointer; background: #fff; appearance: none; position: relative; 
+.checkbox-group input[type="checkbox"] {
+    width: 18px; height: 18px; border: 2px solid #999; border-radius: 3px;
+    accent-color: #999; cursor: pointer; background: #fff; appearance: none; position: relative;
 }
-.checkbox-group input[type="checkbox"]:checked::before { 
-    content: ""; position: absolute; top: 2px; left: 6px; width: 4px; height: 9px; 
-    border: solid #999; border-width: 0 2px 2px 0; transform: rotate(45deg); 
+.checkbox-group input[type="checkbox"]:checked::before {
+    content: ""; position: absolute; top: 2px; left: 6px; width: 4px; height: 9px;
+
 }
 
 select { background-color: transparent !important; color: #000 !important; }
 
-@media (max-width: 768px) { 
-    input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="date"], textarea, select { width: 100% !important; } 
+@media (max-width: 768px) {
+    input[type="text"], input[type="email"], input[type="number"], input[type="password"], input[type="date"], textarea, select { width: 100% !important; }
 }
 
-.dropzone { 
-    width: 100%; padding: 40px; border: 2px dashed #999; border-radius: 10px; 
-    text-align: center; cursor: pointer; transition: 0.2s; 
+.dropzone {
+    width: 100%; padding: 40px; border: 2px dashed #999; border-radius: 10px;
+    text-align: center; cursor: pointer; transition: 0.2s;
 }
 .dropzone.dragover { background: #eef5ff; border-color: #999; }
 
 .card-border {
-    border: 2px solid #999;       /* gray border */
+     /* gray border */
     border-radius: 8px;
     background: transparent;       /* transparent background */
     box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* subtle shadow */
@@ -234,9 +234,9 @@ function prevStep() { currentStep--; showStep(currentStep); }
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("imageUpload");
 const preview = document.createElement("div");
-preview.id = "preview"; 
-preview.style.display="flex"; 
-preview.style.flexWrap="wrap"; 
+preview.id = "preview";
+preview.style.display="flex";
+preview.style.flexWrap="wrap";
 preview.style.marginTop="10px";
 dropzone.appendChild(preview);
 
@@ -260,10 +260,10 @@ function updatePreview() {
     Array.from(fileInput.files).forEach(file => {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
-        img.style.height="100px"; 
-        img.style.marginRight="10px"; 
+        img.style.height="100px";
+        img.style.marginRight="10px";
         img.style.marginBottom="10px";
-        img.style.border="1px solid #999"; 
+        img.style.border="1px solid #999";
         img.style.borderRadius="5px";
         preview.appendChild(img);
     });
@@ -272,5 +272,19 @@ function updatePreview() {
 showStep(currentStep);
 
 </script>
+<style>
+    /* 🔥 REMOVE DJANGO FIELDSET COMPLETELY */
+fieldset {
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 0 !important;
+}
+
+legend {
+    display: none !important;
+}
+
+</style>
 
 {% endblock %}
