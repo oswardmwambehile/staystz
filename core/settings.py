@@ -21,7 +21,7 @@ env.read_env(BASE_DIR / ".env")
 # SECURITY
 # --------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY", default='django-insecure-dq&*$-xd(&@*!q_!5a3b5o!lfg4-w5gcs2m&=&ia_hd@&wg*tk')
-DEBUG = env("DEBUG", default=True)
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "staystz.com", "www.staystz.com", "45.33.63.182"]
 
@@ -111,9 +111,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "staystzdb",
-        "USER": "root",
-        "PASSWORD": "",
-        "HOST": "localhost",
+         "USER": "staystz",
+        "PASSWORD": "StrongPassword123",
+        "HOST": "127.0.0.1",
         "PORT": "3306",
     }
 }
