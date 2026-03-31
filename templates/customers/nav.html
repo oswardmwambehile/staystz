@@ -1,5 +1,7 @@
 {% load static %}
 <!-- NAVBAR -->
+{% load static %}
+<!-- NAVBAR -->
 <nav class="bg-white shadow-md fixed w-full top-0 z-50">
   <div class="max-w-screen-xl flex items-center justify-between mx-auto px-4 py-4">
 
@@ -40,7 +42,6 @@
       <div class="relative">
         <button id="userButton" class="flex items-center gap-2 text-gray-900 hover:text-green-600">
           <img src="{% static 'customer/img/user.png' %}" class="w-5 h-5"> Hello, {{ user.username }}
-          <!-- ✅ FIXED HERE -->
           <img src="{% static 'customer/img/drop.png' %}" class="w-3 h-3">
         </button>
         <div id="userDropdown" class="hidden absolute z-10 mt-2 bg-white rounded-lg shadow w-48">
@@ -104,8 +105,20 @@
         <a href="{% url 'bookings-services' %}" class="block py-1 hover:text-green-600">My Bookings</a>
         <a href="{% url 'dashboard' %}" class="block py-1 hover:text-green-600">Dashboard</a>
         <a href="{% url 'add_attachment' %}" class="block py-1 hover:text-green-600">List Property</a>
-        <a href="{% url 'logout' %}" class="block py-1 hover:text-green-600">Logout</a>
+        <a href="{% url 'logout' %}" class="block w-full text-center bg-[#1591bc] text-white py-2 rounded hover:bg-green-700">
+  Logout
+</a>
       </div>
+    </div>
+    {% else %}
+    <!-- ✅ FIX ADDED HERE -->
+    <div class="flex flex-col gap-2 mt-2">
+      <a href="{% url 'signin' %}" class="flex items-center gap-2 py-2 px-2 bg-white border border-green-600 rounded hover:bg-[#1591bc] hover:text-white">
+        Sign In
+      </a>
+      <a href="{% url 'register' %}" class="flex items-center gap-2 py-2 px-2 bg-[#1591bc] text-white rounded hover:bg-[#1591bc]">
+        Sign Up
+      </a>
     </div>
     {% endif %}
   </div>
