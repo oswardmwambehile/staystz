@@ -8,18 +8,19 @@
 <title>Staystz.com</title>
 <link rel="icon" href="{% static 'customer/img/STAYS SVG Fav.svg' %}" type="image/x-icon" />
 
-<!-- Tailwind CSS via CDN -->
+<!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Font Awesome via CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<!-- Font Awesome -->
+<link rel="stylesheet" href="{% static 'vendor/fontawesome/all.min.css' %}">
 
-<!-- Flowbite CSS via CDN -->
+<!-- Flowbite -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet"/>
 
-<!-- Google Translate Fix Styles -->
+<!-- 🔥 STRONG GOOGLE TRANSLATE FIX -->
 <style>
-/* Hide Google Translate UI */
+
+/* 🚫 Hide ALL Google Translate UI */
 .goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate,
 .goog-te-gadget,
@@ -32,16 +33,16 @@
     visibility: hidden !important;
     height: 0 !important;
     opacity: 0 !important;
-}
+}     s
 
-/* Hide iframe injected by Google */
+/* 🚫 Hide iframe injected by Google */
 iframe.goog-te-banner-frame {
     display: none !important;
     height: 0 !important;
     visibility: hidden !important;
 }
 
-/* Prevent body shifting */
+/* 🚫 Prevent body shifting */
 body {
     top: 0px !important;
     position: static !important;
@@ -51,12 +52,15 @@ body {
 .navbar-spacing {
     padding-top: 4rem;
 }
+
 </style>
+
 </head>
 
 <body class="bg-white navbar-spacing">
 
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
 
     <!-- Hidden Google Translate -->
     <div id="google_translate_element" style="display:none;"></div>
@@ -71,13 +75,12 @@ body {
         }, 'google_translate_element');
     }
     </script>
+
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <!-- Flowbite JS via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
-
-    <!-- Google Translate Removal & Fix Script -->
+    <!-- 🔥 STRONG FIX SCRIPT -->
     <script>
+
     function translateTo(lang) {
         const interval = setInterval(() => {
             const select = document.querySelector(".goog-te-combo");
@@ -89,20 +92,31 @@ body {
         }, 300);
     }
 
+    /* 🚫 FORCE REMOVE GOOGLE TOP BAR */
     function removeGoogleBar() {
         const iframe = document.querySelector('.goog-te-banner-frame');
-        if (iframe) iframe.remove();
+        if (iframe) {
+            iframe.remove();
+        }
 
         const banner = document.querySelector('.goog-te-banner-frame.skiptranslate');
-        if (banner) banner.remove();
+        if (banner) {
+            banner.remove();
+        }
 
         document.body.style.top = "0px";
     }
 
-    // Run periodically after Flowbite is loaded
-    setInterval(removeGoogleBar, 100); // slower interval for safety
+    /* Run aggressively */
+    setInterval(removeGoogleBar, 30);
+
+    /* Also run on load */
     window.addEventListener('load', removeGoogleBar);
+
     </script>
+
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
 </body>
 </html>
