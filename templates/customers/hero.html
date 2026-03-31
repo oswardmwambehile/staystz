@@ -32,12 +32,10 @@ Where to next?
 
       </h1>
 
-      <p class="text-lg md:text-xl leading-relaxed text-gray-100 max-w-3xl mx-auto">
-  Discover exclusive properties and Genius rewards across the country. 
-</p>
-      <p class="text-lg md:text-xl leading-relaxed text-gray-100 max-w-3xl mx-auto">
-   Whether you're planning a quick city escape or a relaxing beach holiday.
-</p>
+      <p class="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-gray-100">
+        Discover exclusive properties and Genius rewards across the country.
+        Whether you're planning a quick city escape or a relaxing beach holiday.
+      </p>
 
     </div>
 
@@ -48,54 +46,67 @@ Where to next?
 
 
 <!-- SEARCH BAR -->
-<div class="relative -mt-5 md:-mt-10 px-3 z-10 flex justify-center">
+<div class="relative -mt-5 md:-mt-10 px-3 z-10">
 
-  <form method="GET" action="{% url 'global_search' %}" class="w-full flex justify-center">
+  <form method="GET" action="{% url 'global_search' %}">
 
-    <div class="shadow-2xl p-5 flex flex-col md:flex-row gap-4 items-center rounded-xl"
-         style="background-color:#1591bc; width:80%; margin:0 auto;">
+    <div class="shadow-2xl p-5 flex flex-col md:flex-row gap-4 items-center rounded-xl w-full max-w-6xl mx-auto bg-[#1591bc]">
 
       <!-- Region -->
-      <div class="flex items-center px-4 rounded-lg w-full md:w-1/2 ">
-        <i class="fa-solid fa-location-dot text-white text-2xl mr-3"></i>
+      <div class="flex items-center  px-4 rounded-lg w-full">
+
+        <i class="fa-solid fa-location-dot text-white text-2xl  mr-3"></i>
+
         <select name="region"
-                class="w-full h-12 pl-2 py-2 border border-gray-300 text-gray-700 text-base md:text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        class="w-full h-12 pl-2 py-2 outline-none text-gray-700 text-base md:text-sm rounded-lg">
+
           <option value="">Select Region</option>
+
           {% for region in regions %}
           <option value="{{ region }}"
           {% if request.GET.region == region %}selected{% endif %}>
-            {{ region }}
+          {{ region }}
           </option>
           {% endfor %}
+
         </select>
+
       </div>
 
       <!-- Property Type -->
-      <div class="flex items-center px-4 rounded-lg w-full md:w-1/2 ">
-        <i class="fa-solid fa-building text-white text-2xl mr-3"></i>
+      <div class="flex items-center  px-4 rounded-lg w-full">
+
+        <i class="fa-solid fa-building text-white text-2xl  mr-3"></i>
+
         <select name="property_type"
-                class="w-full h-12 pl-2 py-2 border border-gray-300 text-gray-700 text-base md:text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        class="w-full h-12 pl-2 py-2 outline-none text-gray-700 text-base md:text-sm rounded-lg">
+
           <option value="">Property type</option>
           <option value="apartment" {% if request.GET.property_type == "apartment" %}selected{% endif %}>Apartment</option>
           <option value="homes" {% if request.GET.property_type == "Homes" %}selected{% endif %}>Homes</option>
           <option value="villa" {% if request.GET.property_type == "villa" %}selected{% endif %}>Villa</option>
           <option value="lodge" {% if request.GET.property_type == "lodge" %}selected{% endif %}>Lodge</option>
           <option value="hotel" {% if request.GET.property_type == "hotel" %}selected{% endif %}>Hotel</option>
-          <option value="office_space" {% if request.GET.property_type == "office_space" %}selected{% endif %}>Office Space</option>
+          <option value="office_space" {% if request.GET.property_type == "office_space" %}selected{% endif %}>Office Spcae</option>
           <option value="resort" {% if request.GET.property_type == "resort" %}selected{% endif %}>Resort</option>
           <option value="gest_house" {% if request.GET.property_type == "gest_house" %}selected{% endif %}>Guest House</option>
           <option value="shuffle" {% if request.GET.property_type == "shuffles" %}selected{% endif %}>Shuffles</option>
           <option value="moving_logistic" {% if request.GET.property_type == "moving_logistic" %}selected{% endif %}>Moving Logistic</option>
-          <option value="piki_piki_bajaji" {% if request.GET.property_type == "piki_piki_bajaji" %}selected{% endif %}>Bajaji/Pikipiki</option>
+          <option value="piki_piki_bajaji" {% if request.GET.property_type == "piki_piki_bajaji" %}selected{% endif %}>Bjaji/Pikipiki</option>
           <option value="tent or campsite" {% if request.GET.property_type == "tent or campsite" %}selected{% endif %}>Tent/Camp Site</option>
+
         </select>
+
       </div>
 
       <!-- Search Button -->
-      <button type="submit"
-              class="px-8 h-12 font-semibold text-gray-900 text-lg rounded-lg w-full md:w-auto hover:opacity-90 transition"
-              style="background-color:#ffc200">
-        Search
+      <button
+      type="submit"
+      class="px-8 h-12 font-semibold text-gray-900 text-lg rounded-lg w-full md:w-auto hover:opacity-90 transition"
+      style="background-color:#ffc200">
+
+      Search
+
       </button>
 
     </div>
