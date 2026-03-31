@@ -122,7 +122,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from datetime import timedelta
-from .models import OtpToken  # your OTP model
+from .models import OtpToken  # make sure this is your OTP model
 
 def resend_otp(request):
     if request.method == 'POST':
@@ -138,8 +138,8 @@ def resend_otp(request):
         # ------------------------
         # 1. Cooldown check (1 min)
         # ------------------------
-        last_otp = OtpToken.objects.filter(user=user).order_by('-created_at').first()
-        if last_otp and timezone.now() - last_otp.created_at < timedelta(seconds=60):
+        last_otp = OtpToken.objects.filter(user=user).order_by('-otp_created_at').first()
+        if last_otp and timezone.now() - last_otp.otp_created_at < timedelta(seconds=60):
             messages.warning(request, "Please wait 1 minute before requesting another OTP")
             return redirect("resend-otp")
 
@@ -147,7 +147,7 @@ def resend_otp(request):
         # 2. Daily OTP limit check (max 5 per day)
         # ------------------------
         today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        otp_count_today = OtpToken.objects.filter(user=user, created_at__gte=today_start).count()
+        otp_count_today = OtpToken.objects.filter(user=user, otp_created_at__gte=today_start).count()
         if otp_count_today >= 5:
             messages.warning(request, "You have reached the daily OTP request limit. Try again tomorrow.")
             return redirect("resend-otp")
