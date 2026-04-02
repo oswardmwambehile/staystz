@@ -1,14 +1,21 @@
 {% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
+      crossorigin="anonymous" />
+
 <footer class="text-white pt-12" style="background-color:#1591bc;">
   <div class="max-w-7xl mx-auto px-6">
 
-    <!-- Grid Footer -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-10">
+    <!-- GRID (DESKTOP) / ACCORDION (MOBILE) -->
+    <div class="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-5 lg:gap-10">
 
-      <!-- ABOUT -->
-      <div>
-        <h5 class="text-lg font-semibold mb-4">About</h5>
-        <ul class="space-y-2 text-sm">
+      <!-- ITEM -->
+      <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
+        <button onclick="toggleFooter('about')" class="w-full flex justify-between items-center lg:block">
+          <h5 class="text-lg font-semibold">About</h5>
+          <span class="lg:hidden">+</span>
+        </button>
+
+        <ul id="about" class="hidden lg:block mt-3 space-y-2 text-sm">
           <li><a href="{% url 'about-stays' %}" class="hover:underline">About Stays Tanzania</a></li>
           <li><a href="#" class="hover:underline">How we work</a></li>
           <li><a href="#" class="hover:underline">Sustainability</a></li>
@@ -20,58 +27,65 @@
       </div>
 
       <!-- SUPPORT -->
-      <div>
-        <h5 class="text-lg font-semibold mb-4">Support</h5>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:underline">Help Center</a></li>
-          <li><a href="#" class="hover:underline">Contact Us</a></li>
-          <li><a href="#" class="hover:underline">Manage your trips</a></li>
-          <li><a href="#" class="hover:underline">Booking Support</a></li>
-        </ul>
-        <div class="mt-4 text-sm space-y-2">
-          <p class="flex items-center"><i class="fa fa-map-marker-alt mr-2"></i>Dar es Salaam, Tanzania</p>
-          <p class="flex items-center"><i class="fa fa-phone-alt mr-2"></i>+255 745 67890</p>
-          <p class="flex items-center"><i class="fa fa-envelope mr-2"></i>staytanzania@gmail.com</p>
+      <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
+        <button onclick="toggleFooter('support')" class="w-full flex justify-between items-center lg:block">
+          <h5 class="text-lg font-semibold">Support</h5>
+          <span class="lg:hidden">+</span>
+        </button>
+
+        <div id="support" class="hidden lg:block mt-3">
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">Help Center</a></li>
+            <li><a href="#" class="hover:underline">Contact Us</a></li>
+            <li><a href="#" class="hover:underline">Manage your trips</a></li>
+            <li><a href="#" class="hover:underline">Booking Support</a></li>
+          </ul>
+
+          <div class="mt-4 text-sm space-y-2">
+            <p class="flex items-center"><i class="fa fa-map-marker-alt mr-2"></i>Dar es Salaam</p>
+            <p class="flex items-center"><i class="fa fa-phone-alt mr-2"></i>+255 745 67890</p>
+            <p class="flex items-center"><i class="fa fa-envelope mr-2"></i>staytanzania@gmail.com</p>
+          </div>
         </div>
       </div>
 
-      <!-- SOCIAL MEDIA + SUBSCRIBE -->
-      <div>
-        <h5 class="text-lg font-semibold mb-4">Follow Us</h5>
-        <div class="flex space-x-3 mt-3">
-  <a href="https://www.instagram.com/stays_shoppingtz?igsh=aWE3Z3VvdWw3MHh5&utm_source=qr" target="_blank">
-    <img src="{% static 'customer/img/insta.jpg' %}" class="w-9 h-9 rounded-full hover:opacity-80 transition">
-  </a>
-  <a href="https://www.facebook.com/share/1DcaQ8x6pE/?mibextid=wwXIfr" target="_blank">
-    <img src="{% static 'customer/img/Facebook_f_logo_(2019).svg.png' %}" class="w-9 h-9 rounded-full hover:opacity-80 transition">
-  </a>
-  <a href="https://www.linkedin.com/in/frank-nestory-699102355?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3Bt7Udy65cSCySpFIb9z%2FP0w%3D%3D" target="_blank">
-    <img src="{% static 'customer/img/linkedin.webp' %}" class="w-9 h-9 rounded-full hover:opacity-80 transition">
-  </a>
-  <a href="https://x.com/stays_tz?s=21" target="_blank">
-    <img src="{% static 'customer/img/twitter.png' %}" class="w-9 h-9 rounded-full hover:opacity-80 transition">
-  </a>
-  <a href="https://youtube.com/@stays_tz?si=8q1sxHT25uz4DghD" target="_blank">
-    <img src="{% static 'customer/img/youtube.jpg' %}" class="w-9 h-9 rounded-full hover:opacity-80 transition">
-  </a>
-</div>
+      <!-- FOLLOW -->
+      <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
+        <button onclick="toggleFooter('follow')" class="w-full flex justify-between items-center lg:block">
+          <h5 class="text-lg font-semibold">Follow Us</h5>
+          <span class="lg:hidden">+</span>
+        </button>
 
-        <!-- Subscribe Form -->
-        <div class="mt-6 max-w-xs">
-          <p class="text-sm mb-2">Subscribe to our newsletter</p>
-          <form method="POST" action="#">
-            {% csrf_token %}
-            <input type="text" name="name" placeholder="Your Name" class="w-full mb-2 px-3 py-2 rounded text-gray-800 text-sm focus:outline-none">
-            <input type="email" name="email" placeholder="Your Email" class="w-full mb-3 px-3 py-2 rounded text-gray-800 text-sm focus:outline-none">
-            <button type="submit" class="w-full bg-[#ffc200] text-white font-semibold py-2 rounded hover:bg-[#ffc200] transition">Subscribe</button>
-          </form>
+        <div id="follow" class="hidden lg:block mt-3">
+
+          <div class="flex space-x-3">
+            <a href="#"><img src="{% static 'customer/img/insta.jpg' %}" class="w-9 h-9 rounded-full"></a>
+            <a href="#"><img src="{% static 'customer/img/Facebook_f_logo_(2019).svg.png' %}" class="w-9 h-9 rounded-full"></a>
+            <a href="#"><img src="{% static 'customer/img/linkedin.webp' %}" class="w-9 h-9 rounded-full"></a>
+            <a href="#"><img src="{% static 'customer/img/twitter.png' %}" class="w-9 h-9 rounded-full"></a>
+            <a href="#"><img src="{% static 'customer/img/youtube.jpg' %}" class="w-9 h-9 rounded-full"></a>
+          </div>
+
+          <div class="mt-6 max-w-xs">
+            <form method="POST">
+              {% csrf_token %}
+              <input type="text" placeholder="Your Name" class="w-full mb-2 px-3 py-2 rounded text-gray-800 text-sm">
+              <input type="email" placeholder="Your Email" class="w-full mb-3 px-3 py-2 rounded text-gray-800 text-sm">
+              <button class="w-full bg-[#ffc200] py-2 rounded">Subscribe</button>
+            </form>
+          </div>
+
         </div>
       </div>
 
       <!-- PARTNERS -->
-      <div>
-        <h5 class="text-lg font-semibold mb-4">Partners</h5>
-        <ul class="space-y-2 text-sm">
+      <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
+        <button onclick="toggleFooter('partners')" class="w-full flex justify-between items-center lg:block">
+          <h5 class="text-lg font-semibold">Partners</h5>
+          <span class="lg:hidden">+</span>
+        </button>
+
+        <ul id="partners" class="hidden lg:block mt-3 space-y-2 text-sm">
           <li><a href="#" class="hover:underline">Property Owners</a></li>
           <li><a href="#" class="hover:underline">Car Rental Partners</a></li>
           <li><a href="#" class="hover:underline">Travel Agencies</a></li>
@@ -80,9 +94,13 @@
       </div>
 
       <!-- TERMS -->
-      <div>
-        <h5 class="text-lg font-semibold mb-4">Terms & Conditions</h5>
-        <ul class="space-y-2 text-sm">
+      <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
+        <button onclick="toggleFooter('terms')" class="w-full flex justify-between items-center lg:block">
+          <h5 class="text-lg font-semibold">Terms & Conditions</h5>
+          <span class="lg:hidden">+</span>
+        </button>
+
+        <ul id="terms" class="hidden lg:block mt-3 space-y-2 text-sm">
           <li><a href="{% url 'privacy' %}" class="hover:underline">Privacy Policy</a></li>
           <li><a href="{% url 'terms' %}" class="hover:underline">Terms of Service</a></li>
           <li><a href="{% url 'cookies' %}" class="hover:underline">Cookies Policy</a></li>
@@ -92,16 +110,29 @@
 
     </div>
 
-    <!-- Footer bottom -->
+    <!-- BOTTOM -->
     <div class="mt-10 border-t border-white/30 pt-5 text-sm flex flex-col md:flex-row justify-between items-center">
-      <p class="text-center md:text-left">&copy; 2026 Stay Tanzania. All rights reserved.</p>
+      <p>&copy; 2026 Stay Tanzania</p>
       <div class="flex space-x-4 mt-2 md:mt-0">
         <a href="{% url 'index' %}" class="hover:underline">Home</a>
-        <a href="#" class="hover:underline">Cookies</a>
         <a href="#" class="hover:underline">Help</a>
-        <a href="#" class="hover:underline">FAQs</a>
       </div>
     </div>
 
   </div>
 </footer>
+
+<!-- JS -->
+<script>
+function toggleFooter(id) {
+  const sections = ["about","support","follow","partners","terms"];
+
+  sections.forEach(sec => {
+    if (sec !== id) {
+      document.getElementById(sec).classList.add("hidden");
+    }
+  });
+
+  document.getElementById(id).classList.toggle("hidden");
+}
+</script>
