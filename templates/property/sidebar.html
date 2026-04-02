@@ -1,10 +1,13 @@
 {% load static %}
 
+<!-- Include Font Awesome CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-pap..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 <div class="sidebar" data-background-color="dark">
   <div class="sidebar-logo">
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="dark">
-      <a href="{%url 'index' %}" class="logo">
+      <a href="{% url 'index' %}" class="logo">
         <img src="{% static 'customer/img/logo.png' %}" alt="navbar brand" class="navbar-brand" height="30" />
       </a>
       <div class="nav-toggle">
@@ -29,52 +32,46 @@
         <!-- Section -->
         <li class="nav-section">
           <span class="sidebar-mini-icon"><i class="fas fa-ellipsis-h"></i></span>
-          <h4 class="text-section">Components</h4>
+          <h4 class="text-section" style="font-size: 1.1rem;">Components</h4>
         </li>
 
         <!-- Home -->
         <li class="nav-item">
-          <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-gray-700 hover:text-blue-600">
-             <img src="{% static 'customer/img/rese.png' %}" alt="Manage Car Rental" height="20" />
+          <a href="{% url 'dashboard' %}" class="flex items-center gap-2 text-gray-700 hover:text-blue-600" style="font-size: 1.05rem;">
+            <i class="fas fa-home"></i>
             <span>Home</span>
           </a>
         </li>
 
-
-
         <!-- Manage Bookings -->
         <li class="nav-item">
-          <a href="{% url 'my_properties' %}">
-             <img src="{% static 'customer/img/bedro.png' %}" alt="Manage Car Rental" height="20" />
-            <p>Manage Bookings</p>
+          <a href="{% url 'my_properties' %}" style="font-size: 1.05rem;">
+            <i class="fas fa-calendar-check"></i>
+            <span>Manage Bookings</span>
           </a>
         </li>
-
-
 
         <!-- Manage Residence -->
         <li class="nav-item">
-          <a href="{% url 'my_residence_properties' %}">
-              <img src="{% static 'customer/img/rese.png' %}" alt="Manage Car Rental" height="20" />
-            <p>Manage Residence</p>
+          <a href="{% url 'my_residence_properties' %}" style="font-size: 1.05rem;">
+            <i class="fas fa-building"></i>
+            <span>Manage Residence</span>
           </a>
         </li>
 
-
-
         <!-- Manage Car Rental -->
         <li class="nav-item">
-          <a href="{% url 'my_car_rentals' %}">
-              <img src="{% static 'customer/img/cars.png' %}" alt="Manage Car Rental" height="20" />
-            <p>Manage Car Rental</p>
+          <a href="{% url 'my_car_rentals' %}" style="font-size: 1.05rem;">
+            <i class="fas fa-car"></i>
+            <span>Manage Car Rental</span>
           </a>
         </li>
 
         <!-- Bookings -->
         <li class="nav-item">
-          <a href="{% url 'owner_bookings' %}">
-              <img src="{% static 'customer/img/building.png' %}" alt="Manage Car Rental" height="20" />
-            <p>Bookings</p>
+          <a href="{% url 'owner_bookings' %}" style="font-size: 1.05rem;">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Bookings</span>
           </a>
         </li>
 
@@ -82,5 +79,3 @@
     </div>
   </div>
 </div>
-
-
