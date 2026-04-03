@@ -27,3 +27,14 @@ class NewsEvent(models.Model):
     def get_display_date(self):
         """Returns event_date if it's an event, otherwise publish_date"""
         return self.event_date if self.is_event and self.event_date else self.publish_date
+
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=150)
+    email = models.EmailField()
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.email}"

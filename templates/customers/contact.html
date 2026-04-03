@@ -1,0 +1,124 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO / BANNER -->
+<section class="relative w-full h-96 md:h-[350px] bg-cover bg-center"
+    style="background-image: url('{% static "customer/img/header.jpg" %}');">
+
+    <div class="absolute inset-0" style="background-color: rgba(21,145,188,0.6);">
+        <div class="flex items-center justify-center h-full px-4">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-white">Contact Us</h1>
+                <p class="mt-4 text-lg md:text-xl text-white">
+                    Reach out to STAYS Tanzania anytime
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="py-20">
+    <div class="container mx-auto px-4 md:px-0">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            <!-- LEFT: CONTACT INFO -->
+            <div class="space-y-8">
+
+                <h2 class="text-4xl font-bold text-blue-700">Get In Touch</h2>
+
+                <!-- Address -->
+                <div class="flex items-start gap-4">
+                    <i class="bi bi-geo-alt text-3xl text-[#1591bc]"></i>
+                    <div>
+                        <h4 class="font-semibold text-lg">Location</h4>
+                        <p class="text-gray-600">Sinza, Dar es Salaam, Tanzania</p>
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="flex items-start gap-4">
+                    <i class="bi bi-telephone text-3xl text-[#1591bc]"></i>
+                    <div>
+                        <h4 class="font-semibold text-lg">Phone</h4>
+                        <p class="text-gray-600">+255 676 513 904</p>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="flex items-start gap-4">
+                    <i class="bi bi-envelope text-3xl text-[#1591bc]"></i>
+                    <div>
+                        <h4 class="font-semibold text-lg">Email</h4>
+                        <p class="text-gray-600">info@staystz.com</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: CONTACT FORM -->
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+
+                <h3 class="text-2xl font-semibold mb-6 text-gray-700">Send Message</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <input type="text" name="name" placeholder="Your Name"
+                            class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#1591bc]">
+                    </div>
+
+                    <div class="mb-4">
+                        <input type="email" name="email" placeholder="Your Email"
+                            class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#1591bc]">
+                    </div>
+
+                    <div class="mb-4">
+                        <textarea name="message" rows="5" placeholder="Your Message"
+                            class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#1591bc]"></textarea>
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-[#1591bc] text-white py-3 rounded-lg hover:bg-[#117a9c] transition">
+                        Send Message
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- GOOGLE MAP -->
+<section class="pb-20">
+    <div class="container mx-auto px-4 md:px-0">
+        <div class="rounded-xl overflow-hidden shadow-lg">
+
+            <iframe
+                src="https://www.google.com/maps?q=Sinza, Dar es Salaam&output=embed"
+                width="100%"
+                height="400"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>
+
+        </div>
+    </div>
+</section>
+
+{% include 'customer/footer.html' %}
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+{% endblock %}
