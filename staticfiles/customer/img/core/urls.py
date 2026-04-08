@@ -1,0 +1,23 @@
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, include
+
+
+urlpatterns = [
+
+
+    path('admin/', admin.site.urls),
+    path('', include('account.urls')),
+    path('accounts/', include('allauth.urls')),
+    path('booking/', include('booking.urls')),
+    path('resedence/', include('resedence.urls')),
+    path('carrental/', include('carrental.urls')),
+    path('attachments/', include('attachments.urls')),
+    path('news-events/', include('news_event.urls')),
+
+]
+# Serve static and media in debug mode
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

@@ -7,14 +7,11 @@
 
 <div class="w-full bg-white">
 
-    <!-- Navbar -->
     {% include 'customers/nav.html' %}
 
-    <!-- Page Wrapper -->
     <div class="min-h-screen pt-28 px-6 flex items-center justify-center">
 
-        <!-- FORM ONLY -->
-        <div class="w-full max-w-4xl md:w-7/10 mx-auto  shadow-lg rounded-xl p-8">
+        <div class="w-full max-w-4xl mx-auto shadow-lg rounded-xl p-8">
 
             <h1 class="text-xl font-medium mb-3" style="font-family:'Montserrat', sans-serif;">
                 Property Ownership Verification
@@ -25,49 +22,62 @@
             </p>
 
             <p class="text-gray-500 mb-6">
-                All documents are reviewed for verification purposes, so your property can be visible in our system.
+                All documents are reviewed for verification purposes.
             </p>
 
-            <!-- Info Alert -->
+            <!-- Info -->
             <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 text-blue-900 p-4 rounded-lg mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1zm0 4a.905.905 0 1 0 0-1.81A.905.905 0 0 0 8 5zm1 2H7v5h2V7z"/>
-                </svg>
                 <p class="text-sm">
-                    Upload clear images only. Accepted formats: JPG, PNG.
-                    NIDA number is required when selecting NIDA.
+                    Upload clear documents. Accepted formats: <strong>JPG, PNG, PDF</strong>.
+                    Required number depends on selected document type.
                 </p>
             </div>
 
-            <!-- FORM -->
             <form method="post" enctype="multipart/form-data" class="space-y-5">
                 {% csrf_token %}
 
                 <!-- Attachment Type -->
                 <div>
                     <label class="block font-semibold mb-2">Attachment Type</label>
-                    {{ form.attachment_type|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
-                    <p class="text-sm text-gray-500 mt-1">Select the type of document you want to upload</p>
+                    {{ form.attachment_type|add_class:"w-full border rounded-lg px-3 py-2" }}
                 </div>
 
                 <!-- NIDA -->
                 <div id="nida-wrapper" class="hidden">
                     <label class="block font-semibold mb-2">NIDA Number</label>
-                    {{ form.nida_number|add_class:"w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" }}
-                    <p class="text-sm text-gray-500 mt-1">Enter your NIDA number exactly as on your card</p>
+                    {{ form.nida_number|add_class:"w-full border rounded-lg px-3 py-2" }}
+                </div>
+
+                <!-- Passport -->
+                <div id="passport-wrapper" class="hidden">
+                    <label class="block font-semibold mb-2">Passport Number</label>
+                    {{ form.passport_number|add_class:"w-full border rounded-lg px-3 py-2" }}
+                </div>
+
+                <!-- Voter -->
+                <div id="voter-wrapper" class="hidden">
+                    <label class="block font-semibold mb-2">Voter ID Number</label>
+                    {{ form.voter_id_number|add_class:"w-full border rounded-lg px-3 py-2" }}
+                </div>
+
+                <!-- Driving License -->
+                <div id="license-wrapper" class="hidden">
+                    <label class="block font-semibold mb-2">Driving License Number</label>
+                    {{ form.driving_license_number|add_class:"w-full border rounded-lg px-3 py-2" }}
                 </div>
 
                 <!-- Upload -->
                 <div>
-                    <label class="block font-semibold mb-2">Upload Document Image</label>
-                    {{ form.document|add_class:"w-full border border-gray-300 rounded-lg file:bg-black file:text-white file:px-4 file:py-2 file:border-0 file:mr-4 file:rounded-md cursor-pointer" }}
-                    <p class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG</p>
+                    <label class="block font-semibold mb-2">Upload Document</label>
+                    {{ form.document|add_class:"w-full border rounded-lg file:bg-black file:text-white file:px-4 file:py-2 file:border-0 file:mr-4 file:rounded-md cursor-pointer" }}
+                    <p class="text-sm text-gray-500 mt-1">Accepted: JPG, PNG, PDF</p>
                 </div>
 
-                <!-- Submit Button -->
-<button type="submit" class="bg-[#1591bc] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#1591bc] transition">
-    Submit for Verification
-</button>
+                <!-- Submit -->
+                <button type="submit"
+                    class="bg-[#1591bc] text-white py-3 px-6 rounded-lg font-semibold hover:bg-[#127a9c] transition">
+                    Submit for Verification
+                </button>
 
             </form>
 
@@ -76,22 +86,46 @@
     </div>
 
 </div>
+
 {% include 'customer/footer.html' %}
-<!-- NIDA Toggle Script -->
+
+<!-- SCRIPT -->
 <script>
 const attachmentSelect = document.getElementById("id_attachment_type");
-const nidaWrapper = document.getElementById("nida-wrapper");
 
-function toggleNidaField() {
-    if(attachmentSelect.value.toLowerCase() === "nida"){
+const nidaWrapper = document.getElementById("nida-wrapper");
+const passportWrapper = document.getElementById("passport-wrapper");
+const voterWrapper = document.getElementById("voter-wrapper");
+const licenseWrapper = document.getElementById("license-wrapper");
+
+function hideAll() {
+    nidaWrapper.classList.add("hidden");
+    passportWrapper.classList.add("hidden");
+    voterWrapper.classList.add("hidden");
+    licenseWrapper.classList.add("hidden");
+}
+
+function toggleFields() {
+    hideAll();
+
+    const value = attachmentSelect.value;
+
+    if (value === "nida") {
         nidaWrapper.classList.remove("hidden");
-    } else {
-        nidaWrapper.classList.add("hidden");
+    }
+    else if (value === "passport") {
+        passportWrapper.classList.remove("hidden");
+    }
+    else if (value === "voter_id") {
+        voterWrapper.classList.remove("hidden");
+    }
+    else if (value === "driving_license") {
+        licenseWrapper.classList.remove("hidden");
     }
 }
 
-attachmentSelect.addEventListener("change", toggleNidaField);
-toggleNidaField();
+attachmentSelect.addEventListener("change", toggleFields);
+toggleFields();
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
