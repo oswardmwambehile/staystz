@@ -153,7 +153,7 @@ class CarBooking(models.Model):
             ("trip", "Per Trip"),
         ]
 
-        booking_type = models.CharField(
+    booking_type = models.CharField(
             max_length=10,
             choices=BOOKING_TYPE,
             default="day"
