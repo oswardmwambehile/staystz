@@ -21,7 +21,7 @@ env.read_env(BASE_DIR / ".env")
 # SECURITY
 # --------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY", default='django-insecure-dq&*$-xd(&@*!q_!5a3b5o!lfg4-w5gcs2m&=&ia_hd@&wg*tk')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "staystz.com","www.staystz.com", "45.33.63.182"]
 
@@ -158,6 +158,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
 # --------------------------------------------------
 # INTERNATIONALIZATION
 # --------------------------------------------------
@@ -189,7 +191,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # WhiteNoise static files
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # --------------------------------------------------
 # EMAIL
@@ -198,8 +200,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="philimonosward5@gmail.com")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="lzmdwiuefxtbldru")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
 # --------------------------------------------------
 # DEFAULT PK

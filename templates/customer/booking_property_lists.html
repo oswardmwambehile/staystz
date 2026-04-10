@@ -7,7 +7,7 @@
 
     <!-- Navbar -->
     {% include 'customers/nav.html' %}
-    <br><br>
+    
 
     <!-- Header Section -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
@@ -23,10 +23,36 @@
         </div>
 
         <!-- Image -->
-        <div class="md:w-1/2 mb-8 md:mb-0">
-            <img src="{% static 'customer/img/a2.jpg' %}" alt="Property Image"
-                 class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-        </div>
+<!-- Image -->
+<div class="md:w-1/2 mb-8 md:mb-0">
+
+    {% with property_type|lower as pt %}
+
+        {% if pt == "hotel" %}
+            <img src="{% static 'customer/img/hotel.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "lodge" %}
+            <img src="{% static 'customer/img/hw.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "villa" %}
+            <img src="{% static 'customer/img/villa.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "resort" %}
+            <img src="{% static 'customer/img/lodge.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "guest_house" or pt == "guest house" %}
+            <img src="{% static 'customer/img/gest.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "tent or campsite" or pt == "tent or campsite" %}
+            <img src="{% static 'customer/img/cmp.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% else %}
+            <img src="{% static 'customer/img/lodge.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% endif %}
+
+    {% endwith %}
+
+</div>
     </div>
 
     <!-- Search Section -->

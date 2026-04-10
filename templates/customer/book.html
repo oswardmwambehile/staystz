@@ -11,11 +11,11 @@
     {% include 'customers/nav.html' %}
 
     <!-- Header Section -->
-<div class="flex flex-col-reverse md:flex-row items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-32 pb-12">
+<div class="flex flex-col-reverse md:flex-row items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 md:pt-18 pb-3">
 
     <!-- Text -->
     <div class="md:w-1/2 md:pr-8">
-        <h1 class="text-3xl sm:text-4xl mb-4 text-gray-900" style="font-family: 'Montserrat', sans-serif;">
+        <h1 class="text-1xl sm:text-2xl mb-4 text-gray-900" style="font-family: 'Montserrat', sans-serif;">
             Find your perfect stay in <span class="text-green-800">one place</span>
         </h1>
         <p class="text-gray-600 text-base sm:text-lg">
@@ -27,7 +27,7 @@
 
     <!-- Image -->
     <div class="md:w-1/2 mb-8 md:mb-0">
-        <img src="{% static 'customer/img/property-1.jpg' %}" alt="Property Image"
+        <img src="{% static 'customer/img/hw.jpeg' %}" alt="Property Image"
              class="rounded-lg shadow-lg w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover">
     </div>
 
@@ -37,7 +37,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Title -->
         <div class="text-center mb-10">
-            <h2 class="text-2xl sm:text-3xl mb-2" style="font-family: 'Montserrat', sans-serif;">BOOKING CATEGORIES</h2>
+            <h2 class="text-2xl sm:text-2xl mb-2">BOOKING CATEGORIES</h2>
             <p class="text-gray-600">Choose your preferred accommodation type and book instantly.</p>
         </div>
 
@@ -58,7 +58,7 @@
             <!-- Lodge -->
             <a href="{% url 'booking_properties' 'lodge' %}" class="group">
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition hover:-translate-y-2 hover:shadow-2xl">
-                    <img src="{% static 'customer/img/lodge.jpeg' %}" alt="Lodge" class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                    <img src="{% static 'customer/img/hw.jpeg' %}" alt="Lodge" class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="p-4 text-center">
                         <h5 class="font-semibold text-lg mb-1">Lodge</h5>
                         <p class="text-gray-600 text-sm">Nature-friendly lodges for relaxing and adventurous stays.</p>
@@ -80,7 +80,7 @@
             <!-- Resort -->
             <a href="{% url 'booking_properties' 'resort' %}" class="group">
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition hover:-translate-y-2 hover:shadow-2xl">
-                    <img src="{% static 'customer/img/property-5.jpg' %}" alt="Resort" class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                    <img src="{% static 'customer/img/lodge.jpeg' %}" alt="Resort" class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="p-4 text-center">
                         <h5 class="font-semibold text-lg mb-1">Resort</h5>
                         <p class="text-gray-600 text-sm">Premium resorts with all-inclusive amenities.</p>
@@ -102,7 +102,7 @@
             <!-- Tent / Camp -->
             <a href="{% url 'booking_properties' 'tent or campsite' %}" class="group">
                 <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform transition hover:-translate-y-2 hover:shadow-2xl">
-                    <img src="{% static 'customer/img/hw.jpeg' %}" alt="Camp Site" class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105">
+                    <img src="{% static 'customer/img/cmp.jpeg' %}" alt="Camp Site" class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105">
                     <div class="p-4 text-center">
                         <h5 class="font-semibold text-lg mb-1">Tent / Camp Site</h5>
                         <p class="text-gray-600 text-sm">Outdoor campsites and tented stays for unforgettable adventures.</p>

@@ -7,14 +7,14 @@
 
     <!-- Navbar -->
     {% include 'customers/nav.html' %}
-    <div class="h-40 md:h-24"></div>
+    
 
     <!-- Header Start -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
 
         <!-- Text Section -->
         <div class="md:w-1/2 md:pr-8 mt-8 md:mt-0">
-            <h1 class="text-1xl sm:text-2xl lg:text-3xl   mb-3" style="font-family: 'Montserrat', sans-serif;">
+            <h1 class="text-1xl sm:text-2xl lg:text-3xl   mb-3">
                 Property List in <span class="text-green-800">{{ property_type|title }}</span>
             </h1>
             <p class="text-gray-600 text-base sm:text-lg">
@@ -24,9 +24,27 @@
         </div>
 
         <!-- Image Section -->
-        <div class="md:w-1/2 text-center">
-            <img class="rounded-lg shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover" src="{% static 'customer/img/property-4.jpg' %}" alt="Property Image">
-        </div>
+      <div class="md:w-1/2 mb-8 md:mb-0">
+
+    {% with property_type|lower as pt %}
+
+        {% if pt == "apartment" %}
+            <img src="{% static 'customer/img/apartment.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "homes" %}
+            <img src="{% static 'customer/img/homes.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "office_space" or pt == "office space" %}
+            <img src="{% static 'customer/img/a1.jpg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% else %}
+            <img src="{% static 'customer/img/apartment.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% endif %}
+
+    {% endwith %}
+
+</div>
     </div>
     <!-- Header End -->
 

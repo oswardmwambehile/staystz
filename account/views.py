@@ -72,16 +72,93 @@ from django.contrib.auth import authenticate, login, logout
 
 
 
+from datetime import timedelta
+from django.utils import timezone
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from django.shortcuts import redirect, render
+from .forms import RegisterForm
+from .models import OtpToken
+from django.conf import settings
+
 def signup(request):
     form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Account created successfully! An OTP was sent to your Email")
-            return redirect("verify-email", username=request.POST['username'])
-    context = {"form": form}
-    return render(request, "customer/signup.html", context)
+            user = form.save(commit=False)
+            user.is_active = False  # user inactive until verified
+            user.save()
+
+            # create OTP
+            otp = OtpToken.objects.create(
+                user=user,
+                otp_expires_at=timezone.now() + timedelta(minutes=5)
+            )
+
+            # send email
+            try:
+                send_mail(
+                    subject="Email Verification",
+                    message=f"Hi {user.username},\n\nYour OTP is: {otp.otp_code}\nIt expires in 5 minutes.",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[user.email],
+                    fail_silently=False
+                )
+            except Exception as e:
+                messages.warning(request, f"Account created but failed to send OTP email: {e}")
+                return redirect("verify-email", username=user.username)
+
+            messages.success(request, "Account created successfully! An OTP has been sent to your email.")
+            return redirect("verify-email", username=user.username)
+
+    return render(request, "customer/signup.html", {"form": form})
+
+
+def resend_otp(request):
+    if request.method == 'POST':
+        user_email = request.POST.get("otp_email")
+        User = get_user_model()
+
+        if not user_email or not User.objects.filter(email=user_email).exists():
+            messages.warning(request, "This email doesn't exist")
+            return redirect("resend-otp")
+
+        user = User.objects.get(email=user_email)
+
+        # cooldown check
+        last_otp = OtpToken.objects.filter(user=user).order_by('-otp_created_at').first()
+        if last_otp and timezone.now() - last_otp.otp_created_at < timedelta(seconds=60):
+            messages.warning(request, "Wait 1 min before requesting another OTP")
+            return redirect("resend-otp")
+
+        # daily limit check
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        if OtpToken.objects.filter(user=user, otp_created_at__gte=today_start).count() >= 5:
+            messages.warning(request, "Reached daily OTP limit")
+            return redirect("resend-otp")
+
+        # create OTP
+        otp = OtpToken.objects.create(user=user, otp_expires_at=timezone.now() + timedelta(minutes=5))
+
+        # send email safely
+        try:
+            send_mail(
+                subject="Email Verification",
+                message=f"Hi {user.username},\n\nYour OTP is: {otp.otp_code}\nIt expires in 5 minutes.",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[user.email],
+                fail_silently=False
+            )
+        except Exception as e:
+            messages.error(request, f"Failed to send OTP email: {e}")
+            return redirect("resend-otp")
+
+        messages.success(request, "A new OTP has been sent to your email")
+        return redirect("verify-email", username=user.username)
+
+    return render(request, "customer/resend_otp.html")
 
 
 def verify_email(request, username):
@@ -116,87 +193,7 @@ def verify_email(request, username):
     return render(request, "customer/verify_token.html", {"username": username})
 
 
-from django.contrib import messages
-from django.shortcuts import redirect, render
-from django.utils import timezone
-from django.contrib.auth import get_user_model
-from django.core.mail import send_mail
-from datetime import timedelta
-from .models import OtpToken  # make sure this is your OTP model
 
-def resend_otp(request):
-    if request.method == 'POST':
-        user_email = request.POST.get("otp_email")
-        User = get_user_model()
-
-        if not User.objects.filter(email=user_email).exists():
-            messages.warning(request, "This email doesn't exist in the database")
-            return redirect("resend-otp")
-
-        user = User.objects.get(email=user_email)
-
-        # ------------------------
-        # 1. Cooldown check (1 min)
-        # ------------------------
-        last_otp = OtpToken.objects.filter(user=user).order_by('-otp_created_at').first()
-        if last_otp and timezone.now() - last_otp.otp_created_at < timedelta(seconds=60):
-            messages.warning(request, "Please wait 1 minute before requesting another OTP")
-            return redirect("resend-otp")
-
-        # ------------------------
-        # 2. Daily OTP limit check (max 5 per day)
-        # ------------------------
-        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        otp_count_today = OtpToken.objects.filter(user=user, otp_created_at__gte=today_start).count()
-        if otp_count_today >= 5:
-            messages.warning(request, "You have reached the daily OTP request limit. Try again tomorrow.")
-            return redirect("resend-otp")
-
-        # ------------------------
-        # 3. Create OTP
-        # ------------------------
-        otp = OtpToken.objects.create(
-            user=user,
-            otp_expires_at=timezone.now() + timedelta(minutes=5)
-        )
-
-        # ------------------------
-        # 4. Send Email
-        # ------------------------
-        subject = "Email Verification"
-        message = f"""
-Hi {user.username},
-
-Welcome to StaySTZ!
-
-Your One-Time Password (OTP) is: **{otp.otp_code}**
-
-This OTP will expire in 5 minutes.
-
-To verify your email and complete your account setup, click the link below or copy it into your browser:
-
-https://staystz.com/verify-email/{user.username}
-
-If you did not request this verification, please ignore this email.
-
-Best regards,
-The StaySTZ Team
-"""
-        sender = "clintonmatics@gmail.com"
-        receiver = [user.email]
-
-        send_mail(
-            subject,
-            message,
-            sender,
-            receiver,
-            fail_silently=False,
-        )
-
-        messages.success(request, "A new OTP has been sent to your email-address")
-        return redirect("verify-email", username=user.username)
-
-    return render(request, "customer/resend_otp.html")
 
 
 
