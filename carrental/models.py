@@ -148,7 +148,16 @@ class CarBooking(models.Model):
         ("cancelled", "Cancelled"),
         ("completed", "Completed"),
     ]
+    BOOKING_TYPE = [
+            ("day", "Per Day"),
+            ("trip", "Per Trip"),
+        ]
 
+        booking_type = models.CharField(
+            max_length=10,
+            choices=BOOKING_TYPE,
+            default="day"
+        )
     car = models.ForeignKey(CarRental, on_delete=models.CASCADE, related_name="bookings")
 
     # Optional logged in customer

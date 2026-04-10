@@ -176,7 +176,8 @@ class CarBookingForm(forms.ModelForm):
             "pickup_date",
             "pickup_time",
             "pickup_location",
-            "dropoff_location",   # ✅ added
+            "dropoff_location",
+            "booking_type",
         ]
 
         widgets = {
@@ -200,6 +201,9 @@ class CarBookingForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Drop-off location (e.g. Kariakoo)"
             }),
+            "booking_type": forms.Select(attrs={
+              "class": "form-control"
+}),
         }
 
 
