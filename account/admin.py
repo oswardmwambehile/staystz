@@ -1,7 +1,12 @@
 from django.contrib import admin
 from .models import User, OtpToken
 from django.contrib.auth.admin import UserAdmin
-# Register your models here.
+
+# ✅ THIS IS THE CORRECT PLACE
+admin.site.site_header = "StayTanzania Administration"
+admin.site.site_title = "StayTanzania Admin Portal"
+admin.site.index_title = "Welcome to StayTanzania Administration"
+
 
 class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
@@ -18,4 +23,3 @@ class OtpTokenAdmin(admin.ModelAdmin):
 
 admin.site.register(OtpToken, OtpTokenAdmin)
 admin.site.register(User, CustomUserAdmin)
-    
