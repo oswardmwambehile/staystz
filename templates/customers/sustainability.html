@@ -1,0 +1,155 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO -->
+<section class="bg-white py-20 border-b">
+    <div class="max-w-6xl mx-auto px-6">
+        <h1 class="text-2xl md:text-3xl  text-gray-900 mb-4">
+            Sustainability at StaysTZ
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl">
+            We’re working to make travel and property services more sustainable across Tanzania,
+            supporting eco-friendly stays, responsible travel, and local communities.
+        </p>
+    </div>
+</section>
+
+<!-- INTRO -->
+<section class="py-16 ">
+    <div class="max-w-5xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+            Our approach
+        </h2>
+        <p class="text-gray-600 leading-relaxed">
+            At <strong>StaysTZ</strong>, we believe sustainability is about making better choices—
+            for our customers, our partners, and the environment.
+        </p>
+        <p class="text-gray-600 mt-4 leading-relaxed">
+            We are building a platform that encourages responsible travel and supports
+            property owners who adopt eco-friendly practices.
+        </p>
+    </div>
+</section>
+
+<!-- COMMITMENT -->
+<section class="py-16">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+        <!-- TEXT -->
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                Our commitment
+            </h2>
+            <p class="text-gray-600 mb-4">
+                We are committed to reducing environmental impact while improving
+                access to quality stays and services.
+            </p>
+            <p class="text-gray-600">
+                By working with property owners, travelers, and service providers,
+                we aim to create a more sustainable ecosystem across Tanzania.
+            </p>
+        </div>
+
+        <!-- IMAGE -->
+        <div>
+            <img src="{% static 'customer/img/apartment.jpeg' %}" 
+                 class="w-full rounded-lg object-cover">
+        </div>
+
+    </div>
+</section>
+
+<!-- INITIATIVES (NO CARDS - Booking style list/grid) -->
+<section class="py-16  border-t">
+    <div class="max-w-6xl mx-auto px-6">
+
+        <h2 class="text-2xl font-semibold text-gray-900 mb-10">
+            What we focus on
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-10">
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Eco-friendly properties
+                </h3>
+                <p class="text-gray-600">
+                    Supporting listings that use sustainable materials,
+                    energy-efficient systems, and responsible water usage.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Local communities
+                </h3>
+                <p class="text-gray-600">
+                    Working with local hosts and businesses to ensure tourism
+                    benefits the communities we serve.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Responsible travel
+                </h3>
+                <p class="text-gray-600">
+                    Encouraging travelers to make choices that reduce waste
+                    and protect the environment.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- FUTURE -->
+<section class="py-16">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+        <!-- IMAGE -->
+        <div>
+            <img src="{% static 'customer/img/v8.jpeg' %}" 
+                 class="w-full rounded-lg object-cover">
+        </div>
+
+        <!-- TEXT -->
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                Looking ahead
+            </h2>
+            <p class="text-gray-600 mb-4">
+                We are continuously improving how sustainability is integrated
+                into our platform.
+            </p>
+            <p class="text-gray-600">
+                Our future plans include highlighting eco-certified properties,
+                improving transparency, and helping users make more informed choices.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 text-center">
+    <div class="max-w-3xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+            Travel more responsibly with StaysTZ
+        </h2>
+        <p class="text-gray-600 mb-6">
+            Discover stays and services that support a more sustainable future.
+        </p>
+        <a href="#" class="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition">
+            Explore stays
+        </a>
+    </div>
+</section>
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}

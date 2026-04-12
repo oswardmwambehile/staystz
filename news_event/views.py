@@ -37,6 +37,16 @@ def security_policy(request):
     return render(request, "customers/security_policy.html")
 
 
+def how_we_work(request):
+    return render(request, 'customers/who.html')
+
+def sustainability(request):
+    return render(request, 'customers/sustainability.html')
+
+def careers(request):
+    return render(request, 'customers/careers.html')
+
+
 
 
 def contact(request):

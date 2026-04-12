@@ -1,0 +1,178 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO -->
+<section class="bg-white py-20 border-b">
+    <div class="max-w-6xl mx-auto px-6">
+        <h1 class="text-2xl md:text-3xl font-semibold text-gray-900 mb-4">
+            Careers at StaysTZ
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl">
+            Help us build the future of travel, car rentals, and property booking across Tanzania.
+            Join a team focused on innovation, growth, and real impact.
+        </p>
+    </div>
+</section>
+
+<!-- INTRO -->
+<section class="py-16">
+    <div class="max-w-5xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+            Work with us
+        </h2>
+        <p class="text-gray-600 leading-relaxed">
+            At <strong>StaysTZ</strong>, we are connecting people with places and services across Tanzania.
+            From car rentals to property stays and bookings, our mission is to simplify travel and living.
+        </p>
+        <p class="text-gray-600 mt-4 leading-relaxed">
+            We’re looking for passionate individuals who want to grow, learn, and contribute to a fast-moving digital platform.
+        </p>
+    </div>
+</section>
+
+<!-- AREAS -->
+<section class="py-16">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-10">
+            Areas of opportunity
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-10">
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Car rental operations
+                </h3>
+                <p class="text-gray-600">
+                    Manage bookings, coordinate vehicles, and support customers using our rental services.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Bookings & reservations
+                </h3>
+                <p class="text-gray-600">
+                    Assist users in booking stays and services while ensuring a smooth experience on our platform.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Property & residences
+                </h3>
+                <p class="text-gray-600">
+                    Work with property owners to list, manage, and grow their presence on StaysTZ.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- WHY JOIN -->
+<section class="py-16 border-t">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+
+        <!-- TEXT -->
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                Why join StaysTZ
+            </h2>
+
+            <ul class="space-y-4 text-gray-600">
+                <li>Work on a growing digital platform in Tanzania</li>
+                <li>Opportunities for career development</li>
+                <li>Collaborative and supportive team environment</li>
+                <li>Exposure to travel, transport, and real estate industries</li>
+                <li>Make real impact in local communities</li>
+            </ul>
+        </div>
+
+        <!-- IMAGE -->
+        <div>
+            <img src="{% static 'customer/img/gest.jpeg' %}" 
+                 class="w-full rounded-lg object-cover">
+        </div>
+
+    </div>
+</section>
+
+<!-- JOB LISTINGS -->
+<section class="py-16">
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-8">
+            Open positions
+        </h2>
+
+        <div class="border rounded-lg divide-y">
+
+            <!-- JOB ITEM -->
+            <div class="p-6 flex justify-between items-center">
+                <div>
+                    <h3 class="font-semibold text-gray-800">
+                        Customer Support Officer
+                    </h3>
+                    <p class="text-sm text-gray-500">
+                        Full-time • Tanzania
+                    </p>
+                </div>
+                <a href="#" class="text-blue-600 font-medium hover:underline">
+                    Apply
+                </a>
+            </div>
+
+            <div class="p-6 flex justify-between items-center">
+                <div>
+                    <h3 class="font-semibold text-gray-800">
+                        Booking Assistant
+                    </h3>
+                    <p class="text-sm text-gray-500">
+                        Full-time • Tanzania
+                    </p>
+                </div>
+                <a href="#" class="text-blue-600 font-medium hover:underline">
+                    Apply
+                </a>
+            </div>
+
+            <div class="p-6 flex justify-between items-center">
+                <div>
+                    <h3 class="font-semibold text-gray-800">
+                        Property Listing Manager
+                    </h3>
+                    <p class="text-sm text-gray-500">
+                        Full-time • Tanzania
+                    </p>
+                </div>
+                <a href="#" class="text-blue-600 font-medium hover:underline">
+                    Apply
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20  text-center">
+    <div class="max-w-3xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+            Don’t see a role that fits?
+        </h2>
+        <p class="text-gray-600 mb-6">
+            We’re always looking for talented people. Send us your CV and we’ll keep you in mind.
+        </p>
+        <a href="#" class="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition">
+            Send Application
+        </a>
+    </div>
+</section>
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}

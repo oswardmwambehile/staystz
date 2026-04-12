@@ -17,22 +17,60 @@
 
         <!-- Text -->
         <div class="md:w-1/2 space-y-6">
-            <h1 class="text-3xl md:text-5xl">
+            <h1 class="text-2xl md:text-3xl">
                 Property List in <span class="text-green-700">{{ property_type }}</span>
             </h1>
 
             <p class="text-gray-600 text-base md:text-lg leading-relaxed">
-                Explore properties available in {{ property_type }}. Browse homes,
-                apartments, land and rentals to find something that matches your needs.
+                Discover a wide range of {{ property_type }} options tailored to your needs. 
+                Browse listings, compare features, and find the perfect match with ease on StayStz.
             </p>
         </div>
 
         <!-- Image -->
-        <div class="md:w-1/2 flex justify-center">
-            <img src="{% static 'customer/img/s6.jpg' %}"
-                 class="rounded-xl shadow-lg w-full max-w-lg md:max-w-xl"
-                 alt="Property">
-        </div>
+        <div class="md:w-1/2 mb-8 md:mb-0">
+
+    {% with property_type|lower as pt %}
+
+        {% if pt == "hotel" %}
+            <img src="{% static 'customer/img/hotel.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "lodge" %}
+            <img src="{% static 'customer/img/hw.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% elif pt == "homes" %}
+            <img src="{% static 'customer/img/homes.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% elif pt == "apartment" %}
+            <img src="{% static 'customer/img/apartment.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        
+        {% elif pt == "office_space" or pt == "office space" %}
+            <img src="{% static 'customer/img/a1.jpg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+
+        {% elif pt == "villa" %}
+            <img src="{% static 'customer/img/villa.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% elif pt == "moving_logistic" %}
+            <img src="{% static 'customer/img/logistic.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% elif pt == "shuffle" %}
+            <img src="{% static 'customer/img/red.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% elif pt == "piki_piki_bajaji" %}
+            <img src="{% static 'customer/img/bajaji.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "resort" %}
+            <img src="{% static 'customer/img/lodge.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "guest_house" or pt == "guest house" %}
+            <img src="{% static 'customer/img/gest.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% elif pt == "tent or campsite" or pt == "tent or campsite" %}
+            <img src="{% static 'customer/img/cmp.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+
+        {% else %}
+            <img src="{% static 'customer/img/lodge.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
+        {% endif %}
+
+    {% endwith %}
+
+</div>
 
     </div>
 </div>
@@ -48,7 +86,7 @@
         No Properties Found
     </h4>
     <p>
-        Sorry, we couldn't find any properties, rentals, or cars available in
+        Sorry, we couldn't find any properties available in
         <strong>{{ property_type }}</strong> right now.
         Please try another location or check again later.
     </p>

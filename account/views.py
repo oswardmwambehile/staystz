@@ -81,6 +81,7 @@ from django.shortcuts import redirect, render
 from .forms import RegisterForm
 from .models import OtpToken
 from django.conf import settings
+import traceback
 
 def signup(request):
     form = RegisterForm()
@@ -106,7 +107,15 @@ def signup(request):
                     recipient_list=[user.email],
                     fail_silently=False
                 )
+                print("Email sent successfully")
+                print("SENDING TO:", user.email)
+                print("OTP:", otp.otp_code)
+
             except Exception as e:
+                print("❌ EMAIL ERROR:", str(e))
+                print("❌ ERROR TYPE:", type(e))
+                print("❌ FULL TRACEBACK:")
+                traceback.print_exc()
                 messages.warning(request, f"Account created but failed to send OTP email: {e}")
                 return redirect("verify-email", username=user.username)
 
@@ -151,7 +160,15 @@ def resend_otp(request):
                 recipient_list=[user.email],
                 fail_silently=False
             )
+            print("Email sent successfully")
+            print("SENDING TO:", user.email)
+            print("OTP:", otp.otp_code)
+
         except Exception as e:
+            print("❌ EMAIL ERROR:", str(e))
+            print("❌ ERROR TYPE:", type(e))
+            print("❌ FULL TRACEBACK:")
+            traceback.print_exc()
             messages.error(request, f"Failed to send OTP email: {e}")
             return redirect("resend-otp")
 
