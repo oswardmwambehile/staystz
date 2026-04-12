@@ -7,35 +7,8 @@
 
     <!-- Navbar -->
     {% include 'customers/nav.html' %}
-    <br><br>
 
-    <!-- Header Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
 
-        <!-- Text -->
-        <div class="md:w-1/2 md:pr-8">
-            <h1 class="text-1xl sm:text-2xl lg:text-3xl  mb-4" style="font-family: 'Montserrat', sans-serif;">
-                Car Rentals in <span class="text-green-800">{{ car_type_selected }}</span>
-            </h1>
-            <p class="text-gray-600 text-base sm:text-lg">
-                Explore a curated list of vehicles available in {{ car_type_selected }}. Filter by type, capacity, and price to find the right ride for your travel or transport needs.
-                
-            </p>
-        </div>
-
-        <!-- Image -->
-        <div class="md:w-1/2 mb-8 md:mb-0">
-            {% if car_type_selected == "moving_logistic" %}
-                <img src="{% static 'customer/img/logistic.jpeg' %}" alt="Moving Car" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-            {% elif car_type_selected == "shuffle" %}
-                <img src="{% static 'customer/img/red.jpeg' %}" alt="Shuffle Car" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-            {% elif car_type_selected == "piki_piki_bajaji" %}
-                <img src="{% static 'customer/img/bajaji.jpeg' %}" alt="Bajaji" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-            {% else %}
-                <img src="{% static 'customer/img/travel.jpeg' %}" alt="Car Rentals" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-            {% endif %}
-        </div>
-    </div>
 
 
 
