@@ -38,7 +38,7 @@
 
 <!-- SEARCH BAR -->
 <div class="relative w-full px-3 -mt-10 md:-mt-10 z-20">
-  <form method="GET" action="{% url 'global_search' %}">
+  <form id="globalSearchForm" method="GET" action="{% url 'global_search' %}">
     <div class="shadow-2xl p-4 md:p-5 flex flex-col md:flex-row gap-3 md:gap-4 items-center rounded-xl w-full max-w-6xl mx-auto bg-[#1591bc]">
 
       <!-- Region -->
@@ -65,9 +65,11 @@
           <option value="office_space" {% if request.GET.property_type == "office_space" %}selected{% endif %}>Office Space</option>
           <option value="resort" {% if request.GET.property_type == "resort" %}selected{% endif %}>Resort</option>
           <option value="gest_house" {% if request.GET.property_type == "gest_house" %}selected{% endif %}>Guest House</option>
-          <option value="shuffle" {% if request.GET.property_type == "shuffles" %}selected{% endif %}>Shuffles</option>
-          <option value="moving_logistic" {% if request.GET.property_type == "moving_logistic" %}selected{% endif %}>Moving Logistic</option>
-          <option value="piki_piki_bajaji" {% if request.GET.property_type == "piki_piki_bajaji" %}selected{% endif %}>Bajaji/Pikipiki</option>
+          <option value="shuffle" {% if request.GET.property_type == "shuffle" %}selected{% endif %}>Shuttles</option>
+
+      <option value="moving_logistic" {% if request.GET.property_type == "moving_logistic" %}selected{% endif %}>Moving Logistic</option>
+
+      <option value="piki_piki_bajaji" {% if request.GET.property_type == "piki_piki_bajaji" %}selected{% endif %}>Bajaji/Pikipiki</option>
           <option value="tent or campsite" {% if request.GET.property_type == "tent or campsite" %}selected{% endif %}>Tent/Camp Site</option>
         </select>
       </div>
@@ -81,3 +83,34 @@
     </div>
   </form>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("globalSearchForm");
+    const propertyType = document.querySelector("select[name='property_type']");
+
+    if (!form || !propertyType) {
+        console.error("Form or select not found!");
+        return;
+    }
+
+    const urls = {
+        "shuffle": "{% url 'car_rental_list_by_type' 'shuffle' %}",
+        "moving_logistic": "{% url 'car_rental_list_by_type' 'moving_logistic' %}",
+        "piki_piki_bajaji": "{% url 'car_rental_list_by_type' 'piki_piki_bajaji' %}"
+    };
+
+    form.addEventListener("submit", function (e) {
+
+        const selectedType = propertyType.value;
+        console.log("Selected:", selectedType);
+
+        if (urls[selectedType]) {
+            e.preventDefault();
+            console.log("Redirecting to:", urls[selectedType]);
+            window.location.href = urls[selectedType];
+        }
+    });
+});
+</script>
