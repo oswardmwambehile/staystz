@@ -9,6 +9,12 @@ admin.site.index_title = "Welcome to StayTanzania Administration"
 
 
 class CustomUserAdmin(UserAdmin):
+    list_display = ("email", "username", "date_joined", "is_staff")
+    ordering = ("-date_joined",)  # 👈 newest users first
+
+    search_fields = ("email", "username")
+    list_filter = ("is_staff", "is_superuser", "is_active", "date_joined")
+
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
