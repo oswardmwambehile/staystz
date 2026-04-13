@@ -1,0 +1,66 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO -->
+<section class="bg-white py-16 border-b">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <h1 class="text-3xl font-semibold text-gray-900 mb-4">
+            Help Center
+        </h1>
+        <p class="text-gray-600">
+            Find answers to common questions about bookings, payments, and services.
+        </p>
+    </div>
+</section>
+
+<!-- SEARCH -->
+<section class="py-10">
+    <div class="max-w-3xl mx-auto px-6">
+        <input type="text" placeholder="Search help topics..."
+               class="w-full border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-black">
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-12">
+    <div class="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-10">
+
+        <div>
+            <h3 class="font-semibold text-lg mb-2">How do I book a property?</h3>
+            <p class="text-gray-600">Search, choose your property, and follow the booking steps.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg mb-2">How do payments work?</h3>
+            <p class="text-gray-600">We support secure online payments and direct options.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg mb-2">Can I cancel my booking?</h3>
+            <p class="text-gray-600">Yes, depending on the property’s cancellation policy.</p>
+        </div>
+
+        <div>
+            <h3 class="font-semibold text-lg mb-2">How do I contact support?</h3>
+            <p class="text-gray-600">Use our contact page or email us anytime.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 text-center">
+    <h2 class="text-xl font-semibold mb-3">Still need help?</h2>
+    <a href="{% url 'contact' %}"
+       class="bg-black text-white px-6 py-3 rounded-md">
+       Contact Support
+    </a>
+</section>
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO -->
+<section class="bg-white py-20 border-b">
+    <div class="max-w-6xl mx-auto px-6">
+        <h1 class="text-2xl md:text-3xl text-gray-900 mb-4">
+            Corporate Contact
+        </h1>
+        <p class="text-lg text-gray-600 max-w-2xl">
+            Get in touch with the StayStz team for partnerships, business inquiries,
+            support, or general questions. We’re here to help.
+        </p>
+    </div>
+</section>
+
+<!-- CONTACT INFO -->
+<section class="py-16">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+
+        <!-- LEFT: DETAILS -->
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+                Contact details
+            </h2>
+
+            <div class="space-y-6 text-gray-600">
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Head Office</h3>
+                    <p>Dar es Salaam, Tanzania</p>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Email</h3>
+                    <p>support@staystz.com</p>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Phone</h3>
+                    <p>+255 634 456 678</p>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800">Working hours</h3>
+                    <p>Monday – Friday: 8:00 AM – 6:00 PM</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- RIGHT: IMAGE -->
+        <div>
+            <img src="{% static 'customer/img/building.png' %}" 
+                 class="w-full rounded-lg object-cover">
+        </div>
+
+    </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="py-16 border-t">
+    <div class="max-w-4xl mx-auto px-6">
+
+        <h2 class="text-2xl font-semibold text-gray-900 mb-8 text-center">
+            Send us a message
+        </h2>
+
+        <form class="space-y-6">
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <input type="text" placeholder="Full name"
+                       class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-black">
+
+                <input type="email" placeholder="Email address"
+                       class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-black">
+            </div>
+
+            <input type="text" placeholder="Subject"
+                   class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-black">
+
+            <textarea rows="5" placeholder="Your message"
+                      class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-black"></textarea>
+
+            <div class="text-center">
+                <button type="submit"
+                        class="bg-black text-white px-8 py-3 rounded-md hover:bg-gray-800 transition">
+                    Send message
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</section>
+
+<!-- BUSINESS / PARTNERS -->
+<section class="py-16 border-t">
+    <div class="max-w-6xl mx-auto px-6">
+
+        <h2 class="text-2xl font-semibold text-gray-900 mb-10">
+            Business & partnerships
+        </h2>
+
+        <div class="grid md:grid-cols-3 gap-10">
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Property owners
+                </h3>
+                <p class="text-gray-600">
+                    List your property on StayStz and reach more customers across Tanzania.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Transport providers
+                </h3>
+                <p class="text-gray-600">
+                    Partner with us to offer car rentals, logistics, and transport services.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                    Corporate partners
+                </h3>
+                <p class="text-gray-600">
+                    Collaborate with StayStz to build better travel and housing solutions.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 text-center">
+    <div class="max-w-3xl mx-auto px-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+            Let’s work together
+        </h2>
+        <p class="text-gray-600 mb-6">
+            Whether you’re a business, partner, or customer — we’d love to hear from you.
+        </p>
+        <a href="#" class="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 transition">
+            Contact support
+        </a>
+    </div>
+</section>
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}

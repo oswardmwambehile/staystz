@@ -19,6 +19,11 @@ def news_event_detail(request, slug):
     return render(request, 'customer/news_event_detail.html', context)
 
 
+def help_center(request):
+    return render(request, "customers/help_center.html")
+def manage_trips(request):
+   
+    return render(request, "customers/manage_trips.html")
 
 
 
@@ -45,6 +50,47 @@ def sustainability(request):
 
 def careers(request):
     return render(request, 'customers/careers.html')
+
+def cooperate(request):
+    return render(request, 'customers/cooperate.html')
+
+
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+def booking_support(request):
+    success = False
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        booking_id = request.POST.get("booking_id")
+        message = request.POST.get("message")
+
+        full_message = f"""
+Booking Support Request
+
+Name: {name}
+Email: {email}
+Booking ID: {booking_id}
+
+Message:
+{message}
+"""
+
+        send_mail(
+            subject="StayStz Booking Support Request",
+            message=full_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[settings.EMAIL_HOST_USER],
+            fail_silently=False,
+        )
+
+        success = True
+
+    return render(request, "customers/booking_support.html", {"success": success})
 
 
 

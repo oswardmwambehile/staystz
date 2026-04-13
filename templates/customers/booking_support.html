@@ -1,0 +1,150 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO -->
+<section class="bg-white py-16 border-b">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <h1 class="text-3xl font-semibold text-gray-900 mb-4">
+            Booking Support
+        </h1>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+            Need help with your booking? Find answers, manage your reservation,
+            or contact our support team.
+        </p>
+    </div>
+</section>
+
+<!-- QUICK ACTIONS -->
+<section class="py-12">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+
+        <a href="{% url 'manage_trips' %}" class="border rounded-xl p-6 hover:shadow-lg transition">
+            <h3 class="font-semibold text-lg mb-2">Manage booking</h3>
+            <p class="text-gray-600 text-sm">
+                View, update, or cancel your reservation بسهولة.
+            </p>
+        </a>
+
+        <a href="{% url 'help_center' %}" class="border rounded-xl p-6 hover:shadow-lg transition">
+            <h3 class="font-semibold text-lg mb-2">Help Center</h3>
+            <p class="text-gray-600 text-sm">
+                Find answers to common booking and payment questions.
+            </p>
+        </a>
+
+        <a href="" class="border rounded-xl p-6 hover:shadow-lg transition">
+            <h3 class="font-semibold text-lg mb-2">Contact Support</h3>
+            <p class="text-gray-600 text-sm">
+                Get in touch with our team for direct assistance.
+            </p>
+        </a>
+
+    </div>
+</section>
+
+<!-- COMMON ISSUES -->
+<section class="py-16 border-t">
+    <div class="max-w-5xl mx-auto px-6">
+
+        <h2 class="text-2xl font-semibold text-gray-900 mb-10">
+            Common booking issues
+        </h2>
+
+        <div class="space-y-8">
+
+            <div>
+                <h3 class="font-semibold text-gray-800 mb-2">
+                    I didn’t receive my booking confirmation
+                </h3>
+                <p class="text-gray-600">
+                    Check your email spam folder or verify your email address. 
+                    You can also retrieve your booking using your email and booking ID.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-semibold text-gray-800 mb-2">
+                    How do I cancel or change my booking?
+                </h3>
+                <p class="text-gray-600">
+                    Visit the “Manage Trips” section and enter your booking details 
+                    to modify or cancel your reservation.
+                </p>
+            </div>
+
+            <div>
+                <h3 class="font-semibold text-gray-800 mb-2">
+                    Payment issues
+                </h3>
+                <p class="text-gray-600">
+                    If your payment failed or was delayed, try again or contact support 
+                    for assistance with your transaction.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="py-16 border-t">
+    <div class="max-w-4xl mx-auto px-6">
+
+        <h2 class="text-2xl font-semibold text-gray-900 mb-8 text-center">
+            Contact Booking Support
+        </h2>
+
+        {% if success %}
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-6 text-center">
+                ✅ Your request has been sent successfully!
+            </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <input type="text" name="name" placeholder="Full name"
+                       class="w-full border p-3 rounded-md">
+
+                <input type="email" name="email" placeholder="Email address"
+                       class="w-full border p-3 rounded-md">
+            </div>
+
+            <input type="text" name="booking_id" placeholder="Booking ID (optional)"
+                   class="w-full border p-3 rounded-md">
+
+            <textarea name="message" rows="5" placeholder="Describe your issue"
+                      class="w-full border p-3 rounded-md"></textarea>
+
+            <div class="text-center">
+                <button type="submit"
+                        class="bg-black text-white px-8 py-3 rounded-md">
+                    Send request
+                </button>
+            </div>
+        </form>
+
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 text-center">
+    <div class="max-w-3xl mx-auto px-6">
+        <h2 class="text-xl font-semibold mb-4">
+            We’re here to help 24/7
+        </h2>
+        <p class="text-gray-600 mb-6">
+            Our support team is always ready to assist you with your bookings.
+        </p>
+    </div>
+</section>
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}

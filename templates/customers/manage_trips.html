@@ -1,0 +1,65 @@
+{% extends 'customers/base.html' %}
+{% load static %}
+
+{% block content %}
+
+{% include 'customers/nav.html' %}
+
+<!-- HERO -->
+<section class="bg-white py-16 border-b">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <h1 class="text-3xl font-semibold text-gray-900 mb-4">
+            Manage Your Trips
+        </h1>
+        <p class="text-gray-600">
+            View, update, or cancel your bookings easily.
+        </p>
+    </div>
+</section>
+
+<!-- SEARCH BOOKING -->
+<section class="py-12">
+    <div class="max-w-3xl mx-auto px-6">
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <input type="text" name="booking_id" placeholder="Booking ID"
+                   class="w-full border p-3 rounded-md">
+
+            <input type="email" name="email" placeholder="Email address"
+                   class="w-full border p-3 rounded-md">
+
+            <button type="submit"
+                    class="w-full bg-black text-white py-3 rounded-md">
+                Find booking
+            </button>
+        </form>
+
+    </div>
+</section>
+
+<!-- BOOKINGS RESULT -->
+{% if booking %}
+<section class="py-12">
+    <div class="max-w-4xl mx-auto px-6">
+
+        <div class="border rounded-lg p-6 shadow">
+            <h3 class="text-lg font-semibold mb-2">
+                {{ booking.property.name }}
+            </h3>
+            <p class="text-gray-600">Check-in: {{ booking.check_in }}</p>
+            <p class="text-gray-600">Check-out: {{ booking.check_out }}</p>
+
+            <div class="mt-4">
+                <a href="#" class="text-red-600">Cancel booking</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}
