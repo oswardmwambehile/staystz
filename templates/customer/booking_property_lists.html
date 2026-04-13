@@ -120,10 +120,19 @@
             </div>
             {% empty %}
             <div class="col-span-full">
-                <div class="bg-yellow-100 text-yellow-800 p-6 rounded-lg text-center">
-                    <h5 class="font-semibold mb-2">No properties found</h5>
-                    <p>Sorry, there are no properties available in this property type at the moment. Thank you for browsing our listings.</p>
-                </div>
+                {% if not residence_results and not booking_results and not car_results %}
+<div class="bg-green-100 text-green-800 p-8 rounded-lg text-center">
+    <h4 class="font-semibold text-xl mb-3">
+        Thank you for using staystz platform
+    </h4>
+    <p>
+        Sorry, the properties in 
+        <strong>{{ property_type }}</strong> right now are closed. 
+        Please try another location or check again later. When the properties are open, 
+        you will be able to continue with our services and enjoy browsing our properties.
+    </p>
+</div>
+{% endif %}
             </div>
             {% endfor %}
 
