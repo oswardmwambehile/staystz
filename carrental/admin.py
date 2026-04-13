@@ -138,18 +138,22 @@ class CarRentalAdmin(admin.ModelAdmin):
 
 
 
+
+
 from django.contrib import admin
 from .models import CarBooking
 
 
 @admin.register(CarBooking)
 class CarBookingAdmin(admin.ModelAdmin):
+
+    # ✅ DISPLAY
     list_display = (
         "id",
-        "car",
-        "get_car_owner_name",
-        "get_car_owner_phone",
-        "get_customer_name",
+        "car_name",
+        "car_owner_name",
+        "car_owner_phone",
+        "customer_name",
         "customer_phone_number",
         "pickup_date",
         "pickup_time",
@@ -159,40 +163,80 @@ class CarBookingAdmin(admin.ModelAdmin):
         "created_at",
     )
 
+    # ✅ FILTERS
     list_filter = ("status", "pickup_date", "created_at")
+
+    # ✅ SEARCH
     search_fields = (
         "customer_phone_number",
         "pickup_location",
         "dropoff_location",
         "car__car_name",
-        "car__owner__username",
-        "car__owner__first_name",
-        "car__owner__last_name",
-        "customer__username",
-        "customer__first_name",
-        "customer__last_name",
+        "customer__email",
     )
 
+    # ✅ ORDER
     ordering = ("-created_at",)
 
-    def get_customer_name(self, obj):
-        if obj.customer:
-            full_name = f"{obj.customer.first_name} {obj.customer.last_name}".strip()
-            return full_name if full_name else obj.customer.username
-        return "Guest"
-    get_customer_name.short_description = "Customer Name"
+    # ✅ READABLE DETAIL PAGE
+    fieldsets = (
+        ("Booking Info", {
+            "fields": ("car", "booking_type", "status")
+        }),
+        ("Customer Info", {
+            "fields": ("customer", "customer_phone_number")
+        }),
+        ("Trip Details", {
+            "fields": ("pickup_date", "pickup_time", "pickup_location", "dropoff_location")
+        }),
+        ("System", {
+            "fields": ("created_at",),
+        }),
+    )
 
-    def get_car_owner_name(self, obj):
-        if obj.car and obj.car.owner:
-            owner = obj.car.owner
-            full_name = f"{owner.first_name} {owner.last_name}".strip()
-            return full_name if full_name else owner.username
-        return "-"
-    get_car_owner_name.short_description = "Car Owner"
+    readonly_fields = ("created_at",)
 
-    def get_car_owner_phone(self, obj):
-        if obj.car:
-            return obj.car.phone_number
-        return "-"
-    get_car_owner_phone.short_description = "Owner Phone"
+    # =====================================================
+    # ✅ SAFE METHODS (NO CRASH GUARANTEED)
+    # =====================================================
 
+    def car_name(self, obj):
+        try:
+            return obj.car.car_name if obj.car else "No Car"
+        except Exception:
+            return "No Car"
+    car_name.short_description = "Car"
+
+    def customer_name(self, obj):
+        try:
+            if obj.customer:
+                first = obj.customer.first_name or ""
+                last = obj.customer.last_name or ""
+                name = f"{first} {last}".strip()
+                return name if name else obj.customer.email
+            return "Guest"
+        except Exception:
+            return "Guest"
+    customer_name.short_description = "Customer"
+
+    def car_owner_name(self, obj):
+        try:
+            if obj.car and obj.car.owner:
+                owner = obj.car.owner
+                first = owner.first_name or ""
+                last = owner.last_name or ""
+                name = f"{first} {last}".strip()
+                return name if name else owner.email
+            return "-"
+        except Exception:
+            return "-"
+    car_owner_name.short_description = "Car Owner"
+
+    def car_owner_phone(self, obj):
+        try:
+            if obj.car and hasattr(obj.car, "phone_number"):
+                return obj.car.phone_number
+            return "-"
+        except Exception:
+            return "-"
+    car_owner_phone.short_description = "Owner Phone"

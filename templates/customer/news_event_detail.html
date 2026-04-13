@@ -1,17 +1,61 @@
 {% extends "customer/base.html" %}
+{% load static %}
+
 {% block content %}
-<div class="news-event-detail">
-    <h1>{{ post.title }}</h1>
-    {% if post.is_event %}
-        <p><strong>Event Date:</strong> {{ post.event_date|date:"F d, Y H:i" }}</p>
-    {% else %}
-        <p><strong>Published:</strong> {{ post.publish_date|date:"F d, Y" }}</p>
-    {% endif %}
 
-    {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; margin-bottom:20px;">
-    {% endif %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-    <p>{{ post.content|linebreaks }}</p>
+    <!-- GRID -->
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+
+        <!-- 🖼️ LEFT: IMAGE -->
+        <div class="w-full">
+
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                     class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover rounded-2xl shadow-xl">
+            {% else %}
+                <img src="{% static 'customer/img/apartment.jpeg' %}"
+                     class="w-full h-[300px] sm:h-[400px] md:h-[500px] object-cover rounded-2xl shadow-xl">
+            {% endif %}
+
+        </div>
+
+        <!-- 📝 RIGHT: CONTENT -->
+        <div class="flex flex-col justify-center">
+
+            <!-- TITLE -->
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 mb-4">
+                {{ post.title }}
+            </h1>
+
+            <!-- DATE -->
+            {% if post.is_event and post.event_date %}
+                <p class="text-sm text-blue-600 font-medium mb-4">
+                    📅 Event Date: {{ post.event_date|date:"F d, Y • H:i" }}
+                </p>
+            {% elif not post.is_event and post.publish_date %}
+                <p class="text-sm text-gray-500 mb-4">
+                    📰 Published: {{ post.publish_date|date:"F d, Y" }}
+                </p>
+            {% endif %}
+
+            <!-- AUTHOR -->
+            {% if post.author %}
+                <p class="text-sm text-gray-400 mb-6">
+                    By {{ post.author }}
+                </p>
+            {% endif %}
+
+            <!-- CONTENT -->
+            <div class="text-gray-700 leading-relaxed text-base space-y-4">
+                {{ post.content|linebreaks }}
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+
 {% endblock %}
