@@ -163,15 +163,14 @@
             {% empty %}
             <div class="col-span-full text-center py-6">
                 {% if not residence_results and not booking_results and not car_results %}
-<div class="bg-green-100 text-green-800 p-8 rounded-lg text-center  ">
+<div class="bg-green-100 text-green-800 p-8 rounded-lg text-center max-w-3xl mx-auto ">
     <h4 class="font-semibold text-xl mb-3">
-        Thank you for using staystz platform
+        Thank you for using staystz.com                                                                                                                                                                                                                                 
     </h4>
     <p>
-        Sorry, the properties in 
+        Sorry, the 
         <strong>{{ property_type }}</strong> right now are closed. 
-        Please try another location or check again later. When the properties are open, 
-        you will be able to continue with our services and enjoy browsing our properties.
+        Please try again later.
     </p>
 </div>
 {% endif %}
