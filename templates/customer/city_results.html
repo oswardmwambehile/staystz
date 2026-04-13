@@ -65,10 +65,16 @@
     <div class="container mx-auto py-12 px-4 md:px-8">
 
         {% if not residence_results and not booking_results and not car_results %}
-        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-6 mb-6 rounded">
-            <h5 class="font-semibold mb-1">No properties found in {{ city }}</h5>
-            <p>Sorry, there are no booking, residence, or car rental properties available in this city right now.</p>
-        </div>
+        <div class="bg-green-100 text-green-800 p-8 rounded-lg text-center max-w-3xl mx-auto ">
+    <h4 class="font-semibold text-xl mb-3">
+        Thank you for using staystz.com                                                                                                                                                                                                                                 
+    </h4>
+    <p>
+        Sorry, the properties lists in
+        <strong>{{ property_type }}</strong> right now are closed. 
+        Please try again later.
+    </p>
+</div>
         {% endif %}
 
         {# Residence Properties #}
