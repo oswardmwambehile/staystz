@@ -72,9 +72,9 @@
                         <strong>
                             
                                 {{ car.carrentalpricing.currency }}
-                                {{ car.carrentalpricing.base_price_per_day|floatformat:0|intcomma }}
+                                {{ car.carrentalpricing.base_price_per_day|floatformat:2|intcomma }}
                                 up to
-                                {{ car.carrentalpricing.max_price_per_day|floatformat:0|intcomma }}
+                                {{ car.carrentalpricing.max_price_per_day|floatformat:2|intcomma }}
                             
                         </strong>
                     </div>
@@ -82,9 +82,9 @@
                     <div id="trip-price"
                          class="hidden text-center bg-yellow-100 text-yellow-800 py-2 px-4 rounded-md mt-2">
                         The price for trip is <strong>{{ car.carrentalpricing.currency }}
-                                    {{ car.carrentalpricing.base_price_per_day|floatformat:0|intcomma }}
+                                    {{ car.carrentalpricing.base_price_per_day|floatformat:2|intcomma }}
                                     up to
-                                    {{ car.carrentalpricing.max_price_per_day|floatformat:0|intcomma }}
+                                    {{ car.carrentalpricing.max_price_per_day|floatformat:2|intcomma }}
                                 </strong>
                     </div>
                 {% endif %}

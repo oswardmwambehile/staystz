@@ -37,8 +37,8 @@
                 <!-- Car Details -->
                 <div class="p-4 flex-grow">
                     <h5 class="text-[#ffc200] mb-2 font-semibold">
-     TZS {{ car.carrentalpricing.base_price_per_day|floatformat:0|intcomma }}
-    up to {{ car.carrentalpricing.max_price_per_day|floatformat:0|intcomma }} 
+     TZS {{ car.carrentalpricing.base_price_per_day|floatformat:2|intcomma }}
+    up to {{ car.carrentalpricing.max_price_per_day|floatformat:2|intcomma }} 
 </h5
                     <a href="" class="block text-lg font-semibold mb-1 hover:text-[#1591bc]">
                         {{ car.car_name }}
