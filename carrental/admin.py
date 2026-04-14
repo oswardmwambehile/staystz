@@ -6,6 +6,7 @@ from .models import (
     CarRentalPricing,
     CarRentalLegal,
 )
+from django.utils.html import format_html
 
 # ---------------------------
 # Inline for Car Photos
@@ -16,12 +17,14 @@ class CarRentalPhotoInline(admin.TabularInline):
     fields = ('image', 'image_preview')
     readonly_fields = ('image_preview',)
 
+
     def image_preview(self, obj):
         if obj.image:
-            return f'<img src="{obj.image.url}" width="100" style="border-radius:5px;" />'
+            return format_html(
+                '<img src="{}" width="100" style="border-radius:5px;" />',
+                obj.image.url
+            )
         return "-"
-    image_preview.allow_tags = True
-    image_preview.short_description = 'Preview'
 
 # ---------------------------
 # Inline for Car Setup / Features
@@ -172,7 +175,6 @@ class CarBookingAdmin(admin.ModelAdmin):
         "pickup_location",
         "dropoff_location",
         "car__car_name",
-        "customer__email",
     )
 
     # ✅ ORDER
@@ -206,6 +208,7 @@ class CarBookingAdmin(admin.ModelAdmin):
         except Exception:
             return "No Car"
     car_name.short_description = "Car"
+    
 
     def customer_name(self, obj):
         try:
