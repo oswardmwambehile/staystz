@@ -48,7 +48,7 @@ class CarRentalPricingInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                'base_price_per_day',
+                ('base_price_per_day',"max_price_per_day")
                 ('weekly_discount', 'monthly_discount'),
                 ('cleaning_fee', 'tax_percentage'),
                 'currency',

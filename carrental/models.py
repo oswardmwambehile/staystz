@@ -109,6 +109,7 @@ class CarRentalPhoto(models.Model):
 class CarRentalPricing(models.Model):
     car = models.OneToOneField(CarRental, on_delete=models.CASCADE)
     base_price_per_day = models.DecimalField(max_digits=12, decimal_places=2)
+    max_price_per_day = models.DecimalField(max_digits=12, decimal_places=2)
     weekly_discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     monthly_discount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
 
@@ -119,6 +120,7 @@ class CarRentalPricing(models.Model):
 
     def __str__(self):
         return f"Pricing for {self.car.car_name}"
+    
 
 
 # ---------------------------------------------------
