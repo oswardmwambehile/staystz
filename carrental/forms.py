@@ -165,6 +165,8 @@ class CarRentalLegalForm(forms.ModelForm):
         bootstrap_fields(self.fields)
 
 
+        
+
 from django import forms
 from .models import CarBooking
 
@@ -175,6 +177,7 @@ class CarBookingForm(forms.ModelForm):
         fields = [
             "customer_phone_number",
             "pickup_date",
+            "dropoff_date",
             "pickup_time",
             "pickup_location",
             "dropoff_location",
@@ -186,25 +189,45 @@ class CarBookingForm(forms.ModelForm):
                 "class": "form-control",
                 "placeholder": "Enter your phone number (e.g. 0712xxxxxx)"
             }),
+
             "pickup_date": forms.DateInput(attrs={
                 "class": "form-control",
                 "type": "date"
             }),
+
+            "dropoff_date": forms.DateInput(attrs={
+                "class": "form-control",
+                "type": "date"
+            }),
+
             "pickup_time": forms.TimeInput(attrs={
                 "class": "form-control",
                 "type": "time"
             }),
+
             "pickup_location": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Pickup location (e.g. Ubungo)"
             }),
+
             "dropoff_location": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Drop-off location (e.g. Kariakoo)"
             }),
+
             "booking_type": forms.Select(attrs={
-              "class": "form-control"
-}),
+                "class": "form-control"
+            }),
         }
 
+    # ✅ CLEAN VALIDATION (GOOD)
+    def clean(self):
+        cleaned_data = super().clean()
+        pickup_date = cleaned_data.get("pickup_date")
+        dropoff_date = cleaned_data.get("dropoff_date")
 
+        if pickup_date and dropoff_date:
+            if dropoff_date < pickup_date:
+                self.add_error("dropoff_date", "Drop-off date cannot be before pickup date")
+
+        return cleaned_data

@@ -142,27 +142,24 @@ class CarRentalLegal(models.Model):
 from django.db import models
 from django.conf import settings
 
-
 class CarBooking(models.Model):
+
     BOOKING_STATUS = [
         ("pending", "Pending"),
         ("confirmed", "Confirmed"),
         ("cancelled", "Cancelled"),
         ("completed", "Completed"),
     ]
+
     BOOKING_TYPE = [
-            ("day", "Per Day"),
-            ("trip", "Per Trip"),
-        ]
+        ("day", "Per Day"),
+        ("trip", "Per Trip"),
+    ]
 
-    booking_type = models.CharField(
-            max_length=10,
-            choices=BOOKING_TYPE,
-            default="day"
-        )
-    car = models.ForeignKey(CarRental, on_delete=models.CASCADE, related_name="bookings")
+    booking_type = models.CharField(max_length=10, choices=BOOKING_TYPE, default="day")
 
-    # Optional logged in customer
+    car = models.ForeignKey("CarRental", on_delete=models.CASCADE, related_name="bookings")
+
     customer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -173,16 +170,25 @@ class CarBooking(models.Model):
     customer_phone_number = models.CharField(max_length=20)
 
     pickup_date = models.DateField()
-    pickup_time = models.TimeField(blank=True, null=True)
+
+    pickup_time = models.TimeField(null=True, blank=True)  # ✅ ADD THIS
+
+    dropoff_date = models.DateField(null=True, blank=True)
 
     pickup_location = models.CharField(max_length=255, blank=True, null=True)
-
-    # ✅ NEW FIELD
     dropoff_location = models.CharField(max_length=255, blank=True, null=True)
 
-    status = models.CharField(max_length=20, choices=BOOKING_STATUS, default="pending")
+    total_days = models.PositiveIntegerField(null=True, blank=True)
 
+    status = models.CharField(max_length=20, choices=BOOKING_STATUS, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        if self.pickup_date and self.dropoff_date:
+            days = (self.dropoff_date - self.pickup_date).days
+            self.total_days = max(days, 1)
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.customer_phone_number} - {self.car.car_name}"
+        return f"{self.customer_phone_number} - {self.car}"
