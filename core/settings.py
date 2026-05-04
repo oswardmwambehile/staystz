@@ -110,10 +110,10 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "staystzdb",
-         "USER": "staystz",
-        "PASSWORD": "StrongPassword123",
-        "HOST": "127.0.0.1",
+        "NAME": "staystz_staystz_db",
+        "USER": "staystz_staystz",
+        "PASSWORD": "tKRP4asVo1MV",
+        "HOST": "localhost",
         "PORT": "3306",
     }
 }
