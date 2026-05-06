@@ -23,7 +23,7 @@ env.read_env(BASE_DIR / ".env")
 SECRET_KEY = env("DJANGO_SECRET_KEY", default='django-insecure-dq&*$-xd(&@*!q_!5a3b5o!lfg4-w5gcs2m&=&ia_hd@&wg*tk')
 DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "staystz.com","www.staystz.com", "45.33.63.182"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "staystz.com","www.staystz.com", "187.127.229.230"]
 
 CSRF_TRUSTED_ORIGINS = [
    
@@ -110,9 +110,9 @@ WSGI_APPLICATION = "core.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "staystz_staystz_db",
-        "USER": "staystz_staystz",
-        "PASSWORD": "tKRP4asVo1MV",
+        "NAME": "staystz_db",
+        "USER": "staystz",
+        "PASSWORD": "StrongPassword123",
         "HOST": "localhost",
         "PORT": "3306",
     }
