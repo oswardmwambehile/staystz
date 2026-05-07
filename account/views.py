@@ -103,23 +103,29 @@ def signup(request):
                 send_mail(
                     subject="Staystz Email Verification",
                     message=f"""
-                        Hello {user.username},
+                        Hello, {user.username},
 
-                        Welcome to StayStz! 👋
+                    Welcome to Staystz.
 
-                        To continue with your request, please use the One-Time Password (OTP) below to verify your email address:
+                    To continue with your request, please use the One-Time Password (OTP) below to verify your email address:
 
-                        🔑 OTP Code: {otp.otp_code}
+                    ----------------------------------------
+                                OTP CODE
+                    ----------------------------------------
 
-                        ⏳ This code will expire in 5 minutes for security reasons.
+                                {otp.otp_code}
 
-                        If you did not request this verification, please ignore this email — your account is safe.
+                    ----------------------------------------
 
-                        Need help? Our support team is always here for you.
+                    This code will expire in 5 minutes for security reasons.
 
-                        Best regards,  
-                        StayStz Team 🌍  
-                        Smart Stays • Easy Moves • Trusted Services
+                    If you did not request this verification, you can safely ignore this email.
+
+                    If you need assistance, please contact our support team.
+
+                    Best regards,
+                    StayStz Team
+                    Smart Stays. Easy Moves. Trusted Services.
                         """,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[user.email],
@@ -174,23 +180,29 @@ def resend_otp(request):
             send_mail(
                 subject="Staystz Email Verification",
                 message=f"""
-                    Hi {user.username},
+                   Hello, {user.username},
 
-                    Welcome to StayStz! 👋
+                    Welcome to Staystz.
 
                     To continue with your request, please use the One-Time Password (OTP) below to verify your email address:
 
-                    🔑 OTP Code: {otp.otp_code}
+                    ----------------------------------------
+                                OTP CODE
+                    ----------------------------------------
 
-                    ⏳ This code will expire in 5 minutes for security reasons.
+                                {otp.otp_code}
 
-                    If you did not request this verification, please ignore this email — your account is safe.
+                    ----------------------------------------
 
-                    Need help? Our support team is always here for you.
+                    This code will expire in 5 minutes for security reasons.
 
-                    Best regards,  
-                    StayStz Team 🌍  
-                    Smart Stays • Easy Moves • Trusted Services
+                    If you did not request this verification, you can safely ignore this email.
+
+                    If you need assistance, please contact our support team.
+
+                    Best regards,
+                    StayStz Team
+                    Smart Stays. Easy Moves. Trusted Services.
                     """,
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[user.email],
