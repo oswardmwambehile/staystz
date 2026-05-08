@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <!-- NAVBAR -->
 {% load static %}
 <!-- NAVBAR -->
@@ -58,16 +59,26 @@
       </div>
       {% else %}
       <div class="flex items-center gap-2">
-        <a href="{% url 'signin' %}" class="flex items-center justify-center bg-white border border-green-600 text-gray-900 px-4 py-2 rounded-lg gap-2 hover:bg-[#1591bc] hover:text-white"><img src="{% static 'customer/img/signin.png' %}" class="w-4 h-4"> Sign In</a>
-        <a href="{% url 'register' %}" class="flex items-center justify-center bg-[#1591bc] text-white px-4 py-2 rounded-lg gap-2 hover:bg-green-700"><img src="{% static 'customer/img/signup.webp' %}" class="w-4 h-4"> Sign Up</a>
+        <a href="{% url 'signin' %}" class="flex items-center justify-center bg-white border border-green-600 text-gray-900 px-4 py-2 rounded-lg gap-2 hover:bg-[#1591bc] hover:text-white">
+  <i class="fa-solid fa-right-to-bracket"></i>
+  Sign In
+</a>
+
+<a href="{% url 'register' %}" class="flex items-center justify-center bg-[#1591bc] text-white px-4 py-2 rounded-lg gap-2 hover:bg-green-700">
+  <i class="fa-solid fa-user-plus"></i>
+  Sign Up
+</a>
       </div>
       {% endif %}
     </div>
 
     <!-- MOBILE BUTTON -->
-    <button id="mobileMenuButton" class="md:hidden flex items-center justify-center w-10 h-10 bg-gray-100 rounded-lg hover:bg-gray-200">
-      <img src="{% static 'customer/img/menu.jpg' %}" class="w-16 h-12" alt="Menu Icon">
-    </button>
+<button id="mobileMenuButton"
+  class="md:hidden flex items-center justify-center w-11 h-11  rounded-lg hover:bg-gray-200 transition">
+
+  <i class="fa-solid fa-bars text-2xl text-gray-700"></i>
+
+</button>
   </div>
 
   <!-- MOBILE MENU -->
@@ -113,12 +124,15 @@
     {% else %}
     <!-- ✅ FIX ADDED HERE -->
     <div class="flex flex-col gap-2 mt-2">
-      <a href="{% url 'signin' %}" class="flex items-center gap-2 py-2 px-2 bg-white border border-green-600 rounded hover:bg-[#1591bc] hover:text-white">
-        Sign In
-      </a>
-      <a href="{% url 'register' %}" class="flex items-center gap-2 py-2 px-2 bg-[#1591bc] text-white rounded hover:bg-[#1591bc]">
-        Sign Up
-      </a>
+      <a href="{% url 'signin' %}" class="flex items-center justify-center bg-white border border-green-600 text-gray-900 px-4 py-2 rounded-lg gap-2 hover:bg-[#1591bc] hover:text-white">
+  <i class="fa-solid fa-right-to-bracket"></i>
+  Sign In
+</a>
+
+<a href="{% url 'register' %}" class="flex items-center justify-center bg-[#1591bc] text-white px-4 py-2 rounded-lg gap-2 hover:bg-green-700">
+  <i class="fa-solid fa-user-plus"></i>
+  Sign Up
+</a>
     </div>
     {% endif %}
   </div>
