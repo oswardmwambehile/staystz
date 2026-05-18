@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<body style="
+    font-family:Arial,sans-serif;
+    background:#f3f4f6;
+    padding:40px;
+">
+
+<div style="
+    max-width:700px;
+    margin:auto;
+    background:white;
+    border-radius:14px;
+    overflow:hidden;
+">
+
+    <!-- HEADER -->
+    <div style="
+        background:#111827;
+        padding:30px;
+        text-align:center;
+    ">
+
+        <h1 style="
+            color:white;
+            margin:0;
+        ">
+            🚗 StaySTZ
+        </h1>
+
+    </div>
+
+    <!-- BODY -->
+    <div style="padding:40px;">
+
+        <h2>
+            Hello {{ customer }},
+        </h2>
+
+        <p style="
+            color:#4b5563;
+            line-height:1.8;
+        ">
+            Your booking request has been received successfully.
+            Our team will contact you shortly.
+        </p>
+
+        <table width="100%"
+        cellpadding="12"
+        style="
+            margin-top:25px;
+            border-collapse:collapse;
+        ">
+
+            <tr style="background:#f9fafb;">
+                <td><strong>Car</strong></td>
+                <td>{{ car }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Pickup Date</strong></td>
+                <td>{{ booking.pickup_date }}</td>
+            </tr>
+
+            <tr style="background:#f9fafb;">
+                <td><strong>Dropoff Date</strong></td>
+                <td>{{ booking.dropoff_date }}</td>
+            </tr>
+
+            <tr>
+                <td><strong>Pickup Location</strong></td>
+                <td>{{ booking.pickup_location }}</td>
+            </tr>
+
+        </table>
+
+        <div style="
+            margin-top:35px;
+            text-align:center;
+        ">
+
+            <a href="https://staystz.com"
+            style="
+                background:#111827;
+                color:white;
+                padding:14px 30px;
+                text-decoration:none;
+                border-radius:8px;
+                display:inline-block;
+            ">
+                Visit Website
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div style="
+        background:#f9fafb;
+        padding:20px;
+        text-align:center;
+        color:#6b7280;
+    ">
+
+        © 2026 StaySTZ Car Rental
+
+    </div>
+
+</div>
+
+</body>
+</html>

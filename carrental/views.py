@@ -170,33 +170,140 @@ def car_rental_details(request, pk):
 
 
 
-
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
+from django.conf import settings
+
 from .models import CarRental
 from .forms import CarBookingForm
 
+
 @login_required(login_url='signin')
 def book_car(request, car_id):
+
+    # GET CAR
     car = get_object_or_404(CarRental, id=car_id)
 
+    # FORM SUBMIT
     if request.method == "POST":
+
         form = CarBookingForm(request.POST)
+
         if form.is_valid():
+
+            # CREATE BOOKING
             booking = form.save(commit=False)
+
+            # ASSIGN CAR
             booking.car = car
 
-            # If user is logged in, store them
-            if request.user.is_authenticated:
-                booking.customer = request.user
+            # ASSIGN LOGGED-IN USER
+            booking.customer = request.user
 
+            # SAVE BOOKING
             booking.save()
-            messages.success(request, "Booking sent successfully. We will contact you soon!")
-            return redirect("book_car", car_id=car.id)
+
+            # ==========================================
+            # EMAIL TO ADMIN
+            # ==========================================
+
+            admin_subject = f"🚗 New Booking - {car}"
+
+            context = {
+                "booking": booking,
+                "car": car,
+            }
+
+            # HTML TEMPLATE
+            html_content = render_to_string(
+                "emails/car_booking_email.html",
+                context
+            )
+
+            # TEXT VERSION
+            text_content = strip_tags(html_content)
+
+            # ADMIN EMAIL
+            admin_email = EmailMultiAlternatives(
+                subject=admin_subject,
+                body=text_content,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=["info@staystz.com"],
+            )
+
+            # ATTACH HTML
+            admin_email.attach_alternative(
+                html_content,
+                "text/html"
+            )
+
+            # SEND ADMIN EMAIL
+            admin_email.send()
+
+            # ==========================================
+            # EMAIL TO CUSTOMER
+            # ==========================================
+
+            customer_subject = "✅ Your Booking Request Has Been Received"
+
+            customer_context = {
+                "booking": booking,
+                "car": car,
+                "customer": request.user,
+            }
+
+            # CUSTOMER TEMPLATE
+            customer_html = render_to_string(
+                "emails/customer_booking_confirmation.html",
+                customer_context
+            )
+
+            customer_text = strip_tags(customer_html)
+
+            # SEND TO LOGGED-IN USER EMAIL
+            customer_email = EmailMultiAlternatives(
+                subject=customer_subject,
+                body=customer_text,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+
+                # USER EMAIL FROM LOGIN ACCOUNT
+                to=[request.user.email],
+            )
+
+            customer_email.attach_alternative(
+                customer_html,
+                "text/html"
+            )
+
+            customer_email.send()
+
+            # SUCCESS MESSAGE
+            messages.success(
+                request,
+                "Booking submitted successfully."
+            )
+
+            return redirect(
+                "book_car",
+                car_id=car.id
+            )
+
     else:
         form = CarBookingForm()
 
-    return render(request, "customer/book_car.html", {"form": form, "car": car})
+    return render(
+        request,
+        "customer/book_car.html",
+        {
+            "form": form,
+            "car": car,
+        }
+    )
 
 
 from django.shortcuts import render
