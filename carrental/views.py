@@ -169,7 +169,6 @@ def car_rental_details(request, pk):
     return render(request, "customer/car_rental_detail.html", context)
 
 
-
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -189,109 +188,83 @@ def book_car(request, car_id):
     # GET CAR
     car = get_object_or_404(CarRental, id=car_id)
 
-    # FORM SUBMIT
     if request.method == "POST":
 
         form = CarBookingForm(request.POST)
 
         if form.is_valid():
 
-            # CREATE BOOKING
-            booking = form.save(commit=False)
+            try:
 
-            # ASSIGN CAR
-            booking.car = car
+                # CREATE BOOKING
+                booking = form.save(commit=False)
 
-            # ASSIGN LOGGED-IN USER
-            booking.customer = request.user
+                # ASSIGN CAR
+                booking.car = car
 
-            # SAVE BOOKING
-            booking.save()
+                # ASSIGN USER
+                booking.customer = request.user
 
-            # ==========================================
-            # EMAIL TO ADMIN
-            # ==========================================
+                # SAVE BOOKING
+                booking.save()
 
-            admin_subject = f"🚗 New Booking - {car}"
+                # =====================================
+                # SEND EMAIL TO ADMIN ONLY
+                # =====================================
 
-            context = {
-                "booking": booking,
-                "car": car,
-            }
+                subject = f"🚗 New Car Booking - {car}"
 
-            # HTML TEMPLATE
-            html_content = render_to_string(
-                "emails/car_booking_email.html",
-                context
-            )
+                context = {
+                    "booking": booking,
+                    "car": car,
+                }
 
-            # TEXT VERSION
-            text_content = strip_tags(html_content)
+                # HTML EMAIL
+                html_content = render_to_string(
+                    "emails/car_booking_email.html",
+                    context
+                )
 
-            # ADMIN EMAIL
-            admin_email = EmailMultiAlternatives(
-                subject=admin_subject,
-                body=text_content,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=["info@staystz.com"],
-            )
+                # TEXT EMAIL
+                text_content = strip_tags(html_content)
 
-            # ATTACH HTML
-            admin_email.attach_alternative(
-                html_content,
-                "text/html"
-            )
+                # EMAIL OBJECT
+                email = EmailMultiAlternatives(
+                    subject=subject,
+                    body=text_content,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=["info@staystz.com"],
+                )
 
-            # SEND ADMIN EMAIL
-            admin_email.send()
+                # ATTACH HTML
+                email.attach_alternative(
+                    html_content,
+                    "text/html"
+                )
 
-            # ==========================================
-            # EMAIL TO CUSTOMER
-            # ==========================================
+                # SEND EMAIL
+                email.send(fail_silently=True)
 
-            customer_subject = "✅ Your Booking Request Has Been Received"
+                # SUCCESS MESSAGE
+                messages.success(
+                    request,
+                    "Booking submitted successfully."
+                )
 
-            customer_context = {
-                "booking": booking,
-                "car": car,
-                "customer": request.user,
-            }
+                # REDIRECT
+                return redirect(
+                    "book_car",
+                    car_id=car.id
+                )
 
-            # CUSTOMER TEMPLATE
-            customer_html = render_to_string(
-                "emails/customer_booking_confirmation.html",
-                customer_context
-            )
+            except Exception as e:
 
-            customer_text = strip_tags(customer_html)
+                print("EMAIL ERROR:", e)
 
-            # SEND TO LOGGED-IN USER EMAIL
-            customer_email = EmailMultiAlternatives(
-                subject=customer_subject,
-                body=customer_text,
-                from_email=settings.DEFAULT_FROM_EMAIL,
-
-                # USER EMAIL FROM LOGIN ACCOUNT
-                to=[request.user.email],
-            )
-
-            customer_email.attach_alternative(
-                customer_html,
-                "text/html"
-            )
-
-            customer_email.send()
-
-            # SUCCESS MESSAGE
-            messages.success(
-                request,
-                "Booking submitted successfully."
-            )
-
-            return redirect(
-                "book_car",
-                car_id=car.id
-            )
+                messages.error(
+                    request,
+                    "Something went wrong while processing your booking."
+                )
 
     else:
         form = CarBookingForm()
@@ -304,7 +277,6 @@ def book_car(request, car_id):
             "car": car,
         }
     )
-
 
 from django.shortcuts import render
 
