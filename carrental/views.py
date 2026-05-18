@@ -168,7 +168,6 @@ def car_rental_details(request, pk):
 
     return render(request, "customer/car_rental_detail.html", context)
 
-
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -192,27 +191,31 @@ def book_car(request, car_id):
 
         form = CarBookingForm(request.POST)
 
+        # DEBUG FORM ERRORS
+        print(form.errors)
+
         if form.is_valid():
 
+            # CREATE BOOKING
+            booking = form.save(commit=False)
+
+            # ASSIGN CAR
+            booking.car = car
+
+            # ASSIGN USER
+            booking.customer = request.user
+
+            # SAVE BOOKING
+            booking.save()
+
+            print("BOOKING SAVED SUCCESSFULLY")
+
+            # =====================================
+            # SEND EMAIL
+            # =====================================
             try:
 
-                # CREATE BOOKING
-                booking = form.save(commit=False)
-
-                # ASSIGN CAR
-                booking.car = car
-
-                # ASSIGN USER
-                booking.customer = request.user
-
-                # SAVE BOOKING
-                booking.save()
-
-                # =====================================
-                # SEND EMAIL TO ADMIN ONLY
-                # =====================================
-
-                subject = f"🚗 New Car Booking - {car}"
+                subject = f"New Car Booking - {car}"
 
                 context = {
                     "booking": booking,
@@ -225,7 +228,7 @@ def book_car(request, car_id):
                     context
                 )
 
-                # TEXT EMAIL
+                # TEXT VERSION
                 text_content = strip_tags(html_content)
 
                 # EMAIL OBJECT
@@ -243,28 +246,35 @@ def book_car(request, car_id):
                 )
 
                 # SEND EMAIL
-                email.send(fail_silently=True)
+                email.send(fail_silently=False)
 
-                # SUCCESS MESSAGE
-                messages.success(
-                    request,
-                    "Booking submitted successfully."
-                )
-
-                # REDIRECT
-                return redirect(
-                    "book_car",
-                    car_id=car.id
-                )
+                print("EMAIL SENT SUCCESSFULLY")
 
             except Exception as e:
 
                 print("EMAIL ERROR:", e)
 
-                messages.error(
-                    request,
-                    "Something went wrong while processing your booking."
-                )
+            # SUCCESS MESSAGE
+            messages.success(
+                request,
+                "Booking submitted successfully."
+            )
+
+            # REDIRECT
+            return redirect(
+                "book_car",
+                car_id=car.id
+            )
+
+        else:
+
+            print("FORM INVALID")
+            print(form.errors)
+
+            messages.error(
+                request,
+                "Please correct the errors below."
+            )
 
     else:
         form = CarBookingForm()

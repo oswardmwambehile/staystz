@@ -47,6 +47,33 @@
                 <h3 class="text-center text-xl font-semibold mb-4">
                     {{ car.car_name|title }}
                 </h3>
+                {% if messages %}
+    <div class="mb-4 space-y-2">
+
+        {% for message in messages %}
+
+            <div class="
+                px-4 py-3 rounded-lg text-green-700
+
+                {% if message.tags == 'success' %}
+                    bg-green-100
+                {% elif message.tags == 'error' %}
+                    bg-red-100
+                {% elif message.tags == 'warning' %}
+                    bg-yellow-100
+                {% else %}
+                    bg-blue-600
+                {% endif %}
+            ">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+{% endif %}
 
                 <!-- PRICE DISPLAY -->
                 {% if car.carrentalpricing %}

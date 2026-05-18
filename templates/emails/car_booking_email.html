@@ -1,256 +1,601 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>New Booking</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Flowbite -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+        rel="stylesheet"
+    />
+
 </head>
 
-<body style="
-    margin:0;
-    padding:0;
-    background:#f3f4f6;
-    font-family:Arial,sans-serif;
+<body class="
+    bg-slate-950
+    py-10
+    px-4
+    font-sans
 ">
 
-<table width="100%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0">
 
-<tr>
-<td align="center" style="padding:40px 15px;">
+        <tr>
+            <td align="center">
 
-<table width="700" cellpadding="0" cellspacing="0"
-style="
-    background:#ffffff;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 5px 20px rgba(0,0,0,0.08);
-">
+                <!-- MAIN CARD -->
+                <table
+                    width="760"
+                    cellpadding="0"
+                    cellspacing="0"
+                    class="
+                        bg-white/10
+                        backdrop-blur-2xl
+                        border
+                        border-white/10
+                        rounded-3xl
+                        overflow-hidden
+                        shadow-2xl
+                    "
+                    style="
+                        background:rgba(255,255,255,0.06);
+                        backdrop-filter:blur(18px);
+                    "
+                >
 
-    <!-- HEADER -->
-    <tr>
-        <td style="
-            background:#111827;
-            padding:35px;
-            text-align:center;
-        ">
-
-            <h1 style="
-                color:white;
-                margin:0;
-                font-size:32px;
-            ">
-                🚗 StaySTZ Booking
-            </h1>
-
-            <p style="
-                color:#d1d5db;
-                margin-top:10px;
-                font-size:15px;
-            ">
-                New Car Rental Booking Notification
-            </p>
-
-        </td>
-    </tr>
-
-    <!-- BODY -->
-    <tr>
-        <td style="padding:40px;">
-
-            <h2 style="
-                margin-top:0;
-                color:#111827;
-                font-size:24px;
-            ">
-                Booking Information
-            </h2>
-
-            <p style="
-                color:#6b7280;
-                line-height:1.7;
-            ">
-                A customer has submitted a new booking request.
-            </p>
-
-            <!-- DETAILS TABLE -->
-            <table width="100%"
-            cellpadding="12"
-            cellspacing="0"
-            style="
-                border-collapse:collapse;
-                margin-top:25px;
-            ">
-
-                <tr style="background:#f9fafb;">
-                    <td width="35%">
-                        <strong>Car</strong>
-                    </td>
-                    <td>
-                        {{ car }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <strong>Booking Type</strong>
-                    </td>
-                    <td>
-                        {{ booking.get_booking_type_display }}
-                    </td>
-                </tr>
-
-                <tr style="background:#f9fafb;">
-                    <td>
-                        <strong>Customer</strong>
-                    </td>
-                    <td>
-
-                        {% if booking.customer %}
-                            {{ booking.customer }}
-                        {% else %}
-                            Guest Customer
-                        {% endif %}
-
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <strong>Phone Number</strong>
-                    </td>
-                    <td>
-                        {{ booking.customer_phone_number }}
-                    </td>
-                </tr>
-
-                <tr style="background:#f9fafb;">
-                    <td>
-                        <strong>Pickup Date</strong>
-                    </td>
-                    <td>
-                        {{ booking.pickup_date }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <strong>Pickup Time</strong>
-                    </td>
-                    <td>
-                        {{ booking.pickup_time }}
-                    </td>
-                </tr>
-
-                <tr style="background:#f9fafb;">
-                    <td>
-                        <strong>Dropoff Date</strong>
-                    </td>
-                    <td>
-                        {{ booking.dropoff_date }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <strong>Total Days</strong>
-                    </td>
-                    <td>
-                        {{ booking.total_days }}
-                    </td>
-                </tr>
-
-                <tr style="background:#f9fafb;">
-                    <td>
-                        <strong>Pickup Location</strong>
-                    </td>
-                    <td>
-                        {{ booking.pickup_location }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <strong>Dropoff Location</strong>
-                    </td>
-                    <td>
-                        {{ booking.dropoff_location }}
-                    </td>
-                </tr>
-
-                <tr style="background:#f9fafb;">
-                    <td>
-                        <strong>Status</strong>
-                    </td>
-
-                    <td>
-
-                        <span style="
-                            background:#facc15;
-                            color:#111827;
-                            padding:7px 14px;
-                            border-radius:999px;
-                            font-size:12px;
-                            font-weight:bold;
+                    <!-- HEADER -->
+                    <tr>
+                        <td class="
+                            bg-gradient-to-r
+                            from-cyan-500
+                            via-blue-600
+                            to-purple-700
+                            px-10
+                            py-12
+                            text-center
+                            relative
+                            overflow-hidden
                         ">
-                            {{ booking.status|upper }}
-                        </span>
 
-                    </td>
-                </tr>
+                            <!-- Glow -->
+                            <div class="
+                                absolute
+                                top-[-60px]
+                                right-[-60px]
+                                w-52
+                                h-52
+                                rounded-full
+                                bg-white/20
+                                blur-3xl
+                            "></div>
 
-                <tr>
-                    <td>
-                        <strong>Created At</strong>
-                    </td>
-                    <td>
-                        {{ booking.created_at }}
-                    </td>
-                </tr>
+                            <div class="relative z-10">
 
-            </table>
+                                <div class="
+                                    w-24
+                                    h-24
+                                    mx-auto
+                                    rounded-full
+                                    bg-white/20
+                                    border
+                                    border-white/20
+                                    backdrop-blur-xl
+                                    flex
+                                    items-center
+                                    justify-center
+                                    text-5xl
+                                    shadow-xl
+                                ">
+                                    🚗
+                                </div>
 
-            <!-- BUTTON -->
-            <div style="margin-top:40px;text-align:center;">
+                                <h1 class="
+                                    text-4xl
+                                    font-extrabold
+                                    text-white
+                                    mt-6
+                                    tracking-wide
+                                ">
+                                    Staystz Booking 
+                                </h1>
 
-                <a href="https://staystz.com/admin/"
-                style="
-                    background:#111827;
-                    color:white;
-                    text-decoration:none;
-                    padding:14px 30px;
-                    border-radius:8px;
-                    display:inline-block;
-                    font-weight:bold;
-                ">
-                    Open Dashboard
-                </a>
+                                <p class="
+                                    text-blue-100
+                                    mt-3
+                                    text-sm
+                                    tracking-wide
+                                ">
+                                    New Car Rental Booking Notification
+                                </p>
 
-            </div>
+                            </div>
 
-        </td>
-    </tr>
+                        </td>
+                    </tr>
 
-    <!-- FOOTER -->
-    <tr>
-        <td style="
-            background:#f9fafb;
-            padding:25px;
-            text-align:center;
-            color:#6b7280;
-            font-size:14px;
-        ">
+                    <!-- BODY -->
+                    <tr>
+                        <td class="p-10">
 
-            © 2026 StaySTZ Car Rental System
+                            <!-- ALERT -->
+                            <div class="
+                                mb-8
+                                p-5
+                                rounded-2xl
+                                border
+                                border-cyan-400/20
+                                bg-cyan-500/10
+                                shadow-lg
+                            ">
 
-        </td>
-    </tr>
+                                <div class="flex items-start">
 
-</table>
+                                    <svg
+                                        class="w-6 h-6 text-cyan-400 mr-3 mt-0.5"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M18 10A8 8 0 11.002 9.999 8 8 0 0118 10zm-9-4a1 1 0 112 0v5a1 1 0 11-2 0V6zm1 8a1.25 1.25 0 100-2.5A1.25 1.25 0 0010 14z"
+                                            clip-rule="evenodd"
+                                        ></path>
+                                    </svg>
 
-</td>
-</tr>
+                                    <div>
 
-</table>
+                                        <h3 class="
+                                            text-white
+                                            font-semibold
+                                            text-lg
+                                        ">
+                                            Booking Submitted
+                                        </h3>
+
+                                        <p class="
+                                            text-slate-300
+                                            text-sm
+                                            mt-1
+                                            leading-6
+                                        ">
+                                            A customer has submitted a new booking request.
+                                            Review the complete reservation details below.
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- TITLE -->
+                            <div class="
+                                flex
+                                items-center
+                                justify-between
+                                mb-6
+                            ">
+
+                                <div>
+
+                                    <h2 class="
+                                        text-2xl
+                                        font-bold
+                                        text-white
+                                    ">
+                                        Booking Information
+                                    </h2>
+
+                                    <p class="
+                                        text-slate-400
+                                        text-sm
+                                        mt-1
+                                    ">
+                                        Reservation and customer details
+                                    </p>
+
+                                </div>
+
+                                <!-- STATUS -->
+                                <span class="
+                                    inline-flex
+                                    items-center
+                                    px-4
+                                    py-2
+                                    rounded-full
+                                    bg-yellow-400/20
+                                    border
+                                    border-yellow-400/20
+                                    text-yellow-300
+                                    text-xs
+                                    font-bold
+                                    uppercase
+                                    tracking-widest
+                                ">
+                                    {{ booking.status }}
+                                </span>
+
+                            </div>
+
+                            <!-- TABLE -->
+                            <div class="
+                                rounded-3xl
+                                overflow-hidden
+                                border
+                                border-white/10
+                                shadow-2xl
+                            ">
+
+                                <table class="
+                                    w-full
+                                    text-sm
+                                    text-left
+                                    text-slate-300
+                                ">
+
+                                    <tbody>
+
+                                        <!-- CAR -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                            bg-white/5
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                                w-[35%]
+                                            ">
+                                                Car
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-semibold
+                                            ">
+                                                {{ car }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- BOOKING TYPE -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Booking Type
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.get_booking_type_display }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- CUSTOMER -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                            bg-white/5
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Customer
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+
+                                                {% if booking.customer %}
+                                                    {{ booking.customer }}
+                                                {% else %}
+                                                    Guest Customer
+                                                {% endif %}
+
+                                            </td>
+                                        </tr>
+
+                                        <!-- PHONE -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Phone Number
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.customer_phone_number }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- PICKUP DATE -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                            bg-white/5
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Pickup Date
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.pickup_date }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- PICKUP TIME -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Pickup Time
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.pickup_time }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- DROPOFF DATE -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                            bg-white/5
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Dropoff Date
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.dropoff_date }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- TOTAL DAYS -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Total Days
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                            ">
+
+                                                <span class="
+                                                    inline-flex
+                                                    items-center
+                                                    px-4
+                                                    py-2
+                                                    rounded-xl
+                                                    bg-cyan-500/20
+                                                    border
+                                                    border-cyan-400/20
+                                                    text-cyan-300
+                                                    font-bold
+                                                ">
+                                                    {{ booking.total_days }} Day(s)
+                                                </span>
+
+                                            </td>
+                                        </tr>
+
+                                        <!-- PICKUP LOCATION -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                            bg-white/5
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Pickup Location
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.pickup_location }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- DROPOFF LOCATION -->
+                                        <tr class="
+                                            border-b
+                                            border-white/10
+                                        ">
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Dropoff Location
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.dropoff_location }}
+                                            </td>
+                                        </tr>
+
+                                        <!-- CREATED -->
+                                        <tr class="bg-white/5">
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                font-semibold
+                                                text-slate-400
+                                            ">
+                                                Created At
+                                            </td>
+
+                                            <td class="
+                                                px-6
+                                                py-5
+                                                text-white
+                                                font-medium
+                                            ">
+                                                {{ booking.created_at }}
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <!-- BUTTON -->
+                            <div class="mt-10 text-center">
+
+                                <a href="https://staystz.com/admin/"
+                                class="
+                                    inline-flex
+                                    items-center
+                                    justify-center
+                                    px-8
+                                    py-4
+                                    rounded-2xl
+                                    bg-gradient-to-r
+                                    from-cyan-500
+                                    to-blue-600
+                                    text-white
+                                    text-sm
+                                    font-bold
+                                    shadow-2xl
+                                    hover:scale-105
+                                    transition-all
+                                    duration-300
+                                ">
+
+                                    Open Dashboard
+
+                                </a>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <!-- FOOTER -->
+                    <tr>
+                        <td class="
+                            border-t
+                            border-white/10
+                            px-8
+                            py-6
+                            text-center
+                        ">
+
+                            <p class="
+                                text-slate-400
+                                text-sm
+                            ">
+                                © 2026 StaySTZ Car Rental System
+                            </p>
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+
+    </table>
+
+    <!-- FLOWBITE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 
 </body>
+
 </html>
