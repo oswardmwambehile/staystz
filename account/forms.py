@@ -1,24 +1,75 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from .models import User
+
 import re
+
+
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model 
+from django.contrib.auth import get_user_model
+from captcha.fields import CaptchaField
+
+
+User = get_user_model()
 
 
 class RegisterForm(UserCreationForm):
-    email=forms.CharField(widget=forms.EmailInput(attrs={"placeholder": "Enter email-address", "class": "form-control"}))
-    username=forms.CharField(widget=forms.TextInput(attrs={"placeholder": "Enter email-username", "class": "form-control"}))
-    password1=forms.CharField(label="Password", widget=forms.PasswordInput(attrs={"placeholder": "Enter password", "class": "form-control"}))
-    password2=forms.CharField(label="Confirm Password", widget=forms.PasswordInput(attrs={"placeholder": "Confirm password", "class": "form-control"}))
-    
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            "placeholder": "Enter email-address",
+            "class": "form-control"
+        })
+    )
+
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "placeholder": "Enter username",
+            "class": "form-control"
+        })
+    )
+
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={
+            "placeholder": "Enter password",
+            "class": "form-control"
+        })
+    )
+
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(attrs={
+            "placeholder": "Confirm password",
+            "class": "form-control"
+        })
+    )
+
+    # ✅ ANTI-BOT CAPTCHA
+    captcha = CaptchaField()
+
     class Meta:
-        model = get_user_model()
+        model = User
         fields = ["email", "username", "password1", "password2"]
 
+    # ✅ prevent duplicate emails
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email already exists")
+
+        return email
+
+    # ✅ basic username validation
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+
+        if len(username) < 4:
+            raise forms.ValidationError("Username too short")
+
+        return username
 
 
 from django import forms
@@ -67,7 +118,7 @@ class LoginForm(forms.Form):
 
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.models import User
+
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 

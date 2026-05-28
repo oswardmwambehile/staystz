@@ -15,6 +15,7 @@ urlpatterns = [
     path('carrental/', include('carrental.urls')),
     path('attachments/', include('attachments.urls')),
     path('news-events/', include('news_event.urls')),
+    path('captcha/', include('captcha.urls')),
 
 ]
 # Serve static and media in debug mode

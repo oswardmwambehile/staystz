@@ -155,7 +155,7 @@ class ResidencePropertyAdmin(admin.ModelAdmin):
         "region",
         "district",
         "colored_status",
-        "airbnb_available",
+        "bnb_available",
         "created_at",
     )
 
@@ -165,7 +165,7 @@ class ResidencePropertyAdmin(admin.ModelAdmin):
         "property_type",
         "status",
         "region",
-        "airbnb_available",
+        "bnb_available",
         "furnished",
         "parking_available",
     )

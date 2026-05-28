@@ -1,5 +1,5 @@
 {% load static %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       crossorigin="anonymous" />
 
 <footer class="text-white pt-12" style="background-color:#1591bc;">
@@ -8,14 +8,16 @@
     <!-- GRID (DESKTOP) / ACCORDION (MOBILE) -->
     <div class="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-5 lg:gap-10">
 
-      <!-- ITEM -->
+      <!-- ABOUT -->
       <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
-        <button onclick="toggleFooter('about')" class="w-full flex justify-between items-center lg:block">
+
+        <button onclick="toggleFooter('about')"
+          class="w-full flex justify-between items-center lg:block lg:text-left lg:mb-3">
           <h5 class="text-lg font-semibold">About</h5>
           <span class="lg:hidden">+</span>
         </button>
 
-        <ul id="about" class="hidden lg:block mt-3 space-y-2 text-sm">
+        <ul id="about" class="hidden lg:block space-y-2 text-sm">
           <li><a href="{% url 'about-stays' %}" class="hover:underline">About Stays Tanzania</a></li>
           <li><a href="{% url 'how_we_work' %}" class="hover:underline">How we work</a></li>
           <li><a href="{%url 'sustainability' %}" class="hover:underline">Sustainability</a></li>
@@ -28,12 +30,15 @@
 
       <!-- SUPPORT -->
       <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
-        <button onclick="toggleFooter('support')" class="w-full flex justify-between items-center lg:block">
+
+        <button onclick="toggleFooter('support')"
+          class="w-full flex justify-between items-center lg:block lg:text-left lg:mb-3">
           <h5 class="text-lg font-semibold">Support</h5>
           <span class="lg:hidden">+</span>
         </button>
 
-        <div id="support" class="hidden lg:block mt-3">
+        <div id="support" class="hidden lg:block">
+
           <ul class="space-y-2 text-sm">
             <li><a href="{%url 'help_center' %}" class="hover:underline">Help Center</a></li>
             <li><a href="{%url 'contact' %}" class="hover:underline">Contact Us</a></li>
@@ -46,93 +51,97 @@
             <p class="flex items-center"><i class="fa fa-phone-alt mr-2"></i>+255 676 513 904</p>
             <p class="flex items-center"><i class="fa fa-envelope mr-2"></i>info@staystz.com</p>
           </div>
+
         </div>
       </div>
 
-      
-
-      
-
       <!-- TERMS -->
       <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
-        <button onclick="toggleFooter('terms')" class="w-full flex justify-between items-center lg:block">
+
+        <button onclick="toggleFooter('terms')"
+          class="w-full flex justify-between items-center lg:block lg:text-left lg:mb-3">
           <h5 class="text-lg font-semibold">Terms & Conditions</h5>
           <span class="lg:hidden">+</span>
         </button>
 
-        <ul id="terms" class="hidden lg:block mt-3 space-y-2 text-sm">
+        <ul id="terms" class="hidden lg:block space-y-2 text-sm">
           <li><a href="{% url 'privacy' %}" class="hover:underline">Privacy Policy</a></li>
           <li><a href="{% url 'terms' %}" class="hover:underline">Terms of Service</a></li>
           <li><a href="{% url 'cookies' %}" class="hover:underline">Cookies Policy</a></li>
           <li><a href="{% url 'security_policy' %}" class="hover:underline">Security Policy</a></li>
         </ul>
+
       </div>
 
       <!-- PARTNERS -->
       <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
-        <button onclick="toggleFooter('partners')" class="w-full flex justify-between items-center lg:block">
+
+        <button onclick="toggleFooter('partners')"
+          class="w-full flex justify-between items-center lg:block lg:text-left lg:mb-3">
           <h5 class="text-lg font-semibold">Partners</h5>
           <span class="lg:hidden">+</span>
         </button>
 
-        <ul id="partners" class="hidden lg:block mt-3 space-y-2 text-sm">
+        <ul id="partners" class="hidden lg:block space-y-2 text-sm">
           <li><a href="#" class="hover:underline">Property Owners</a></li>
           <li><a href="#" class="hover:underline">Car Rental Partners</a></li>
           <li><a href="#" class="hover:underline">Travel Agencies</a></li>
           <li><a href="#" class="hover:underline">Become a Partner</a></li>
         </ul>
+
       </div>
 
       <!-- FOLLOW -->
       <div class="border-b border-white/30 lg:border-0 pb-3 lg:pb-0">
-        <button onclick="toggleFooter('follow')" class="w-full flex justify-between items-center lg:block">
+
+        <button onclick="toggleFooter('follow')"
+          class="w-full flex justify-between items-center lg:block lg:text-left lg:mb-3">
           <h5 class="text-lg font-semibold">Follow Us</h5>
           <span class="lg:hidden">+</span>
         </button>
 
-        <div id="follow" class="hidden lg:block mt-3">
+        <div id="follow" class="hidden lg:block">
 
           <div class="flex space-x-3">
             <a href="https://www.instagram.com/stays_shoppingtz?igsh=aWE3Z3VvdWw3MHh5&utm_source=qr"
-       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
-      <i class="fab fa-instagram"></i>
-    </a>
+               class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+              <i class="fab fa-instagram"></i>
+            </a>
 
-    <a href="https://www.facebook.com/share/1DcaQ8x6pE/?mibextid=wwXIfr"
-       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
-      <i class="fab fa-facebook"></i>
-    </a>
+            <a href="https://www.facebook.com/share/1DcaQ8x6pE/?mibextid=wwXIfr"
+               class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+              <i class="fab fa-facebook"></i>
+            </a>
 
-    <a href="https://www.linkedin.com/in/frank-nestory-699102355"
-       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
-      <i class="fab fa-linkedin-in"></i>
-    </a>
+            <a href="https://www.linkedin.com/in/frank-nestory-699102355"
+               class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
 
-    <a href="https://x.com/stays_tz?s=21"
-       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
-      <i class="fab fa-twitter"></i>
-    </a>
+            <a href="https://x.com/stays_tz?s=21"
+               class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+              <i class="fab fa-twitter"></i>
+            </a>
 
-    <a href="https://youtube.com/@stays_tz"
-       class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
-      <i class="fab fa-youtube"></i>
-    </a>
-
+            <a href="https://youtube.com/@stays_tz"
+               class="w-9 h-9 flex items-center justify-center border border-white rounded-full hover:bg-white hover:text-blue-600 transition">
+              <i class="fab fa-youtube"></i>
+            </a>
           </div>
 
           <div class="mt-6 max-w-xs">
             <form method="POST">
               {% csrf_token %}
-              <input type="text" placeholder="Your Name" class="w-full mb-2 px-3 py-2 rounded text-gray-800 text-sm">
-              <input type="email" placeholder="Your Email" class="w-full mb-3 px-3 py-2 rounded text-gray-800 text-sm">
+              <input type="text" placeholder="Your Name"
+                     class="w-full mb-2 px-3 py-2 rounded text-gray-800 text-sm">
+              <input type="email" placeholder="Your Email"
+                     class="w-full mb-3 px-3 py-2 rounded text-gray-800 text-sm">
               <button class="w-full bg-[#ffc200] py-2 rounded">Subscribe</button>
             </form>
           </div>
 
         </div>
       </div>
-
-
 
     </div>
 
@@ -148,7 +157,6 @@
   </div>
 </footer>
 
-<!-- JS -->
 <script>
 function toggleFooter(id) {
   const sections = ["about","support","follow","partners","terms"];

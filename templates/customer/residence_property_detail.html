@@ -154,19 +154,48 @@
                 </div>
                 {% endif %}
 
-                <!-- Pricing -->
-                {% if pricing %}
-                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-                    <h5 class="text-lg font-semibold text-green-800 mb-2">Pricing</h5>
-                    <p>Base Price: {{ pricing.base_price|floatformat:0|intcomma }} TZS</p>
-                    <p>Cleaning Fee: {{ pricing.cleaning_fee|default:"0" }} TZS</p>
-                    <p>Rent Duration: {{ pricing.get_rent_duration_display }}</p>
-                    {% if property.property_type == "office_space" %}
-                        <p>Min Months: {{ pricing.min_months|default:"N/A" }}</p>
-                        <p>Max Months: {{ pricing.max_months|default:"N/A" }}</p>
-                    {% endif %}
-                </div>
-                {% endif %}
+                
+
+            {% if pricing %}
+          <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
+            <div class="card-body">
+
+                <h5 class="text-lg font-semibold text-green-800 mb-2">Pricing</h5>
+
+              {% if pricing.base_price %}
+                <p><strong>Base Price:</strong>
+                  {{ pricing.base_price|floatformat:0|intcomma }} {{ pricing.currency }}
+                </p>
+              {% endif %}
+
+              {% if pricing.base_price_per_day %}
+                <p><strong>Per Day Price:</strong>
+                  {{ pricing.base_price_per_day|floatformat:0|intcomma }} {{ pricing.currency }}
+                </p>
+              {% endif %}
+
+              {% if pricing.weekly_discount_percent > 0 %}
+                <p><strong>Weekly Discount:</strong> {{ pricing.weekly_discount_percent }}%</p>
+              {% endif %}
+
+              {% if pricing.monthly_discount_percent > 0 %}
+                <p><strong>Monthly Discount:</strong> {{ pricing.monthly_discount_percent }}%</p>
+              {% endif %}
+
+              {% if pricing.cleaning_fee %}
+                <p><strong>Cleaning Fee:</strong>
+                  {{ pricing.cleaning_fee|floatformat:0|intcomma }}
+                </p>
+              {% endif %}
+
+              {% if property.property_type == "office_space" %}
+                <p><strong>Min Months:</strong> {{ pricing.min_months|default:"N/A" }}</p>
+                <p><strong>Max Months:</strong> {{ pricing.max_months|default:"N/A" }}</p>
+              {% endif %}
+
+            </div>
+          </div>
+          {% endif %}
 
                 <!-- Legal -->
                 {% if legal %}

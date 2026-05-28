@@ -140,7 +140,7 @@ select {
                         {% for field in property_form %}
 
                             {# ✅ ONLY Airbnb field gets wrapper id #}
-                            {% if field.name == "airbnb_available" %}
+                            {% if field.name == "bnb_available" %}
                             <div class="mb-3" id="airbnb-wrapper">
                                 <label class="form-label">{{ field.label }}</label><br>
 
@@ -286,20 +286,21 @@ select {
 let currentStep = 1;
 
 // ============================
-// STEP NAVIGATION
+// STEP NAVIGATION (FIXED SAFE)
 // ============================
 function showStep(step) {
     document.querySelectorAll(".step").forEach((s, idx) => {
         const active = idx + 1 === step;
         s.classList.toggle("d-none", !active);
 
-        // Only toggle 'required' on visible fields, do not disable
+        // ❌ FIX: don't blindly set required on hidden steps
         s.querySelectorAll("input, select, textarea").forEach(el => {
-            if (el.type === "checkbox" || el.type === "radio") {
-                // Checkboxes/radios: required only if step visible
-                el.required = active;
+            if (active) {
+                if (el.dataset.optional !== "true") {
+                    el.required = true;
+                }
             } else {
-                el.required = active;
+                el.required = false;
             }
         });
     });
@@ -320,20 +321,35 @@ function prevStep() {
 }
 
 // ============================
-// DROPZONE IMAGE UPLOAD
+// ELEMENTS
+// ============================
+const propertyTypeSelect = document.getElementById("id_property_type");
+const airbnbWrapper = document.getElementById("airbnb-wrapper");
+const airbnbField = document.getElementById("id_bnb_available");
+
+const residenceSetup = document.getElementById("residence-setup");
+const officeSetup = document.getElementById("office-setup");
+
+const pricingFields = document.querySelectorAll(".pricing-field");
+
+// ============================
+// IMAGE UPLOAD (FIXED PROPERLY)
 // ============================
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("imageUpload");
 
 if (dropzone && fileInput) {
+
     const preview = document.createElement("div");
     preview.style.display = "flex";
     preview.style.flexWrap = "wrap";
     preview.style.marginTop = "10px";
     dropzone.appendChild(preview);
 
+    // CLICK OPEN FILES
     dropzone.addEventListener("click", () => fileInput.click());
 
+    // DRAG OVER
     dropzone.addEventListener("dragover", e => {
         e.preventDefault();
         dropzone.classList.add("dragover");
@@ -343,10 +359,18 @@ if (dropzone && fileInput) {
         dropzone.classList.remove("dragover");
     });
 
+    // DROP FIX (IMPORTANT)
     dropzone.addEventListener("drop", e => {
         e.preventDefault();
         dropzone.classList.remove("dragover");
-        fileInput.files = e.dataTransfer.files;
+
+        const dt = new DataTransfer();
+
+        for (let i = 0; i < e.dataTransfer.files.length; i++) {
+            dt.items.add(e.dataTransfer.files[i]);
+        }
+
+        fileInput.files = dt.files;
         updatePreview();
     });
 
@@ -354,10 +378,11 @@ if (dropzone && fileInput) {
 
     function updatePreview() {
         preview.innerHTML = "";
+
         Array.from(fileInput.files).forEach(file => {
             const img = document.createElement("img");
             img.src = URL.createObjectURL(file);
-            img.style.height = "100px";
+            img.style.height = "90px";
             img.style.margin = "5px";
             img.style.border = "1px solid #ccc";
             img.style.borderRadius = "5px";
@@ -367,78 +392,59 @@ if (dropzone && fileInput) {
 }
 
 // ============================
-// DYNAMIC FORM CONTROL
+// MAIN LOGIC
 // ============================
-const propertyTypeSelect = document.getElementById("id_property_type");
-const residenceSetup = document.getElementById("residence-setup");
-const officeSetup = document.getElementById("office-setup");
-const pricingFields = document.querySelectorAll(".pricing-field");
-const buildingLevelSelect = document.getElementById("id_building_level");
-const floorsInput = document.getElementById("id_floors");
-
-function setSectionState(section, show) {
-    if (!section) return;
-
-    section.style.display = show ? "block" : "none";
-
-    section.querySelectorAll("input, select, textarea").forEach(el => {
-        // Only remove required when hidden
-        el.required = show;
-
-        // Reset values for hidden fields
-        if (!show) {
-            if (el.type === "checkbox" || el.type === "radio") {
-                el.checked = false;
-            } else {
-                el.value = "";
-            }
-        }
-    });
-}
-
 function updateSetupPricing() {
     if (!propertyTypeSelect) return;
 
     const type = propertyTypeSelect.value;
 
-    // ============================
-    // AIRBNB
-    // ============================
-    const airbnbWrapper = document.getElementById("airbnb-wrapper");
-    const airbnbField = document.getElementById("id_airbnb_available");
+    const isApartment = type === "apartment";
+    const isOffice = type === "office_space";
 
+    // =========================
+    // AIRBNB FIELD (FIXED)
+    // =========================
     if (airbnbWrapper && airbnbField) {
-        if (type === "apartment") {
+        if (isApartment) {
             airbnbWrapper.style.display = "block";
-            airbnbField.required = true;
         } else {
             airbnbWrapper.style.display = "none";
-            airbnbField.required = false;
-            airbnbField.value = "";
+            airbnbField.value = "no";
         }
     }
 
-    // ============================
+    const isBnbYes = airbnbField && airbnbField.value === "yes";
+
+    // =========================
     // SETUP SECTIONS
-    // ============================
-    if (type === "office_space") {
-        setSectionState(officeSetup, true);
-        setSectionState(residenceSetup, false);
+    // =========================
+    if (isOffice) {
+        officeSetup.style.display = "block";
+        residenceSetup.style.display = "none";
     } else {
-        setSectionState(officeSetup, false);
-        setSectionState(residenceSetup, true);
+        officeSetup.style.display = "none";
+        residenceSetup.style.display = "block";
     }
 
-    // ============================
-    // PRICING
-    // ============================
-    const officePricingFields = [
+    // =========================
+    // PRICING LOGIC
+    // =========================
+    const bnbFields = [
+        "base_price_per_day",
+        "weekly_discount_percent",
+        "monthly_discount_percent",
+        "cleaning_fee",
+        "currency"
+    ];
+
+    const normalFields = [
         "base_price",
+        "rent_duration",
         "min_months",
         "max_months",
-        "rent_duration",
-        "currency",
-        "cleaning_fee"
+        "cleaning_fee",
+        "currency"
     ];
 
     pricingFields.forEach(wrapper => {
@@ -446,41 +452,53 @@ function updateSetupPricing() {
         const input = wrapper.querySelector("input, select, textarea");
         if (!input) return;
 
-        if (type === "office_space") {
-            if (officePricingFields.includes(fieldName)) {
+        // OFFICE
+        if (isOffice) {
+            if (normalFields.includes(fieldName)) {
                 wrapper.style.display = "block";
                 input.required = true;
             } else {
                 wrapper.style.display = "none";
                 input.required = false;
-                if (input.type === "checkbox" || input.type === "radio") {
-                    input.checked = false;
-                } else {
-                    input.value = "";
-                }
+                input.value = "";
             }
-        } else {
+            return;
+        }
+
+        // APARTMENT + BNB
+        if (isApartment && isBnbYes) {
+            if (bnbFields.includes(fieldName)) {
+                wrapper.style.display = "block";
+                input.required = true;
+            } else {
+                wrapper.style.display = "none";
+                input.required = false;
+                input.value = "";
+            }
+            return;
+        }
+
+        // NORMAL RESIDENCE
+        if (normalFields.includes(fieldName)) {
             wrapper.style.display = "block";
             input.required = true;
-        }
-    });
-
-    // ============================
-    // FLOORS
-    // ============================
-    if (buildingLevelSelect && floorsInput) {
-        const wrapper = floorsInput.closest(".mb-3");
-        if (!wrapper) return;
-
-        if (buildingLevelSelect.value === "storey_building") {
-            wrapper.style.display = "block";
-            floorsInput.required = true;
         } else {
             wrapper.style.display = "none";
-            floorsInput.required = false;
-            floorsInput.value = "";
+            input.required = false;
+            input.value = "";
         }
-    }
+    });
+}
+
+// ============================
+// EVENTS
+// ============================
+if (propertyTypeSelect) {
+    propertyTypeSelect.addEventListener("change", updateSetupPricing);
+}
+
+if (airbnbField) {
+    airbnbField.addEventListener("change", updateSetupPricing);
 }
 
 // ============================
@@ -488,16 +506,7 @@ function updateSetupPricing() {
 // ============================
 showStep(currentStep);
 updateSetupPricing();
-
-if (propertyTypeSelect) {
-    propertyTypeSelect.addEventListener("change", updateSetupPricing);
-}
-
-if (buildingLevelSelect) {
-    buildingLevelSelect.addEventListener("change", updateSetupPricing);
-}
 </script>
-
 
 
 

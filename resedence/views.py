@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from .models import ResidenceProperty, ResidencePropertyPhoto
+from django.shortcuts import render, redirect
+from .models import ResidenceProperty, ResidencePropertyPhoto
 from .forms import (
     ResidencePropertyForm,
     ResidencePropertySetupForm,
@@ -8,77 +10,103 @@ from .forms import (
     ResidencePropertyLegalForm,
 )
 
+
 def add_residence_property_all_in_one(request):
     success = False
 
     if request.method == "POST":
+
+        # -------------------------
+        # STEP 1: PROPERTY FORM
+        # -------------------------
         property_form = ResidencePropertyForm(request.POST)
-        property_type = request.POST.get("property_type")
 
-        is_office = (property_type == "office_space")
-
-        residence_setup_form = ResidencePropertySetupForm(request.POST)
-        office_setup_form = OfficePropertySetupForm(request.POST)
-
-        dummy_property = ResidenceProperty(property_type=property_type)
-        pricing_form = ResidencePropertyPricingForm(request.POST, property_obj=dummy_property)
-
-        legal_form = ResidencePropertyLegalForm(request.POST)
-
-        # validate correct setup form only
-        setup_valid = office_setup_form.is_valid() if is_office else residence_setup_form.is_valid()
-
-        if property_form.is_valid() and setup_valid and pricing_form.is_valid() and legal_form.is_valid():
-
+        if property_form.is_valid():
             prop = property_form.save(commit=False)
             prop.owner = request.user
             prop.save()
 
-            # save correct setup
+            property_type = prop.property_type
+            is_office = (property_type == "office_space")
+
+            # -------------------------
+            # STEP 2: SETUP FORM
+            # -------------------------
             if is_office:
-                setup_obj = office_setup_form.save(commit=False)
+                setup_form = OfficePropertySetupForm(request.POST)
             else:
-                setup_obj = residence_setup_form.save(commit=False)
+                setup_form = ResidencePropertySetupForm(request.POST)
 
-            setup_obj.property = prop
-            setup_obj.save()
+            # -------------------------
+            # STEP 3: PRICING FORM (NOW SAFE)
+            # -------------------------
+            pricing_form = ResidencePropertyPricingForm(
+                request.POST,
+                property_obj=prop
+            )
 
-            pricing_obj = pricing_form.save(commit=False)
-            pricing_obj.property = prop
-            pricing_obj.save()
+            # -------------------------
+            # STEP 4: LEGAL FORM
+            # -------------------------
+            legal_form = ResidencePropertyLegalForm(request.POST)
 
-            legal_obj = legal_form.save(commit=False)
-            legal_obj.property = prop
-            legal_obj.save()
+            # -------------------------
+            # VALIDATION
+            # -------------------------
+            setup_valid = setup_form.is_valid()
+            pricing_valid = pricing_form.is_valid()
+            legal_valid = legal_form.is_valid()
 
-            for img in request.FILES.getlist("image"):
-                ResidencePropertyPhoto.objects.create(property=prop, image=img)
+            if setup_valid and pricing_valid and legal_valid:
 
-            success = True
+                # SAVE SETUP
+                setup_obj = setup_form.save(commit=False)
+                setup_obj.property = prop
+                setup_obj.save()
 
-            # reset forms
-            property_form = ResidencePropertyForm()
-            residence_setup_form = ResidencePropertySetupForm()
-            office_setup_form = OfficePropertySetupForm()
-            pricing_form = ResidencePropertyPricingForm()
-            legal_form = ResidencePropertyLegalForm()
+                # SAVE PRICING
+                pricing_obj = pricing_form.save(commit=False)
+                pricing_obj.property = prop
+                pricing_obj.save()
+
+                # SAVE LEGAL
+                legal_obj = legal_form.save(commit=False)
+                legal_obj.property = prop
+                legal_obj.save()
+
+                # SAVE IMAGES
+                for img in request.FILES.getlist("image"):
+                    ResidencePropertyPhoto.objects.create(
+                        property=prop,
+                        image=img
+                    )
+
+                success = True
+
+                return redirect("my_residence_properties")  # ✅ IMPORTANT FIX
+
+        else:
+            # if property form fails
+            setup_form = ResidencePropertySetupForm(request.POST)
+            office_setup_form = OfficePropertySetupForm(request.POST)
+            pricing_form = ResidencePropertyPricingForm(request.POST)
+            legal_form = ResidencePropertyLegalForm(request.POST)
 
     else:
         property_form = ResidencePropertyForm()
-        residence_setup_form = ResidencePropertySetupForm()
+        setup_form = ResidencePropertySetupForm()
         office_setup_form = OfficePropertySetupForm()
         pricing_form = ResidencePropertyPricingForm()
         legal_form = ResidencePropertyLegalForm()
 
-    context = {
+    return render(request, "property/add_residence_property.html", {
         "property_form": property_form,
-        "residence_setup_form": residence_setup_form,
+        "residence_setup_form": setup_form,
         "office_setup_form": office_setup_form,
         "pricing_form": pricing_form,
         "legal_form": legal_form,
         "success": success,
-    }
-    return render(request, "property/add_residence_property.html", context)
+    })
 
 
 
@@ -110,6 +138,7 @@ from .models import (
 def residence_property_detail(request, pk):
     # Fetch the property for the logged-in user
     property_obj = get_object_or_404(ResidenceProperty, pk=pk, owner=request.user)
+    office_setup = getattr(property_obj, 'office_setup', None)
 
     # Related objects
     setup = getattr(property_obj, 'residencepropertysetup', None)
@@ -123,6 +152,7 @@ def residence_property_detail(request, pk):
         "pricing": pricing,
         "legal": legal,
         "photos": photos,
+        "office_setup": office_setup,
     })
 
 

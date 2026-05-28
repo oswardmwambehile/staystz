@@ -260,11 +260,7 @@ def book_car(request, car_id):
                 "Booking submitted successfully."
             )
 
-            # REDIRECT
-            return redirect(
-                "book_car",
-                car_id=car.id
-            )
+            return redirect("car_booking_success", booking_id=booking.id)
 
         else:
 
@@ -276,7 +272,7 @@ def book_car(request, car_id):
                 "Please correct the errors below."
             )
 
-    else:
+    else: 
         form = CarBookingForm()
 
     return render(
@@ -287,6 +283,15 @@ def book_car(request, car_id):
             "car": car,
         }
     )
+
+
+
+def car_booking_success(request, booking_id):
+    booking = get_object_or_404(CarBooking, id=booking_id)
+
+    return render(request, "customer/car_booking_success.html", {
+        "booking": booking
+    })
 
 from django.shortcuts import render
 

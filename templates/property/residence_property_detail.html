@@ -1,180 +1,256 @@
 {% extends "property/base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
+
 {% include "property/sidebar.html" %}
 
 <div class="main-panel">
   <div class="main-header">
-    <div class="main-header-logo">
-      <div class="logo-header" data-background-color="dark">
-        <a href="index.html" class="logo">
-          <img src="{% static 'customer/img/logo.png' %}" alt="navbar brand" class="navbar-brand" height="20" />
-        </a>
-        <div class="nav-toggle">
-          <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
-          <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
-        </div>
-        <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
-      </div>
-    </div>
     {% include "property/nav.html" %}
   </div>
 
   <div class="container">
     <div class="page-inner">
 
-      <!-- Property Title -->
-      <h2 class="mb-2">{{ property.property_name }}</h2>
-      <p class="text-muted">{{ property.property_type|title }} | {{ property.address }}, {{ property.district }}, {{ property.region }}, {{ property.country }}</p>
+      <!-- HEADER -->
+      <h2 class="mb-1">{{ property.property_name }}</h2>
+
+      <p class="text-muted mb-1">
+        {{ property.property_type|title }} |
+        {{ property.address }}, {{ property.district }},
+        {{ property.region }}, {{ property.country }}
+      </p>
+
+      <!-- STATUS -->
       <p>
         <strong>Status:</strong>
         {% if property.status == "open" %}
           <span class="badge bg-success">Open</span>
         {% elif property.status == "hold" %}
-          <span class="badge bg-warning">Hold</span>
+          <span class="badge bg-warning text-dark">Hold</span>
         {% else %}
           <span class="badge bg-danger">Closed</span>
         {% endif %}
       </p>
 
-      <!-- Main Content Grid -->
       <div class="row">
-        <!-- Left: Images + Description -->
-        <div class="col-lg-7 mb-4">
+
+        <!-- LEFT -->
+        <div class="col-lg-7">
+
+          <!-- MAIN IMAGE -->
           {% if photos %}
-          <div class="main-photo mb-2">
-            <img src="{{ photos.0.image.url }}" class="img-fluid rounded shadow-sm" id="mainImage">
-          </div>
+            <img id="mainImage"
+                 src="{{ photos.0.image.url }}"
+                 class="img-fluid rounded shadow mb-2"
+                 style="max-height:420px; width:100%; object-fit:cover;">
+          {% endif %}
+
+          <!-- THUMBNAILS -->
           <div class="d-flex flex-wrap gap-2 mb-3">
             {% for photo in photos %}
-            <img src="{{ photo.image.url }}" class="img-thumbnail" style="width:80px; height:60px; cursor:pointer;" onclick="document.getElementById('mainImage').src='{{ photo.image.url }}'">
+              <img src="{{ photo.image.url }}"
+                   class="img-thumbnail"
+                   style="width:80px;height:60px;cursor:pointer;"
+                   onclick="document.getElementById('mainImage').src='{{ photo.image.url }}'">
             {% endfor %}
           </div>
-          {% endif %}
 
-          <!-- Description under images -->
+          <!-- DESCRIPTION -->
           {% if property.property_description %}
-          <div class="mb-3">
-            <h5>Property Description</h5>
-            <p>{{ property.property_description }}</p>
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5>Description</h5>
+              <p class="mb-0">{{ property.property_description }}</p>
+            </div>
           </div>
           {% endif %}
+
         </div>
 
-        <!-- Right: Cards -->
+        <!-- RIGHT -->
         <div class="col-lg-5">
 
-          <!-- Property Info Card -->
-          <div class="card mb-3 shadow-sm border-0">
-            <div class="card-body p-3">
-              <h5 class="card-title">Property Info</h5>
+          <!-- PROPERTY INFO -->
+          <div class="card mb-3">
+            <div class="card-body">
+
+              <h5 class="mb-3">Property Info</h5>
+
               <p><strong>Phone:</strong> {{ property.phone_number|default:"N/A" }}</p>
-              <p><strong>Property Size (sqm):</strong> {{ property.property_size_sqm|default:"N/A" }}</p>
+              <p><strong>Size:</strong> {{ property.property_size_sqm|default:"N/A" }} sqm</p>
               <p><strong>Year Built:</strong> {{ property.year_built|default:"N/A" }}</p>
               <p><strong>Floors:</strong> {{ property.floors|default:"N/A" }}</p>
+
               <p><strong>Furnished:</strong> {{ property.furnished|yesno:"Yes,No" }}</p>
-              <p><strong>Parking:</strong> {% if property.parking_available %}Yes ({{ property.parking_spaces|default:"-" }} spaces){% else %}No{% endif %}</p>
-              <p><strong>Utilities:</strong> Electricity: {{ property.electricity_type|default:"N/A" }}, Water: {{ property.water_supply|default:"N/A" }}, Internet: {{ property.internet_available|yesno:"Yes,No" }}</p>
-              <p><strong>Security:</strong> CCTV: {{ property.has_cctv|yesno:"Yes,No" }}, Guard: {{ property.has_security_guard|yesno:"Yes,No" }}, Fenced: {{ property.fenced_compound|yesno:"Yes,No" }}</p>
+
+              <p>
+                <strong>Parking:</strong>
+                {% if property.parking_available %}
+                  Yes ({{ property.parking_spaces|default:"-" }})
+                {% else %}
+                  No
+                {% endif %}
+              </p>
+
+              <p>
+                <strong>Utilities:</strong><br>
+                Electricity: {{ property.electricity_type|default:"N/A" }}<br>
+                Water: {{ property.water_supply|default:"N/A" }}<br>
+                Internet: {{ property.internet_available|yesno:"Yes,No" }}
+              </p>
+
             </div>
           </div>
 
-          <!-- Setup Card -->
+          <!-- ================= SETUP ================= -->
+
           {% if setup %}
-          <div class="card mb-3 shadow-sm border-0">
-            <div class="card-body p-3">
-              <h5 class="card-title">Setup & Rooms</h5>
-              <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds }}</p>
-              <p>Bathrooms: {{ setup.number_of_bathrooms }}</p>
-              <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Type: {{ setup.kitchen_type|default:"-" }}</p>
-              <p>Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}, Size: {{ setup.living_room_size_sqm|default:"-" }} sqm</p>
-              <p>Amenities: {{ setup.amenities|join:", " }}</p>
-              <p>Room Types: {{ setup.room_types|join:", " }}</p>
-              <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
-              <p>Balcony: {{ setup.has_balcony|yesno:"Yes,No" }}, Storage Room: {{ setup.has_storage_room|yesno:"Yes,No" }}, Laundry: {{ setup.has_laundry_room|yesno:"Yes,No" }}</p>
+          <div class="card mb-3">
+            <div class="card-body">
+
+              <h5>Residence Setup</h5>
+
+              <p><strong>Rooms:</strong> {{ setup.number_of_rooms }}</p>
+              <p><strong>Beds:</strong> {{ setup.total_beds }}</p>
+              <p><strong>Bathrooms:</strong> {{ setup.number_of_bathrooms }}</p>
+
+              <p>
+                <strong>Kitchen:</strong>
+                {{ setup.has_kitchen|yesno:"Yes,No" }}
+                {% if setup.kitchen_type %} ({{ setup.kitchen_type }}){% endif %}
+              </p>
+
+              <p><strong>Living Room:</strong> {{ setup.has_living_room|yesno:"Yes,No" }}</p>
+
+              <p><strong>Amenities:</strong> {{ setup.amenities|join:", "|default:"N/A" }}</p>
+
             </div>
           </div>
           {% endif %}
 
-          <!-- Pricing Card -->
+          <!-- ================= OFFICE SETUP ================= -->
+
+          {% if office_setup %}
+          <div class="card mb-3">
+            <div class="card-body">
+
+              <h5>Office Setup</h5>
+
+              <p><strong>Condition:</strong> {{ office_setup.building_condition }}</p>
+              <p><strong>Floor Finish:</strong> {{ office_setup.floor_finish }}</p>
+              <p><strong>Door Type:</strong> {{ office_setup.door_type }}</p>
+
+              <p><strong>Size:</strong> {{ office_setup.office_size_sqm }} sqm</p>
+              <p><strong>Tenants:</strong> {{ office_setup.number_of_tenants }}</p>
+
+              <p><strong>Toilet:</strong> {{ office_setup.toilet_available }}</p>
+
+              <p>
+                <strong>Water:</strong> {{ office_setup.has_water|yesno:"Yes,No" }}<br>
+                <strong>Electricity:</strong> {{ office_setup.has_electricity|yesno:"Yes,No" }}
+              </p>
+
+              <p><strong>AC/Fan:</strong> {{ office_setup.fan_or_ac }}</p>
+
+              <p><strong>Ceiling:</strong> {{ office_setup.ceiling_type }}</p>
+              <p><strong>Window:</strong> {{ office_setup.window_type }}</p>
+
+              <p><strong>Road:</strong> {{ office_setup.road_type }}</p>
+              <p><strong>Environment:</strong> {{ office_setup.environment }}</p>
+
+              <p><strong>Location:</strong> {{ office_setup.location_category }}</p>
+
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- ================= PRICING ================= -->
+
           {% if pricing %}
-          <div class="card mb-3 shadow-sm border-0">
-            <div class="card-body p-3">
-              <h5 class="card-title">Pricing</h5>
-              <p>Base Price: {{ pricing.base_price }} {{ pricing.currency }}</p>
-              <p>Weekly Discount: {{ pricing.weekly_discount|default:"0" }}%</p>
-              <p>Monthly Discount: {{ pricing.monthly_discount|default:"0" }}%</p>
-              <p>Cleaning Fee: {{ pricing.cleaning_fee|default:"-" }}</p>
-              <p>Tax Percentage: {{ pricing.tax_percentage|default:"-" }}</p>
+          <div class="card mb-3">
+            <div class="card-body">
+
+              <h5>Pricing</h5>
+
+              {% if pricing.base_price %}
+                <p><strong>Base Price:</strong>
+                  {{ pricing.base_price|floatformat:0|intcomma }} {{ pricing.currency }}
+                </p>
+              {% endif %}
+
+              {% if pricing.base_price_per_day %}
+                <p><strong>Per Day Price:</strong>
+                  {{ pricing.base_price_per_day|floatformat:0|intcomma }} {{ pricing.currency }}
+                </p>
+              {% endif %}
+
+              {% if pricing.weekly_discount_percent > 0 %}
+                <p><strong>Weekly Discount:</strong> {{ pricing.weekly_discount_percent }}%</p>
+              {% endif %}
+
+              {% if pricing.monthly_discount_percent > 0 %}
+                <p><strong>Monthly Discount:</strong> {{ pricing.monthly_discount_percent }}%</p>
+              {% endif %}
+
+              {% if pricing.cleaning_fee %}
+                <p><strong>Cleaning Fee:</strong>
+                  {{ pricing.cleaning_fee|floatformat:0|intcomma }}
+                </p>
+              {% endif %}
+
+              {% if property.property_type == "office_space" %}
+                <p><strong>Min Months:</strong> {{ pricing.min_months|default:"N/A" }}</p>
+                <p><strong>Max Months:</strong> {{ pricing.max_months|default:"N/A" }}</p>
+              {% endif %}
+
             </div>
           </div>
           {% endif %}
 
-          <!-- Legal Card -->
+          <!-- ================= LEGAL ================= -->
+
           {% if legal %}
-          <div class="card mb-3 shadow-sm border-0">
-            <div class="card-body p-3">
-              <h5 class="card-title">Legal & Policies</h5>
-              <p><strong>Terms:</strong> {{ legal.terms_and_conditions|default:"-" }}</p>
-              <p><strong>House Rules:</strong> {{ legal.house_rules|default:"-" }}</p>
-              <p><strong>Cancellation:</strong> {{ legal.cancellation_policy|default:"-" }}</p>
-              <p><strong>Deposit Policy:</strong> {{ legal.deposit_policy|default:"-" }}</p>
-              <p><strong>Refund Rules:</strong> {{ legal.refund_rules|default:"-" }}</p>
-              <p><strong>Insurance:</strong> {{ legal.insurance_details|default:"-" }}</p>
+          <div class="card mb-3">
+            <div class="card-body">
+
+              <h5>Legal & Policies</h5>
+
+              {% if legal.terms_and_conditions %}
+                <p><strong>Terms:</strong> {{ legal.terms_and_conditions }}</p>
+              {% endif %}
+
+              {% if legal.house_rules %}
+                <p><strong>Rules:</strong> {{ legal.house_rules }}</p>
+              {% endif %}
+
+              {% if legal.cancellation_policy %}
+                <p><strong>Cancellation:</strong> {{ legal.cancellation_policy }}</p>
+              {% endif %}
+
+              {% if legal.deposit_policy %}
+                <p><strong>Deposit:</strong> {{ legal.deposit_policy }}</p>
+              {% endif %}
+
+              {% if legal.refund_rules %}
+                <p><strong>Refund:</strong> {{ legal.refund_rules }}</p>
+              {% endif %}
+
+              {% if legal.insurance_details %}
+                <p><strong>Insurance:</strong> {{ legal.insurance_details }}</p>
+              {% endif %}
+
             </div>
           </div>
           {% endif %}
 
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
-<style>
-/* Thumbnails hover effect */
-.img-thumbnail:hover {
-  border-color: #007bff;
-  transform: scale(1.05);
-  transition: 0.2s;
-}
-
-/* Card styling */
-.card {
-  border-radius: 10px;
-  background: #fff;
-}
-
-/* Main image */
-.main-photo img {
-  width: 100%;
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Status badge colors */
-.badge.bg-success {
-  background-color: #28a745;
-  color: #fff;
-}
-.badge.bg-warning {
-  background-color: #ffc107;
-  color: #212529;
-}
-.badge.bg-danger {
-  background-color: #dc3545;
-  color: #fff;
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-  .col-lg-7, .col-lg-5 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-}
-</style>
 {% endblock %}

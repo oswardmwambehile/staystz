@@ -56,7 +56,7 @@ class ResidencePropertyForm(forms.ModelForm):
     class Meta:
         model = ResidenceProperty
         fields = [
-            "property_name", "property_type", "property_description", "airbnb_available",
+            "property_name", "property_type", "property_description", "bnb_available",
             "address", "district", "region", "country",
             "postal_code", "phone_number",
             "property_size_sqm", "year_built","building_level", "floors",
@@ -168,23 +168,19 @@ class ResidencePropertyPhotoForm(forms.ModelForm):
 
 # ------------------------------------------------------------------
 # STEP 4 – PRICING (DIFFERENT FOR OFFICE VS RESIDENCE)
-# ------------------------------------------------------------------
 class ResidencePropertyPricingForm(forms.ModelForm):
 
     class Meta:
         model = ResidencePropertyPricing
         fields = [
             "base_price",
-
-            # Residence fields
-
+            "base_price_per_day",
+            "weekly_discount_percent",
+            "monthly_discount_percent",
             "cleaning_fee",
             "rent_duration",
-
-            # Office fields
             "min_months",
             "max_months",
-
             "currency",
         ]
         widgets = {
@@ -195,15 +191,35 @@ class ResidencePropertyPricingForm(forms.ModelForm):
         self.property_obj = kwargs.pop("property_obj", None)
         super().__init__(*args, **kwargs)
 
-        # Office Space: keep only base_price + min/max months + currency
-        if self.property_obj and self.property_obj.property_type == "office_space":
-            for f in ["weekly_discount", "monthly_discount", "cleaning_fee", "tax_percentage"]:
-                self.fields.pop(f, None)
+        if self.property_obj:
+            is_apartment = self.property_obj.property_type == "apartment"
+            is_bnb = self.property_obj.bnb_available == "yes"
 
-        # Apartment/House: keep normal pricing only
-        else:
-            for f in ["min_months", "max_months"]:
-                self.fields.pop(f, None)
+            if is_apartment and is_bnb:
+                # BNB MODE → DAILY PRICING ONLY
+                allowed_fields = {
+                    "base_price_per_day",
+                    "weekly_discount_percent",
+                    "monthly_discount_percent",
+                    "cleaning_fee",
+                    "currency",
+                }
+
+            else:
+                # NORMAL RENT MODE → MONTHLY / LONG TERM
+                allowed_fields = {
+                    "base_price",
+                    "rent_duration",
+                    "min_months",
+                    "max_months",
+                    "cleaning_fee",
+                    "currency",
+                }
+
+            # remove everything not allowed
+            for field_name in list(self.fields.keys()):
+                if field_name not in allowed_fields:
+                    self.fields.pop(field_name)
 
         bootstrap_fields(self.fields)
 

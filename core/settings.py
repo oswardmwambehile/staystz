@@ -21,7 +21,7 @@ env.read_env(BASE_DIR / ".env")
 # SECURITY
 # --------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY", default='django-insecure-dq&*$-xd(&@*!q_!5a3b5o!lfg4-w5gcs2m&=&ia_hd@&wg*tk')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "staystz.com","www.staystz.com", "187.127.229.230"]
 
@@ -62,6 +62,9 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.twitter",
+
+    'captcha',
+
 ]
 
 SITE_ID = 1
@@ -108,16 +111,11 @@ WSGI_APPLICATION = "core.wsgi.application"
 # DATABASE (MySQL)
 # --------------------------------------------------
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "staystz_db",
-        "USER": "staystz",
-        "PASSWORD": "StrongPassword123",
-        "HOST": "localhost",
-        "PORT": "3306",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 # --------------------------------------------------
 # AUTH
 # --------------------------------------------------

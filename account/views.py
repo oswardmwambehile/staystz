@@ -82,72 +82,130 @@ from .forms import RegisterForm
 from .models import OtpToken
 from django.conf import settings
 import traceback
+import traceback
+from django.utils import timezone
+from datetime import timedelta
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
+from .forms import RegisterForm
+from .models import OtpToken
+
 
 def signup(request):
-    form = RegisterForm()
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False  # user inactive until verified
-            user.save()
 
-            # create OTP
+    print("\n\n================ SIGNUP START ================\n")
+
+    form = RegisterForm()
+
+    if request.method == "POST":
+
+        print("🔵 POST REQUEST RECEIVED")
+
+        form = RegisterForm(request.POST)
+
+        # -------------------------------
+        # 1. FORM VALIDATION DEBUG
+        # -------------------------------
+        if not form.is_valid():
+            print("❌ FORM INVALID")
+            print("ERRORS:", form.errors)
+            messages.error(request, "Form invalid (check error below!)")
+            return render(request, "customer/signup.html", {"form": form})
+
+        print("✅ FORM VALID")
+
+        email = form.cleaned_data.get("email")
+        username = form.cleaned_data.get("username")
+
+        print("📩 EMAIL:", email)
+        print("👤 USERNAME:", username)
+
+        # -------------------------------
+        # 2. USER CREATION DEBUG
+        # -------------------------------
+        try:
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            print("✅ USER CREATED:", user.id)
+
+        except Exception as e:
+            print("❌ USER CREATION FAILED")
+            traceback.print_exc()
+            messages.error(request, "User creation failed")
+            return render(request, "customer/signup.html", {"form": form})
+
+        # -------------------------------
+        # 3. OTP DEBUG
+        # -------------------------------
+        try:
             otp = OtpToken.objects.create(
                 user=user,
                 otp_expires_at=timezone.now() + timedelta(minutes=5)
             )
+            print("🔐 OTP CREATED:", otp.otp_code)
 
-            # send email
-            try:
-                send_mail(
-                    subject="Staystz Email Verification",
-                    message=f"""
-                        Hello, {user.username},
+        except Exception as e:
+            print("❌ OTP CREATION FAILED")
+            traceback.print_exc()
+            messages.error(request, "OTP error")
+            return render(request, "customer/signup.html", {"form": form})
 
-                    Welcome to Staystz.
+        # -------------------------------
+        # 4. EMAIL DEBUG (HOSTINGER)
+        # -------------------------------
+        try:
+            print("📤 EMAIL STARTING...")
 
-                    To continue with your request, please use the One-Time Password (OTP) below to verify your email address:
+            print("SMTP HOST:", settings.EMAIL_HOST)
+            print("SMTP USER:", settings.EMAIL_HOST_USER)
+            print("TO EMAIL:", user.email)
 
-                    ----------------------------------------
-                                OTP CODE
-                    ----------------------------------------
+            html_content = render_to_string(
+                "emails/otp_email.html",
+                {"user": user, "otp": otp.otp_code}
+            )
 
-                                {otp.otp_code}
+            email_msg = EmailMultiAlternatives(
+                subject="Staystz Email Verification",
+                body="Your OTP code is below.",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[user.email],
+            )
 
-                    ----------------------------------------
+            email_msg.attach_alternative(html_content, "text/html")
 
-                    This code will expire in 5 minutes for security reasons.
+            result = email_msg.send(fail_silently=False)
 
-                    If you did not request this verification, you can safely ignore this email.
+            print("📧 EMAIL RESULT:", result)
 
-                    If you need assistance, please contact our support team.
+            if result == 1:
+                print("✅ EMAIL SENT SUCCESSFULLY")
+            else:
+                print("⚠️ EMAIL NOT SENT PROPERLY")
 
-                    Best regards,
-                    StayStz Team
-                    Smart Stays. Easy Moves. Trusted Services.
-                        """,
-                    from_email=settings.EMAIL_HOST_USER,
-                    recipient_list=[user.email],
-                    fail_silently=False
-                )
-                print("Email sent successfully")
-                print("SENDING TO:", user.email)
-                print("OTP:", otp.otp_code)
-
-            except Exception as e:
-                print("❌ EMAIL ERROR:", str(e))
-                print("❌ ERROR TYPE:", type(e))
-                print("❌ FULL TRACEBACK:")
-                traceback.print_exc()
-                messages.warning(request, f"Account created but failed to send OTP email: {e}")
-                return redirect("verify-email", username=user.username)
-
-            messages.success(request, "Account created successfully! An OTP has been sent to your email.")
+        except Exception as e:
+            print("❌ EMAIL FAILED COMPLETELY")
+            traceback.print_exc()
+            messages.warning(request, "Account created but email failed")
             return redirect("verify-email", username=user.username)
 
-    return render(request, "customer/signup.html", {"form": form})
+        # -------------------------------
+        # 5. FINAL SUCCESS
+        # -------------------------------
+        print("🎉 SIGNUP COMPLETE SUCCESS")
 
+        messages.success(request, "Account created successfully! Check your email.")
+        return redirect("verify-email", username=user.username)
+
+    print("🟡 GET REQUEST - SHOW FORM")
+    print("\n================ SIGNUP END ================\n")
+
+    return render(request, "customer/signup.html", {"form": form})
 
 def resend_otp(request):
     if request.method == 'POST':

@@ -72,7 +72,7 @@ class ResidenceProperty(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     property_name = models.CharField(max_length=255)
     property_type = models.CharField(max_length=20, choices=PROPERTY_TYPE_CHOICES)
-    airbnb_available = models.CharField(
+    bnb_available = models.CharField(
     max_length=3,
     choices=AIRBNB_CHOICES,
     blank=True,
@@ -211,8 +211,14 @@ class ResidencePropertyPhoto(models.Model):
 
 class ResidencePropertyPricing(models.Model):
     property = models.OneToOneField(ResidenceProperty, on_delete=models.CASCADE)
-    base_price = models.DecimalField(max_digits=15, decimal_places=2)
+    base_price = models.DecimalField(max_digits=15, decimal_places=2,null=True,blank=True)
+    # Airbnb style pricing (NEW)
+    
+    base_price_per_day = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
 
+    weekly_discount_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+
+    monthly_discount_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     cleaning_fee = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
 
@@ -228,7 +234,7 @@ class ResidencePropertyPricing(models.Model):
         (6, "6 Months"),
         (12, "12 Months"),
     ]
-    rent_duration = models.IntegerField(choices=RENT_DURATION_CHOICES)
+    rent_duration = models.IntegerField(choices=RENT_DURATION_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return f"Pricing for {self.property.property_name}"
