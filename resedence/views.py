@@ -10,6 +10,16 @@ from .forms import (
     ResidencePropertyLegalForm,
 )
 
+from django.shortcuts import render, redirect
+from .models import ResidenceProperty, ResidencePropertyPhoto
+from .forms import (
+    ResidencePropertyForm,
+    ResidencePropertySetupForm,
+    OfficePropertySetupForm,
+    ResidencePropertyPricingForm,
+    ResidencePropertyLegalForm,
+)
+
 
 def add_residence_property_all_in_one(request):
     success = False
@@ -38,7 +48,7 @@ def add_residence_property_all_in_one(request):
                 setup_form = ResidencePropertySetupForm(request.POST)
 
             # -------------------------
-            # STEP 3: PRICING FORM (NOW SAFE)
+            # STEP 3: PRICING FORM
             # -------------------------
             pricing_form = ResidencePropertyPricingForm(
                 request.POST,
@@ -74,16 +84,38 @@ def add_residence_property_all_in_one(request):
                 legal_obj.property = prop
                 legal_obj.save()
 
-                # SAVE IMAGES
-                for img in request.FILES.getlist("image"):
-                    ResidencePropertyPhoto.objects.create(
-                        property=prop,
-                        image=img
-                    )
+                # ======================================================
+                # FIXED IMAGE UPLOAD (SAFE FOR 100 IMAGES)
+                # ======================================================
+
+                images = request.FILES.getlist("image")
+
+                # limit number of images
+                if len(images) > 100:
+                    return render(request, "property/add_residence_property.html", {
+                        "property_form": property_form,
+                        "residence_setup_form": setup_form,
+                        "office_setup_form": office_setup_form,
+                        "pricing_form": pricing_form,
+                        "legal_form": legal_form,
+                        "success": False,
+                        "error": "Maximum 100 images allowed"
+                    })
+
+                # batch processing to avoid server crash
+                batch_size = 10
+
+                for i in range(0, len(images), batch_size):
+                    batch = images[i:i + batch_size]
+
+                    for img in batch:
+                        ResidencePropertyPhoto.objects.create(
+                            property=prop,
+                            image=img
+                        )
 
                 success = True
-
-                return redirect("my_residence_properties")  # ✅ IMPORTANT FIX
+                return redirect("my_residence_properties")
 
         else:
             # if property form fails
