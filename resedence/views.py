@@ -11,6 +11,7 @@ from .forms import (
 )
 
 from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from .models import ResidenceProperty, ResidencePropertyPhoto
 from .forms import (
     ResidencePropertyForm,
@@ -24,25 +25,38 @@ from .forms import (
 def add_residence_property_all_in_one(request):
     success = False
 
+    # =========================
+    # DEFAULT SAFE INITIALIZATION
+    # =========================
+    property_form = ResidencePropertyForm(request.POST or None)
+    setup_form = None
+    office_setup_form = None
+    pricing_form = None
+    legal_form = None
+
+    # =========================
+    # HANDLE POST
+    # =========================
     if request.method == "POST":
 
+        # -------------------------
+        # LOCK CHECK
+        # -------------------------
         if request.session.get("residence_lock"):
-          return redirect("my_residence_properties")
+            return redirect("my_residence_properties")
 
         request.session["residence_lock"] = True
 
         # -------------------------
         # STEP 1: PROPERTY FORM
         # -------------------------
-        property_form = ResidencePropertyForm(request.POST)
-
         if property_form.is_valid():
             prop = property_form.save(commit=False)
             prop.owner = request.user
             prop.save()
 
             property_type = prop.property_type
-            is_office = (property_type == "office_space")
+            is_office = property_type == "office_space"
 
             # -------------------------
             # STEP 2: SETUP FORM
@@ -74,45 +88,48 @@ def add_residence_property_all_in_one(request):
 
             if setup_valid and pricing_valid and legal_valid:
 
+                # -------------------------
                 # SAVE SETUP
+                # -------------------------
                 setup_obj = setup_form.save(commit=False)
                 setup_obj.property = prop
                 setup_obj.save()
 
+                # -------------------------
                 # SAVE PRICING
+                # -------------------------
                 pricing_obj = pricing_form.save(commit=False)
                 pricing_obj.property = prop
                 pricing_obj.save()
 
+                # -------------------------
                 # SAVE LEGAL
+                # -------------------------
                 legal_obj = legal_form.save(commit=False)
                 legal_obj.property = prop
                 legal_obj.save()
 
-                # ======================================================
-                # FIXED IMAGE UPLOAD (SAFE FOR 100 IMAGES)
-                # ======================================================
-
+                # -------------------------
+                # IMAGE UPLOAD SAFE
+                # -------------------------
                 images = request.FILES.getlist("image")
 
-                # limit number of images
                 if len(images) > 100:
+                    request.session["residence_lock"] = False
                     return render(request, "property/add_residence_property.html", {
                         "property_form": property_form,
-                        "residence_setup_form": setup_form,
-                        "office_setup_form": office_setup_form,
+                        "residence_setup_form": setup_form if setup_form else ResidencePropertySetupForm(),
+                        "office_setup_form": office_setup_form if office_setup_form else OfficePropertySetupForm(),
                         "pricing_form": pricing_form,
                         "legal_form": legal_form,
                         "success": False,
                         "error": "Maximum 100 images allowed"
                     })
 
-                # batch processing to avoid server crash
                 batch_size = 10
 
                 for i in range(0, len(images), batch_size):
                     batch = images[i:i + batch_size]
-
                     for img in batch:
                         ResidencePropertyPhoto.objects.create(
                             property=prop,
@@ -120,20 +137,31 @@ def add_residence_property_all_in_one(request):
                         )
 
                 success = True
+                request.session["residence_lock"] = False
                 return redirect("my_residence_properties")
 
         else:
-            # if property form fails
+            # PROPERTY FORM INVALID
             setup_form = ResidencePropertySetupForm(request.POST)
             office_setup_form = OfficePropertySetupForm(request.POST)
             pricing_form = ResidencePropertyPricingForm(request.POST)
             legal_form = ResidencePropertyLegalForm(request.POST)
 
-    else:
-        property_form = ResidencePropertyForm()
+            request.session["residence_lock"] = False
+
+    # =========================
+    # SAFE DEFAULT RENDER (GET OR FAIL)
+    # =========================
+    if setup_form is None:
         setup_form = ResidencePropertySetupForm()
+
+    if office_setup_form is None:
         office_setup_form = OfficePropertySetupForm()
+
+    if pricing_form is None:
         pricing_form = ResidencePropertyPricingForm()
+
+    if legal_form is None:
         legal_form = ResidencePropertyLegalForm()
 
     return render(request, "property/add_residence_property.html", {
@@ -144,7 +172,6 @@ def add_residence_property_all_in_one(request):
         "legal_form": legal_form,
         "success": success,
     })
-
 
 
 
