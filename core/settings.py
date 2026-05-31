@@ -21,7 +21,7 @@ env.read_env(BASE_DIR / ".env")
 # SECURITY
 # --------------------------------------------------
 SECRET_KEY = env("DJANGO_SECRET_KEY", default='django-insecure-dq&*$-xd(&@*!q_!5a3b5o!lfg4-w5gcs2m&=&ia_hd@&wg*tk')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "staystz.com","www.staystz.com", "187.127.229.230"]
 

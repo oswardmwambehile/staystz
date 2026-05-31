@@ -26,6 +26,11 @@ def add_residence_property_all_in_one(request):
 
     if request.method == "POST":
 
+        if request.session.get("residence_lock"):
+          return redirect("my_residence_properties")
+
+        request.session["residence_lock"] = True
+
         # -------------------------
         # STEP 1: PROPERTY FORM
         # -------------------------

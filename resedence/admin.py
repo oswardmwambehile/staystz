@@ -210,4 +210,4 @@ class ResidencePropertyAdmin(admin.ModelAdmin):
             obj.status.upper(),
         )
 
-    colored_status.short_description = "Status"
+    colored_status.short_description = "Status"                                                              
