@@ -271,7 +271,7 @@ select {
 
                         <div class="d-flex gap-2 mt-4">
                             <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
-                            <button type="submit" class="btn btn-success">Finish ✓</button>
+                            <button type="submit" id="finishBtn" class="btn btn-success">Finish ✓</button>
                         </div>
                     </div>
 
@@ -281,6 +281,38 @@ select {
         </div>
     </div>
 </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+    const finishBtn = document.getElementById("finishBtn");
+
+    if (!form || !finishBtn) return;
+
+    let submitted = false;
+
+    form.addEventListener("submit", function(e) {
+
+        if (submitted) {
+            e.preventDefault();
+            return false;
+        }
+
+        submitted = true;
+
+        finishBtn.disabled = true;
+
+        finishBtn.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Saving Property...
+        `;
+
+        finishBtn.classList.remove("btn-success");
+        finishBtn.classList.add("btn-secondary");
+    });
+
+});
+</script>
 
 <script>
 let currentStep = 1;
