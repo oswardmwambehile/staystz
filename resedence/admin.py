@@ -97,7 +97,8 @@ class ResidencePropertyAdmin(admin.ModelAdmin):
         "furnished",
         "parking_available",
     )
-
+     
+     
     search_fields = (
         "property_name",
         "owner__username",
