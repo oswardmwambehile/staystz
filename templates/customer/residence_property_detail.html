@@ -36,45 +36,40 @@
                 {% if photos %}
                 <!-- Alpine Carousel -->
                 <div x-data="{
-                        current: 0,
-                        slides: {{ photos|length }},
-                        images: [
-                            {% for photo in photos %}
-                            '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ],
-                        setImage(i) { this.current = i; },
-                        next() { this.current = (this.current + 1) % this.slides; },
-                        prev() { this.current = (this.current - 1 + this.slides) % this.slides; }
-                    }" class="relative w-full overflow-hidden rounded-xl shadow-lg">
+        current: 0,
+        slides: {{ photos|length }},
+        images: [
+            {% for photo in photos %}
+            '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
+        timer: null,
 
-                    <!-- Main Image -->
-                    <template x-for="(img, index) in images" :key="index">
-                        <img :src="img" x-show="current === index" class="w-full h-[450px] object-cover rounded-xl transition-all duration-500 cursor-zoom-in">
-                    </template>
+        setImage(i) { this.current = i; },
 
-                    <!-- Prev/Next Buttons -->
-                    <button @click="prev()" class="absolute top-1/2 -translate-y-1/2 left-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
-                        &#10094;
-                    </button>
-                    <button @click="next()" class="absolute top-1/2 -translate-y-1/2 right-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
-                        &#10095;
-                    </button>
+        next() { this.current = (this.current + 1) % this.slides; },
 
-                    <!-- Indicators -->
-                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
-                        <template x-for="(img, index) in images" :key="index">
-                            <span @click="current = index" :class="current === index ? 'bg-blue-600' : 'bg-gray-400'" class="w-3 h-3 rounded-full cursor-pointer"></span>
-                        </template>
-                    </div>
+        prev() { this.current = (this.current - 1 + this.slides) % this.slides; },
 
-                    <!-- Thumbnails -->
-                    <div class="flex gap-2 mt-2 overflow-x-auto px-1">
-                        <template x-for="(img, index) in images" :key="index">
-                            <img :src="img" @click="setImage(index)" class="w-24 h-16 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition transform hover:scale-105" :class="current === index ? 'border-blue-600' : ''">
-                        </template>
-                    </div>
-                </div>
+        startAuto() {
+            if (this.slides > 1) {
+                this.timer = setInterval(() => {
+                    this.next();
+                }, 4000);
+            }
+        },
+
+        stopAuto() {
+            if (this.timer) clearInterval(this.timer);
+        }
+    }"
+
+    x-init="startAuto()"
+    @mouseenter="stopAuto()"
+    @mouseleave="startAuto()"
+
+    class="relative w-full overflow-hidden rounded-xl shadow-lg"
+>
                 {% endif %}
 
                 <!-- Description -->
@@ -222,29 +217,7 @@
 
 </div>
 
-<script>
-document.addEventListener('alpine:init', () => {
 
-    document.querySelectorAll('[x-data]').forEach((carousel) => {
-
-        let component = Alpine.$data(carousel);
-
-        if (
-            component &&
-            typeof component.next === 'function' &&
-            component.slides > 1
-        ) {
-
-            setInterval(() => {
-                component.next();
-            }, 4000); // change every 4 seconds
-
-        }
-
-    });
-
-});
-</script>
 
 <!-- Alpine.js -->
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
