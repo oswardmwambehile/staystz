@@ -35,46 +35,41 @@
 
                 {% if photos %}
                 <!-- Alpine Carousel -->
-                <div x-data="{
-                        current: 0,
-                        slides: {{ photos|length }},
-                        images: [
-                            {% for photo in photos %}
-                            '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ],
-                        setImage(i) { this.current = i; },
-                        next() { this.current = (this.current + 1) % this.slides; },
-                        prev() { this.current = (this.current - 1 + this.slides) % this.slides; }
-                    }" class="relative w-full overflow-hidden rounded-xl shadow-lg">
+                <div
+x-data="{
+    current: 0,
+    slides: {{ photos|length }},
+    timer: null,
 
-                    <!-- Main Image -->
-                    <template x-for="(img, index) in images" :key="index">
-                        <img :src="img" x-show="current === index" class="w-full h-[450px] object-cover rounded-xl transition-all duration-500 cursor-zoom-in">
-                    </template>
+    images: [
+        {% for photo in photos %}
+        '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ],
 
-                    <!-- Prev/Next Buttons -->
-                    <button @click="prev()" class="absolute top-1/2 -translate-y-1/2 left-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
-                        &#10094;
-                    </button>
-                    <button @click="next()" class="absolute top-1/2 -translate-y-1/2 right-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
-                        &#10095;
-                    </button>
+    setImage(i) {
+        this.current = i;
+    },
 
-                    <!-- Indicators -->
-                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
-                        <template x-for="(img, index) in images" :key="index">
-                            <span @click="current = index" :class="current === index ? 'bg-blue-600' : 'bg-gray-400'" class="w-3 h-3 rounded-full cursor-pointer"></span>
-                        </template>
-                    </div>
+    next() {
+        this.current = (this.current + 1) % this.slides;
+    },
 
-                    <!-- Thumbnails -->
-                    <div class="flex gap-2 mt-2 overflow-x-auto px-1">
-                        <template x-for="(img, index) in images" :key="index">
-                            <img :src="img" @click="setImage(index)" class="w-24 h-16 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition transform hover:scale-105" :class="current === index ? 'border-blue-600' : ''">
-                        </template>
-                    </div>
-                </div>
+    prev() {
+        this.current = (this.current - 1 + this.slides) % this.slides;
+    },
+
+    startAutoSlide() {
+        if (this.slides > 1) {
+            this.timer = setInterval(() => {
+                this.next();
+            }, 4000);
+        }
+    }
+}"
+x-init="startAutoSlide()"
+class="relative w-full overflow-hidden rounded-xl shadow-lg"
+>
                 {% endif %}
 
                 <!-- Description -->
