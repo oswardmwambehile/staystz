@@ -9,44 +9,7 @@
     {% include 'customers/nav.html' %}
     
 
-    <!-- Header Start -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
-
-        <!-- Text Section -->
-        <div class="md:w-1/2 md:pr-8 mt-8 md:mt-0">
-            <h1 class="text-1xl sm:text-2xl lg:text-3xl   mb-3">
-                Property List in <span class="text-green-800">{{ property_type|title }}</span>
-            </h1>
-            <p class="text-gray-600 text-base sm:text-lg">
-                Explore a curated list of properties available in {{ property_type|title }}. Browse through a variety of options to find
-                the one that fits your lifestyle and budget. 
-            </p>
-        </div>
-
-        <!-- Image Section -->
-      <div class="md:w-1/2 mb-8 md:mb-0">
-
-    {% with property_type|lower as pt %}
-
-        {% if pt == "apartment" %}
-            <img src="{% static 'customer/img/apartment.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "homes" %}
-            <img src="{% static 'customer/img/homes.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "office_space" or pt == "office space" %}
-            <img src="{% static 'customer/img/a1.jpg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% else %}
-            <img src="{% static 'customer/img/apartment.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% endif %}
-
-    {% endwith %}
-
-</div>
-    </div>
-    <!-- Header End -->
+    
 
     <!-- Search Start -->
     {% include 'customer/search.html' %}
@@ -80,8 +43,26 @@
                 <!-- Property Details -->
                 <div class="p-4 flex-1 flex flex-col">
                     <h5 class="text-[#00b20d] mb-2">
-                        TZS {% if property.residencepropertypricing %}{{ property.residencepropertypricing.base_price|floatformat:0|intcomma }}{% else %}N/A{% endif %}/Month
-                    </h5>
+
+{% if property.residencepropertypricing %}
+
+    {% if property.residencepropertypricing.base_price %}
+        <div>
+            TZS {{ property.residencepropertypricing.base_price|floatformat:0|intcomma }}/Month
+        </div>
+    {% endif %}
+
+    {% if property.residencepropertypricing.base_price_per_day %}
+        <div>
+            TZS {{ property.residencepropertypricing.base_price_per_day|floatformat:0|intcomma }}/Day
+        </div>
+    {% endif %}
+
+{% else %}
+    Price Not Available
+{% endif %}
+
+</h5>
                     <a class="block font-semibold text-lg mb-2" href="">
                         {{ property.property_name }}
                     </a>
