@@ -253,3 +253,50 @@ class ResidencePropertyStatusForm(forms.ModelForm):
     class Meta:
         model = ResidenceProperty
         fields = ["status"]
+
+
+from django import forms
+from .models import ResidenceBooking
+
+
+class ResidenceBookingForm(forms.ModelForm):
+
+    class Meta:
+        model = ResidenceBooking
+        fields = [
+            "rent_duration",
+            "phone_number",
+            "check_in_date",
+            "check_out_date",
+        ]
+
+        widgets = {
+            "rent_duration": forms.Select(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+            }),
+
+            "phone_number": forms.TextInput(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500",
+                "placeholder": "e.g. +255712345678"
+            }),
+
+            "check_in_date": forms.DateInput(attrs={
+                "type": "date",
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+            }),
+
+            "check_out_date": forms.DateInput(attrs={
+                "type": "date",
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.is_daily = kwargs.pop("is_daily", False)
+
+        super().__init__(*args, **kwargs)
+
+        if self.is_daily:
+            self.fields["rent_duration"].required = False
+        else:
+            self.fields["check_out_date"].required = False

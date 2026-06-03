@@ -1,0 +1,232 @@
+{% extends 'customers/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+{% include 'customers/nav.html' %}
+
+<div class="bg-white min-h-screen">
+    <div class="max-w-7xl mx-auto pt-8 md:pt-10 pb-10 px-4 sm:px-6 lg:px-8">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+            <!-- IMAGE SLIDER -->
+            <div x-data="{ current: 0, slides: {{ property.photos.all|length }} }"
+                 class="relative w-full overflow-hidden rounded-lg">
+
+                {% if property.photos.all %}
+                    {% for photo in property.photos.all %}
+                        <img
+                            x-show="current === {{ forloop.counter0 }}"
+                            x-transition
+                            src="{{ photo.image.url }}"
+                            class="w-full h-[420px] object-cover rounded-lg"
+                            alt="Property image">
+                    {% endfor %}
+                {% else %}
+                    <img src="{% static 'images/no-image.png' %}"
+                         class="w-full h-[420px] object-cover rounded-lg"
+                         alt="No image">
+                {% endif %}
+
+                <button
+                    type="button"
+                    @click="current = (current === 0 ? slides - 1 : current - 1)"
+                    class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full">
+                    &#10094;
+                </button>
+
+                <button
+                    type="button"
+                    @click="current = (current === slides - 1 ? 0 : current + 1)"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full">
+                    &#10095;
+                </button>
+            </div>
+
+            <!-- BOOKING FORM -->
+            <div class="w-full p-6 border rounded-lg">
+
+                <h3 class="text-center text-xl font-semibold mb-4">
+                    {{ property.property_name|title }}
+                </h3>
+
+                {% if property.residencepropertypricing %}
+                <div class="text-sm text-center space-y-2 mb-4">
+
+                    {% if property.residencepropertypricing.base_price %}
+                    <div class="bg-green-100 text-green-700 p-2 rounded">
+                        Monthly:
+                        {{ property.residencepropertypricing.currency }}
+                        {{ property.residencepropertypricing.base_price|floatformat:2|intcomma }}
+                    </div>
+                    {% endif %}
+
+                    {% if property.residencepropertypricing.base_price_per_day %}
+                    <div class="bg-blue-100 text-blue-700 p-2 rounded">
+                        Daily:
+                        {{ property.residencepropertypricing.currency }}
+                        {{ property.residencepropertypricing.base_price_per_day|floatformat:2|intcomma }}
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endif %}
+
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+
+                    <div>
+                        <label class="block text-sm mb-1">Phone Number</label>
+                        {{ form.phone_number|add_class:"w-full border p-2 rounded" }}
+                    </div>
+
+                    <input
+                        type="hidden"
+                        id="pricing-type"
+                        value="{% if property.residencepropertypricing.base_price_per_day %}daily{% else %}monthly{% endif %}">
+
+                    <!-- CHECK IN -->
+                    <div>
+                        <label class="block text-sm mb-1">Check-in Date</label>
+                        {{ form.check_in_date|add_class:"w-full border p-2 rounded" }}
+                    </div>
+
+                    <!-- MONTHLY -->
+                    <div id="monthly-box">
+                        <label class="block text-sm mb-1">Rent Duration (Months)</label>
+                        {{ form.rent_duration|add_class:"w-full border p-2 rounded" }}
+                    </div>
+
+                    <!-- DAILY -->
+                    <div id="daily-box">
+                        <label class="block text-sm mb-1">Check-out Date</label>
+                        {{ form.check_out_date|add_class:"w-full border p-2 rounded" }}
+                    </div>
+
+                    <!-- PRICE -->
+                    <div id="price-box"
+                         class="hidden bg-yellow-100 text-yellow-800 p-3 rounded text-center">
+                        Total:
+                        <span id="price-value"></span>
+                    </div>
+
+                    <!-- ERRORS -->
+                    {% if form.errors %}
+                    <div class="bg-red-100 text-red-700 p-3 rounded text-sm">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ field.label }}: {{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <button
+                        type="submit"
+                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded">
+                        Book Now
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const type = document.getElementById("pricing-type").value;
+
+    const monthlyBox = document.getElementById("monthly-box");
+    const dailyBox = document.getElementById("daily-box");
+
+    const rentSelect = document.getElementById("id_rent_duration");
+    const checkOut = document.getElementById("id_check_out_date");
+    const checkIn = document.getElementById("id_check_in_date");
+
+    const priceBox = document.getElementById("price-box");
+    const priceValue = document.getElementById("price-value");
+
+    const monthlyPrice = parseFloat("{{ property.residencepropertypricing.base_price|default:0 }}");
+    const dailyPrice = parseFloat("{{ property.residencepropertypricing.base_price_per_day|default:0 }}");
+
+    if (type === "daily") {
+
+        monthlyBox.style.display = "none";
+        dailyBox.style.display = "block";
+
+        if (rentSelect) {
+            rentSelect.disabled = true;
+            rentSelect.removeAttribute("required");
+        }
+
+    } else {
+
+        monthlyBox.style.display = "block";
+        dailyBox.style.display = "none";
+
+        if (checkOut) {
+            checkOut.disabled = true;
+            checkOut.removeAttribute("required");
+        }
+    }
+
+    function calcPrice() {
+
+        if (type === "monthly") {
+
+            let months = parseInt(rentSelect?.value || 0);
+
+            if (!months) {
+                priceBox.classList.add("hidden");
+                return;
+            }
+
+            let total = months * monthlyPrice;
+
+            priceBox.classList.remove("hidden");
+            priceValue.innerText = total.toFixed(2);
+
+        } else {
+
+            if (!checkIn?.value || !checkOut?.value) {
+                priceBox.classList.add("hidden");
+                return;
+            }
+
+            let inDate = new Date(checkIn.value);
+            let outDate = new Date(checkOut.value);
+
+            let diff = (outDate - inDate) / (1000 * 60 * 60 * 24);
+
+            if (diff <= 0) {
+                priceBox.classList.add("hidden");
+                return;
+            }
+
+            let total = diff * dailyPrice;
+
+            priceBox.classList.remove("hidden");
+            priceValue.innerText = total.toFixed(2);
+        }
+    }
+
+    rentSelect?.addEventListener("change", calcPrice);
+    checkIn?.addEventListener("change", calcPrice);
+    checkOut?.addEventListener("change", calcPrice);
+
+});
+</script>
+
+{% endblock %}

@@ -447,9 +447,16 @@ class ResidenceBooking(models.Model):
         (6, "6 Months"),
         (12, "12 Months"),
     ]
-    rent_duration = models.IntegerField(choices=RENT_DURATION_CHOICES)
+    rent_duration = models.IntegerField(
+    choices=RENT_DURATION_CHOICES,
+    null=True,
+    blank=True
+)
+    
 
     phone_number = models.CharField(max_length=20)
+    check_in_date = models.DateField(null=True, blank=True)
+    check_out_date = models.DateField(null=True, blank=True)
     total_price = models.DecimalField(max_digits=15, decimal_places=2)
 
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')

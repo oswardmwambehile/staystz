@@ -24,7 +24,7 @@
 
                 <!-- Property Image -->
                 <div class="relative">
-                    <a href="{% url 'residence_property_detail' property.pk %}">
+                    <a href="">
                         {% if property.photos.first %}
                             <img class="w-full h-64 sm:h-72 md:h-72 object-cover" src="{{ property.photos.first.image.url }}" alt="{{ property.property_name }}">
                         {% else %}

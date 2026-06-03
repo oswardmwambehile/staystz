@@ -21,5 +21,15 @@ urlpatterns = [
       path('residences-categories/', views.resedence, name='residence'),
       path('residence-property/<int:pk>/', views.residence_property_details, name='residence_property_details'),
      path('residences/<str:property_type>/', views.residence_properties, name='residence_properties_type'),
+      path(
+        "residence/book/<int:property_id>/",
+        views.book_residence,
+        name="book_residence"
+    ),
+     path(
+        "residence/booking/success/<int:booking_id>/",
+        views.residence_booking_success,
+        name="residence_booking_success"
+    ),
 ]
 

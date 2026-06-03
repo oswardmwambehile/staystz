@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Residence Booking</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-slate-950 py-10 px-4 font-sans">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center">
+
+<table width="760"
+    cellpadding="0"
+    cellspacing="0"
+    style="background:rgba(255,255,255,0.06); backdrop-filter:blur(18px);"
+    class="bg-white/10 border border-white/10 rounded-3xl overflow-hidden shadow-2xl">
+
+<!-- HEADER -->
+<tr>
+<td class="bg-gradient-to-r from-green-500 via-emerald-600 to-teal-700 px-10 py-12 text-center">
+
+    <div class="w-24 h-24 mx-auto rounded-full bg-white/20 flex items-center justify-center text-5xl">
+        🏠
+    </div>
+
+    <h1 class="text-4xl font-extrabold text-white mt-6">
+        StaySTZ Booking
+    </h1>
+
+    <p class="text-emerald-100 mt-2 text-sm">
+        New Residence Booking Notification
+    </p>
+
+</td>
+</tr>
+
+<!-- BODY -->
+<tr>
+<td class="p-10">
+
+<div class="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-400/20">
+    <p class="text-white font-semibold">Booking Submitted</p>
+    <p class="text-slate-300 text-sm">A new booking request has been made.</p>
+</div>
+
+<h2 class="text-2xl font-bold text-white mb-6">
+    Booking Details
+</h2>
+
+<div class="rounded-2xl overflow-hidden border border-white/10">
+
+<table class="w-full text-sm text-left text-slate-300">
+
+<tbody>
+
+<!-- PROPERTY -->
+<tr class="border-b border-white/10 bg-white/5">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Property</td>
+    <td class="px-6 py-4 text-white">{{ booking.property.property_name }}</td>
+</tr>
+
+<!-- OWNER -->
+<tr class="border-b border-white/10">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Owner</td>
+    <td class="px-6 py-4 text-white">{{ booking.property.owner }}</td>
+</tr>
+
+<!-- CUSTOMER -->
+<tr class="border-b border-white/10 bg-white/5">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Customer</td>
+    <td class="px-6 py-4 text-white">{{ booking.user }}</td>
+</tr>
+
+<!-- PHONE -->
+<tr class="border-b border-white/10">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Phone</td>
+    <td class="px-6 py-4 text-white">{{ booking.phone_number }}</td>
+</tr>
+
+<!-- RENT DURATION -->
+{% if booking.rent_duration %}
+<tr class="border-b border-white/10 bg-white/5">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Rent Duration</td>
+    <td class="px-6 py-4 text-white">{{ booking.rent_duration }} Months</td>
+</tr>
+{% endif %}
+
+<!-- CHECK-IN -->
+{% if booking.check_in_date %}
+<tr class="border-b border-white/10">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Check-in</td>
+    <td class="px-6 py-4 text-white">{{ booking.check_in_date }}</td>
+</tr>
+{% endif %}
+
+<!-- CHECK-OUT -->
+{% if booking.check_out_date %}
+<tr class="border-b border-white/10 bg-white/5">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Check-out</td>
+    <td class="px-6 py-4 text-white">{{ booking.check_out_date }}</td>
+</tr>
+{% endif %}
+
+<!-- TOTAL PRICE -->
+{% if booking.total_price %}
+<tr class="border-b border-white/10 bg-white/5">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Total Price</td>
+    <td class="px-6 py-4 text-white font-bold">
+        {{ booking.total_price }}
+    </td>
+</tr>
+{% endif %}
+
+<!-- CREATED -->
+<tr class="bg-white/5">
+    <td class="px-6 py-4 text-slate-400 font-semibold">Created At</td>
+    <td class="px-6 py-4 text-white">{{ booking.created_at }}</td>
+</tr>
+
+</tbody>
+</table>
+
+</div>
+
+<!-- BUTTON -->
+<div class="mt-8 text-center">
+    <a href="https://staystz.com/admin/"
+       class="inline-block px-8 py-4 rounded-xl bg-emerald-600 text-white font-bold">
+        Open Dashboard
+    </a>
+</div>
+
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td class="text-center text-slate-400 text-sm py-6 border-t border-white/10">
+    © 2026 StaySTZ Booking System
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
