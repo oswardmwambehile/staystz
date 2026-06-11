@@ -74,66 +74,106 @@
                 </div>
                 {% endif %}
 
-                <form method="POST" class="space-y-4">
-                    {% csrf_token %}
+                
+<form method="POST" class="space-y-4">
+    {% csrf_token %}
 
-                    <div>
-                        <label class="block text-sm mb-1">Phone Number</label>
-                        {{ form.phone_number|add_class:"w-full border p-2 rounded" }}
-                    </div>
+    <!-- Phone Number -->
+    <div>
+        <label class="block text-sm font-medium mb-1">
+            Phone Number
+        </label>
+        {{ form.phone_number|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <input
-                        type="hidden"
-                        id="pricing-type"
-                        value="{% if property.residencepropertypricing.base_price_per_day %}daily{% else %}monthly{% endif %}">
+    <!-- Need BnB -->
+    <div>
+        <label class="block text-sm font-medium mb-1">
+            Do you need BnB?
+        </label>
+        {{ form.need_bnb|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <!-- CHECK IN -->
-                    <div>
-                        <label class="block text-sm mb-1">Check-in Date</label>
-                        {{ form.check_in_date|add_class:"w-full border p-2 rounded" }}
-                    </div>
+    <!-- Rent Duration -->
+    <div id="duration-box">
+        <label class="block text-sm font-medium mb-1">
+            Rent Duration
+        </label>
+        {{ form.rent_duration|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <!-- MONTHLY -->
-                    <div id="monthly-box">
-                        <label class="block text-sm mb-1">Rent Duration (Months)</label>
-                        {{ form.rent_duration|add_class:"w-full border p-2 rounded" }}
-                    </div>
+    <!-- Check In -->
+    <div id="checkin-box">
+        <label class="block text-sm font-medium mb-1">
+            Check-in Date
+        </label>
+        {{ form.check_in_date|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <!-- DAILY -->
-                    <div id="daily-box">
-                        <label class="block text-sm mb-1">Check-out Date</label>
-                        {{ form.check_out_date|add_class:"w-full border p-2 rounded" }}
-                    </div>
+    <!-- Check Out -->
+    <div id="checkout-box">
+        <label class="block text-sm font-medium mb-1">
+            Check-out Date
+        </label>
+        {{ form.check_out_date|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <!-- PRICE -->
-                    <div id="price-box"
-                         class="hidden bg-yellow-100 text-yellow-800 p-3 rounded text-center">
-                        Total:
-                        <span id="price-value"></span>
-                    </div>
+    <!-- Adults -->
+    <div>
+        <label class="block text-sm font-medium mb-1">
+            Adults (Watu Wazima)
+        </label>
+        {{ form.adults|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <!-- ERRORS -->
-                    {% if form.errors %}
-                    <div class="bg-red-100 text-red-700 p-3 rounded text-sm">
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <p>{{ field.label }}: {{ error }}</p>
-                            {% endfor %}
-                        {% endfor %}
+    <!-- Children -->
+    <div>
+        <label class="block text-sm font-medium mb-1">
+            Children
+        </label>
+        {{ form.children|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                        {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
+    <!-- Parcel -->
+    <div>
+        <label class="block text-sm font-medium mb-1">
+            Do you have Parcel/Luggage?
+        </label>
+        {{ form.has_parcel|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                    <button
-                        type="submit"
-                        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded">
-                        Book Now
-                    </button>
+    <!-- Parcel Details -->
+    <div id="parcel-box">
+        <label class="block text-sm font-medium mb-1">
+            Parcel Details
+        </label>
+        {{ form.parcel_details|add_class:"w-full border rounded-lg p-3" }}
+    </div>
 
-                </form>
+    <!-- Errors -->
+    {% if form.errors %}
+    <div class="bg-red-100 text-red-700 rounded-lg p-3 text-sm">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <p>{{ field.label }}: {{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <button
+        type="submit"
+        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg">
+        Book Now
+    </button>
+</form>
+
+
+
 
             </div>
 
@@ -143,90 +183,200 @@
 
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const type = document.getElementById("pricing-type").value;
-
-    const monthlyBox = document.getElementById("monthly-box");
-    const dailyBox = document.getElementById("daily-box");
-
-    const rentSelect = document.getElementById("id_rent_duration");
-    const checkOut = document.getElementById("id_check_out_date");
+    // Fields
+    const needBnb = document.getElementById("id_need_bnb");
+    const rentDuration = document.getElementById("id_rent_duration");
     const checkIn = document.getElementById("id_check_in_date");
+    const checkOut = document.getElementById("id_check_out_date");
 
+    const hasParcel = document.getElementById("id_has_parcel");
+    const parcelDetails = document.getElementById("id_parcel_details");
+
+    // Containers
+    const durationBox = document.getElementById("duration-box");
+    const checkinBox = document.getElementById("checkin-box");
+    const checkoutBox = document.getElementById("checkout-box");
+    const parcelBox = document.getElementById("parcel-box");
+
+    // Price
     const priceBox = document.getElementById("price-box");
     const priceValue = document.getElementById("price-value");
 
-    const monthlyPrice = parseFloat("{{ property.residencepropertypricing.base_price|default:0 }}");
-    const dailyPrice = parseFloat("{{ property.residencepropertypricing.base_price_per_day|default:0 }}");
+    const monthlyPrice = parseFloat(
+        "{{ property.residencepropertypricing.base_price|default:0 }}"
+    );
 
-    if (type === "daily") {
+    const dailyPrice = parseFloat(
+        "{{ property.residencepropertypricing.base_price_per_day|default:0 }}"
+    );
 
-        monthlyBox.style.display = "none";
-        dailyBox.style.display = "block";
+    //----------------------------------
+    // Show/Hide BnB fields
+    //----------------------------------
 
-        if (rentSelect) {
-            rentSelect.disabled = true;
-            rentSelect.removeAttribute("required");
-        }
+    function toggleBnB() {
 
-    } else {
+        if (!needBnb) return;
 
-        monthlyBox.style.display = "block";
-        dailyBox.style.display = "none";
+        if (needBnb.value === "yes") {
 
-        if (checkOut) {
-            checkOut.disabled = true;
-            checkOut.removeAttribute("required");
-        }
-    }
+            durationBox.style.display = "none";
 
-    function calcPrice() {
+            checkinBox.style.display = "block";
+            checkoutBox.style.display = "block";
 
-        if (type === "monthly") {
+            if (rentDuration)
+                rentDuration.disabled = true;
 
-            let months = parseInt(rentSelect?.value || 0);
+            if (checkIn)
+                checkIn.disabled = false;
 
-            if (!months) {
-                priceBox.classList.add("hidden");
-                return;
-            }
-
-            let total = months * monthlyPrice;
-
-            priceBox.classList.remove("hidden");
-            priceValue.innerText = total.toFixed(2);
+            if (checkOut)
+                checkOut.disabled = false;
 
         } else {
 
-            if (!checkIn?.value || !checkOut?.value) {
-                priceBox.classList.add("hidden");
-                return;
+            durationBox.style.display = "block";
+
+            checkinBox.style.display = "none";
+            checkoutBox.style.display = "none";
+
+            if (rentDuration)
+                rentDuration.disabled = false;
+
+            if (checkIn)
+                checkIn.disabled = true;
+
+            if (checkOut)
+                checkOut.disabled = true;
+        }
+
+        calculatePrice();
+    }
+
+    //----------------------------------
+    // Show/Hide Parcel field
+    //----------------------------------
+
+    function toggleParcel() {
+
+        if (!hasParcel || !parcelBox)
+            return;
+
+        if (hasParcel.value === "yes") {
+
+            parcelBox.style.display = "block";
+
+            if (parcelDetails)
+                parcelDetails.disabled = false;
+
+        } else {
+
+            parcelBox.style.display = "none";
+
+            if (parcelDetails) {
+                parcelDetails.disabled = true;
+                parcelDetails.value = "";
             }
-
-            let inDate = new Date(checkIn.value);
-            let outDate = new Date(checkOut.value);
-
-            let diff = (outDate - inDate) / (1000 * 60 * 60 * 24);
-
-            if (diff <= 0) {
-                priceBox.classList.add("hidden");
-                return;
-            }
-
-            let total = diff * dailyPrice;
-
-            priceBox.classList.remove("hidden");
-            priceValue.innerText = total.toFixed(2);
         }
     }
 
-    rentSelect?.addEventListener("change", calcPrice);
-    checkIn?.addEventListener("change", calcPrice);
-    checkOut?.addEventListener("change", calcPrice);
+    //----------------------------------
+    // Calculate Price
+    //----------------------------------
+
+    function calculatePrice() {
+
+        if (!priceBox || !priceValue)
+            return;
+
+        // BnB
+        if (needBnb && needBnb.value === "yes") {
+
+            if (!checkIn.value || !checkOut.value) {
+                priceBox.classList.add("hidden");
+                return;
+            }
+
+            const start = new Date(checkIn.value);
+            const end = new Date(checkOut.value);
+
+            const days = Math.floor(
+                (end - start) / (1000 * 60 * 60 * 24)
+            );
+
+            if (days <= 0) {
+                priceBox.classList.add("hidden");
+                return;
+            }
+
+            const total = days * dailyPrice;
+
+            priceBox.classList.remove("hidden");
+            priceValue.innerHTML = total.toLocaleString(undefined,{
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            });
+
+        }
+
+        // Residence
+        else {
+
+            if (!rentDuration || !rentDuration.value) {
+                priceBox.classList.add("hidden");
+                return;
+            }
+
+            const months = parseInt(rentDuration.value);
+
+            const total = months * monthlyPrice;
+
+            priceBox.classList.remove("hidden");
+            priceValue.innerHTML = total.toLocaleString(undefined,{
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+            });
+
+        }
+
+    }
+
+    //----------------------------------
+    // Initial State
+    //----------------------------------
+
+    toggleBnB();
+    toggleParcel();
+    calculatePrice();
+
+    //----------------------------------
+    // Events
+    //----------------------------------
+
+    if (needBnb)
+        needBnb.addEventListener("change", toggleBnB);
+
+    if (hasParcel)
+        hasParcel.addEventListener("change", toggleParcel);
+
+    if (rentDuration)
+        rentDuration.addEventListener("change", calculatePrice);
+
+    if (checkIn)
+        checkIn.addEventListener("change", calculatePrice);
+
+    if (checkOut)
+        checkOut.addEventListener("change", calculatePrice);
 
 });
 </script>
+
+
+
 
 {% endblock %}

@@ -431,6 +431,10 @@ class ResidencePropertyLegal(models.Model):
 from django.db import models
 from django.conf import settings
 
+from django.db import models
+from django.conf import settings
+
+
 class ResidenceBooking(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
@@ -438,29 +442,83 @@ class ResidenceBooking(models.Model):
         ('cancelled', 'Cancelled'),
     )
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    property = models.ForeignKey('ResidenceProperty', on_delete=models.CASCADE)
+    YES_NO_CHOICES = (
+        ('yes', 'Yes'),
+        ('no', 'No'),
+    )
 
-    # For residence: user chooses rent duration in months
     RENT_DURATION_CHOICES = [
         (3, "3 Months"),
         (6, "6 Months"),
         (12, "12 Months"),
     ]
-    rent_duration = models.IntegerField(
-    choices=RENT_DURATION_CHOICES,
-    null=True,
-    blank=True
-)
-    
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
+    )
+
+    property = models.ForeignKey(
+        'ResidenceProperty',
+        on_delete=models.CASCADE
+    )
 
     phone_number = models.CharField(max_length=20)
-    check_in_date = models.DateField(null=True, blank=True)
-    check_out_date = models.DateField(null=True, blank=True)
-    total_price = models.DecimalField(max_digits=15, decimal_places=2)
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    # Ask user if they need BnB
+    need_bnb = models.CharField(
+        max_length=3,
+        choices=YES_NO_CHOICES,
+        default='no'
+    )
+
+    # Used only when need_bnb = no
+    rent_duration = models.IntegerField(
+        choices=RENT_DURATION_CHOICES,
+        null=True,
+        blank=True
+    )
+
+    # Used only when need_bnb = yes
+    check_in_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    check_out_date = models.DateField(
+        null=True,
+        blank=True
+    )
+
+    # Guests
+    adults = models.PositiveIntegerField(default=1)
+    children = models.PositiveIntegerField(default=0)
+
+    # Parcel/Luggage
+    has_parcel = models.CharField(
+        max_length=3,
+        choices=YES_NO_CHOICES,
+        default='no'
+    )
+
+    parcel_details = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    total_price = models.DecimalField(
+        max_digits=15,
+        decimal_places=2
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user} booked {self.property.property_name} for {self.rent_duration} months"
+        return f"{self.user} booked {self.property.property_name}"

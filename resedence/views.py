@@ -338,6 +338,7 @@ def resedence(request, booking_id=None):
     return render(request, 'customer/resedence.html')
 
 
+
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -350,18 +351,19 @@ from .models import ResidenceProperty, ResidenceBooking
 from .forms import ResidenceBookingForm
 
 
-@login_required(login_url='signin')
+@login_required(login_url="signin")
 def book_residence(request, property_id):
 
-    property_obj = get_object_or_404(ResidenceProperty, id=property_id)
+    property_obj = get_object_or_404(
+        ResidenceProperty,
+        id=property_id
+    )
 
     pricing = property_obj.residencepropertypricing
 
     if request.method == "POST":
 
-        form = ResidenceBookingForm(request.POST, is_daily=bool(pricing.base_price_per_day))
-
-        print(form.errors)
+        form = ResidenceBookingForm(request.POST)
 
         if form.is_valid():
 
@@ -370,37 +372,51 @@ def book_residence(request, property_id):
             booking.property = property_obj
             booking.user = request.user
 
-            # =========================
-            # CALCULATE TOTAL PRICE
-            # =========================
             total_price = 0
 
-            # DAILY BOOKING
-            if pricing.base_price_per_day and booking.check_in_date and booking.check_out_date:
+            # -----------------------
+            # BnB Booking (Daily)
+            # -----------------------
+            if (
+                booking.need_bnb == "yes"
+                and booking.check_in_date
+                and booking.check_out_date
+                and pricing.base_price_per_day
+            ):
 
-                days = (booking.check_out_date - booking.check_in_date).days
+                days = (
+                    booking.check_out_date
+                    - booking.check_in_date
+                ).days
 
                 if days <= 0:
                     days = 1
 
                 total_price = days * pricing.base_price_per_day
 
-            # MONTHLY BOOKING
-            elif pricing.base_price and booking.rent_duration:
+            # -----------------------
+            # Residence Booking
+            # -----------------------
+            elif (
+                booking.need_bnb == "no"
+                and booking.rent_duration
+                and pricing.base_price
+            ):
 
-                total_price = booking.rent_duration * pricing.base_price
+                total_price = (
+                    booking.rent_duration
+                    * pricing.base_price
+                )
 
             booking.total_price = total_price
-
             booking.save()
 
-            print("RESIDENCE BOOKING SAVED")
-
-            # ==========================
-            # EMAIL TO PROPERTY OWNER
-            # ==========================
             try:
-                subject = f"New Booking Request - {property_obj.property_name}"
+
+                subject = (
+                    f"New Booking Request - "
+                    f"{property_obj.property_name}"
+                )
 
                 context = {
                     "booking": booking,
@@ -409,45 +425,58 @@ def book_residence(request, property_id):
 
                 html_content = render_to_string(
                     "emails/residence_booking_email.html",
-                    context
+                    context,
                 )
 
                 text_content = strip_tags(html_content)
-
-                owner_email = property_obj.owner.email
 
                 email = EmailMultiAlternatives(
                     subject=subject,
                     body=text_content,
                     from_email=f"StayTZ Bookings <{settings.EMAIL_HOST_USER}>",
-                    to=[owner_email],
+                    to=[property_obj.owner.email],
                 )
 
-                email.attach_alternative(html_content, "text/html")
+                email.attach_alternative(
+                    html_content,
+                    "text/html"
+                )
+
                 email.send(fail_silently=False)
 
-                print("EMAIL SENT TO PROPERTY OWNER")
-
             except Exception as e:
-                print("EMAIL ERROR:", e)
+                print(e)
 
-            messages.success(request, "Booking submitted successfully.")
-            return redirect("residence_booking_success", booking_id=booking.id)
+            messages.success(
+                request,
+                "Booking submitted successfully."
+            )
 
-        else:
-            messages.error(request, "Please correct the errors below.")
-            print(form.errors)
+            return redirect(
+                "residence_booking_success",
+                booking_id=booking.id,
+            )
 
-    else:
-        form = ResidenceBookingForm(
-            is_daily=bool(pricing.base_price_per_day)
+        messages.error(
+            request,
+            "Please correct the errors below."
         )
 
-    return render(request, "customer/book_residence.html", {
-        "form": form,
-        "property": property_obj,
-        "pricing": pricing,
-    })
+    else:
+
+        form = ResidenceBookingForm()
+
+    return render(
+        request,
+        "customer/book_residence.html",
+        {
+            "form": form,
+            "property": property_obj,
+            "pricing": pricing,
+        },
+    )
+
+
 
 
 from django.shortcuts import get_object_or_404, render

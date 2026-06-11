@@ -259,18 +259,31 @@ from django import forms
 from .models import ResidenceBooking
 
 
+from django import forms
+from .models import ResidenceBooking
+
+
 class ResidenceBookingForm(forms.ModelForm):
 
     class Meta:
         model = ResidenceBooking
         fields = [
+            "need_bnb",
             "rent_duration",
             "phone_number",
             "check_in_date",
             "check_out_date",
+            "adults",
+            "children",
+            "has_parcel",
+            "parcel_details",
         ]
 
         widgets = {
+            "need_bnb": forms.Select(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+            }),
+
             "rent_duration": forms.Select(attrs={
                 "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
             }),
@@ -289,14 +302,73 @@ class ResidenceBookingForm(forms.ModelForm):
                 "type": "date",
                 "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
             }),
+
+            "adults": forms.NumberInput(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500",
+                "min": 1
+            }),
+
+            "children": forms.NumberInput(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500",
+                "min": 0
+            }),
+
+            "has_parcel": forms.Select(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+            }),
+
+            "parcel_details": forms.TextInput(attrs={
+                "class": "w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500",
+                "placeholder": "Enter parcel details or quantity"
+            }),
         }
 
     def __init__(self, *args, **kwargs):
-        self.is_daily = kwargs.pop("is_daily", False)
-
         super().__init__(*args, **kwargs)
 
-        if self.is_daily:
-            self.fields["rent_duration"].required = False
+        # Optional by default (JavaScript will show/hide them)
+        self.fields["rent_duration"].required = False
+        self.fields["check_in_date"].required = False
+        self.fields["check_out_date"].required = False
+        self.fields["parcel_details"].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        need_bnb = cleaned_data.get("need_bnb")
+        rent_duration = cleaned_data.get("rent_duration")
+        check_in = cleaned_data.get("check_in_date")
+        check_out = cleaned_data.get("check_out_date")
+        has_parcel = cleaned_data.get("has_parcel")
+        parcel_details = cleaned_data.get("parcel_details")
+
+        # If user needs BnB, require check-in and check-out
+        if need_bnb == "yes":
+            if not check_in:
+                self.add_error(
+                    "check_in_date",
+                    "Check-in date is required when BnB is selected."
+                )
+
+            if not check_out:
+                self.add_error(
+                    "check_out_date",
+                    "Check-out date is required when BnB is selected."
+                )
+
+        # If user does not need BnB, require rent duration
         else:
-            self.fields["check_out_date"].required = False
+            if not rent_duration:
+                self.add_error(
+                    "rent_duration",
+                    "Please select a rent duration."
+                )
+
+        # If user has parcels, require parcel details
+        if has_parcel == "yes" and not parcel_details:
+            self.add_error(
+                "parcel_details",
+                "Please provide parcel details."
+            )
+
+        return cleaned_data
