@@ -21,243 +21,7 @@
 <!-- Premium Property Header -->
 <!-- ========================================= -->
 
-<div class="bg-white border border-gray-200 rounded-3xl shadow-lg p-6 md:p-8 mb-8">
 
-    <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8">
-
-        <!-- ================= Left Section ================= -->
-        <div class="flex-1">
-
-            <!-- Badges -->
-            <div class="flex flex-wrap gap-3 mb-4">
-
-                <span class="inline-flex items-center px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-semibold text-sm">
-                    🏠 {{ property.property_type|title }}
-                </span>
-
-                {% if property.status %}
-
-                    {% if property.status|lower == "open" %}
-
-                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-green-200 bg-green-50 text-green-700 font-semibold text-sm">
-                            ✅ Available
-                        </span>
-
-                    {% elif property.status|lower == "hold" %}
-
-                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-yellow-200 bg-yellow-50 text-yellow-700 font-semibold text-sm">
-                            ⏳ On Hold
-                        </span>
-
-                    {% elif property.status|lower == "closed" %}
-
-                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-red-200 bg-red-50 text-red-700 font-semibold text-sm">
-                            ❌ Closed
-                        </span>
-
-                    {% else %}
-
-                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-gray-700 font-semibold text-sm">
-                            {{ property.status|title }}
-                        </span>
-
-                    {% endif %}
-
-                {% endif %}
-
-            </div>
-
-            <!-- Property Name -->
-
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-
-                {{ property.property_name }}
-
-            </h1>
-
-            <!-- Address -->
-
-            <div class="flex items-start gap-3 mt-4">
-
-                <div class="text-2xl">
-                    📍
-                </div>
-
-                <div class="text-gray-600 leading-7">
-
-                    {{ property.address }}
-
-                    {% if property.district %}
-                        , {{ property.district }}
-                    {% endif %}
-
-                    {% if property.region %}
-                        , {{ property.region }}
-                    {% endif %}
-
-                    {% if property.country %}
-                        , {{ property.country }}
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= Right Section ================= -->
-
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-            <!-- Property Type -->
-
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
-
-                <div class="text-4xl mb-2">
-                    🏡
-                </div>
-
-                <div class="text-xs uppercase tracking-wide text-gray-500">
-                    Property Type
-                </div>
-
-                <div class="font-bold text-gray-800 mt-2">
-                    {{ property.property_type|title }}
-                </div>
-
-            </div>
-
-
-            <!-- Property Size -->
-
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
-
-                <div class="text-4xl mb-2">
-                    📐
-                </div>
-
-                <div class="text-xs uppercase tracking-wide text-gray-500">
-                    Size
-                </div>
-
-                <div class="font-bold text-gray-800 mt-2">
-
-                    {% if property.property_size_sqm %}
-                        {{ property.property_size_sqm }} sqm
-                    {% else %}
-                        N/A
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <!-- Floors -->
-
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
-
-                <div class="text-4xl mb-2">
-                    🏢
-                </div>
-
-                <div class="text-xs uppercase tracking-wide text-gray-500">
-                    Floors
-                </div>
-
-                <div class="font-bold text-gray-800 mt-2">
-
-                    {% if property.floors %}
-                        {{ property.floors }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <!-- Parking -->
-
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
-
-                <div class="text-4xl mb-2">
-                    🚗
-                </div>
-
-                <div class="text-xs uppercase tracking-wide text-gray-500">
-                    Parking
-                </div>
-
-                <div class="font-bold text-gray-800 mt-2">
-
-                    {% if property.parking_spaces %}
-                        {{ property.parking_spaces }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <!-- District -->
-
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
-
-                <div class="text-4xl mb-2">
-                    🗺️
-                </div>
-
-                <div class="text-xs uppercase tracking-wide text-gray-500">
-                    District
-                </div>
-
-                <div class="font-bold text-gray-800 mt-2">
-
-                    {% if property.district %}
-                        {{ property.district }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <!-- Region -->
-
-            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
-
-                <div class="text-4xl mb-2">
-                    🌍
-                </div>
-
-                <div class="text-xs uppercase tracking-wide text-gray-500">
-                    Region
-                </div>
-
-                <div class="font-bold text-gray-800 mt-2">
-
-                    {% if property.region %}
-                        {{ property.region }}
-                    {% else %}
-                        N/A
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 
 
                 {% if photos %}
@@ -303,6 +67,13 @@
                     </div>
                 </div>
                 {% endif %}
+                <!-- Description -->
+                {% if property.property_name %}
+                <div class="mt-4 p-4 bg-gray-50 rounded-xl shadow">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-2">{{ property.property_name }}</h5>
+                    
+                </div>
+                {% endif %}
 
                 <!-- Description -->
                 {% if property.property_description %}
@@ -316,97 +87,212 @@
                     <a href="{% url 'book_residence' property.id %}" class="block w-full text-center py-3 bg-[#1591bc] hover:bg-[#1591bc] text-white font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-1">Book Now</a>
                 </div>
 
+                <div class="bg-white border border-gray-200 rounded-3xl shadow-lg p-6 md:p-8 mb-8">
+
+    <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8">
+
+        <!-- ================= Left Section ================= -->
+        <div class="flex-1">
+
+            <!-- Badges -->
+            <div class="flex flex-wrap gap-3 mb-4">
+
+                <span class="inline-flex items-center px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-semibold text-sm">
+                    <i class="fa-solid fa-house mr-2 text-green-600 text-lg"></i>
+                    {{ property.property_type|title }}
+                </span>
+
+                {% if property.status %}
+
+                    {% if property.status|lower == "open" %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-green-200 bg-green-50 text-green-700 font-semibold text-sm">
+                            <i class="fa-solid fa-circle-check mr-2 text-green-600 text-lg"></i> Available
+                        </span>
+
+                    {% elif property.status|lower == "hold" %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-yellow-200 bg-yellow-50 text-yellow-700 font-semibold text-sm">
+                            <i class="fa-solid fa-clock mr-2 text-green-600 text-lg"></i> On Hold
+                        </span>
+
+                    {% elif property.status|lower == "closed" %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-red-200 bg-red-50 text-red-700 font-semibold text-sm">
+                            <i class="fa-solid fa-circle-xmark mr-2 text-green-600 text-lg"></i> Closed
+                        </span>
+
+                    {% else %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-gray-700 font-semibold text-sm">
+                            {{ property.status|title }}
+                        </span>
+                    {% endif %}
+
+                {% endif %}
+
             </div>
 
+            <!-- Property Name -->
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                {{ property.property_name }}
+            </h1>
+
+            <!-- Address -->
+            <div class="flex items-start gap-3 mt-4">
+
+                <div>
+                    <i class="fa-solid fa-location-dot text-green-600 text-lg"></i>
+                </div>
+
+                <div class="text-gray-600 leading-7">
+                    {{ property.address }}
+                    {% if property.district %}, {{ property.district }}{% endif %}
+                    {% if property.region %}, {{ property.region }}{% endif %}
+                    {% if property.country %}, {{ property.country }}{% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Right Section ================= -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+            <!-- Property Type -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-house text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Property Type</div>
+                <div class="font-bold text-gray-800 mt-2">{{ property.property_type|title }}</div>
+            </div>
+
+            <!-- Property Size -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-ruler-combined text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Size</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.property_size_sqm %}
+                        {{ property.property_size_sqm }} sqm
+                    {% else %} N/A {% endif %}
+                </div>
+            </div>
+
+            <!-- Floors -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-building text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Floors</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.floors %}{{ property.floors }}{% else %}N/A{% endif %}
+                </div>
+            </div>
+
+            <!-- Parking -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-car text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Parking</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.parking_spaces %}{{ property.parking_spaces }}{% else %}N/A{% endif %}
+                </div>
+            </div>
+
+            <!-- District -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-map text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">District</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.district %}{{ property.district }}{% else %}N/A{% endif %}
+                </div>
+            </div>
+
+            <!-- Region -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-globe text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Region</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.region %}{{ property.region }}{% else %}N/A{% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+            </div>
+
+
+
+
             <!-- RIGHT: Cards -->
-            <div class="lg:col-span-3 space-y-4">
+<div class="lg:col-span-3 space-y-4">
 
                 <!-- Property Information -->
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
 
     <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        🏡 Property Information
+        <i class="fa-solid fa-house text-green-600 text-lg"></i>
+        Property Information
     </h3>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
         <!-- Property Size -->
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">📐</div>
+            <i class="fa-solid fa-ruler-combined text-green-600 text-xl mb-2"></i>
             <h4 class="font-semibold text-gray-800">
                 {{ property.property_size_sqm|default:"N/A" }}
             </h4>
-            <p class="text-sm text-gray-500">
-                Square Meters
-            </p>
+            <p class="text-sm text-gray-500">Square Meters</p>
         </div>
 
         <!-- Floors -->
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🏢</div>
+            <i class="fa-solid fa-building text-green-600 text-xl mb-2"></i>
             <h4 class="font-semibold text-gray-800">
                 {{ property.floors|default:"N/A" }}
             </h4>
-            <p class="text-sm text-gray-500">
-                Floors
-            </p>
+            <p class="text-sm text-gray-500">Floors</p>
         </div>
 
         <!-- Parking -->
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🚗</div>
+            <i class="fa-solid fa-car text-green-600 text-xl mb-2"></i>
             <h4 class="font-semibold text-gray-800">
                 {{ property.parking_spaces|default:"N/A" }}
             </h4>
-            <p class="text-sm text-gray-500">
-                Parking Spaces
-            </p>
+            <p class="text-sm text-gray-500">Parking Spaces</p>
         </div>
 
         <!-- Status -->
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
 
-            <div class="text-4xl mb-2">📋</div>
+            <i class="fa-solid fa-clipboard-check text-green-600 text-xl mb-2"></i>
 
             {% if property.status %}
 
                 {% if property.status|lower == "open" %}
-
                     <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 font-semibold">
-                        ✅ {{ property.status|title }}
-                    </span>
-
-                {% elif property.status|lower == "hold" %}
-
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 font-semibold">
-                        ⏳ {{ property.status|title }}
-                    </span>
-
-                {% elif property.status|lower == "closed" %}
-
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 font-semibold">
-                        ❌ {{ property.status|title }}
-                    </span>
-
-                {% else %}
-
-                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-semibold">
                         {{ property.status|title }}
                     </span>
 
+                {% elif property.status|lower == "hold" %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 font-semibold">
+                        {{ property.status|title }}
+                    </span>
+
+                {% elif property.status|lower == "closed" %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 font-semibold">
+                        {{ property.status|title }}
+                    </span>
+
+                {% else %}
+                    <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 font-semibold">
+                        {{ property.status|title }}
+                    </span>
                 {% endif %}
 
             {% else %}
-
-                <span class="text-gray-400">
-                    N/A
-                </span>
-
+                <span class="text-gray-400">N/A</span>
             {% endif %}
 
-            <p class="text-sm text-gray-500 mt-2">
-                Availability
-            </p>
+            <p class="text-sm text-gray-500 mt-2">Availability</p>
 
         </div>
 
@@ -420,215 +306,192 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
 
     <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        🏠 Residence Setup & Rooms
+        <i class="fa-solid fa-house text-green-600 text-lg"></i>
+        Residence Setup & Rooms
     </h3>
 
     <!-- Summary -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
 
         <div class="bg-gray-50 rounded-xl p-4 text-center border">
-            <div class="text-3xl">🛏️</div>
+            <i class="fa-solid fa-bed text-green-600 text-xl"></i>
             <div class="font-bold text-lg mt-2">
                 {{ setup.number_of_rooms }}
             </div>
-            <div class="text-gray-500 text-sm">
-                Rooms
-            </div>
+            <div class="text-gray-500 text-sm">Rooms</div>
         </div>
 
         <div class="bg-gray-50 rounded-xl p-4 text-center border">
-            <div class="text-3xl">🛌</div>
+            <i class="fa-solid fa-person-shelter text-green-600 text-xl"></i>
             <div class="font-bold text-lg mt-2">
                 {{ setup.beds_per_room }}
             </div>
-            <div class="text-gray-500 text-sm">
-                Beds / Room
-            </div>
+            <div class="text-gray-500 text-sm">Beds / Room</div>
         </div>
 
         <div class="bg-gray-50 rounded-xl p-4 text-center border">
-            <div class="text-3xl">🛏</div>
+            <i class="fa-solid fa-bed text-green-600 text-xl"></i>
             <div class="font-bold text-lg mt-2">
                 {{ setup.total_beds|default:"N/A" }}
             </div>
-            <div class="text-gray-500 text-sm">
-                Total Beds
-            </div>
+            <div class="text-gray-500 text-sm">Total Beds</div>
         </div>
 
         <div class="bg-gray-50 rounded-xl p-4 text-center border">
-            <div class="text-3xl">🚿</div>
+            <i class="fa-solid fa-shower text-green-600 text-xl"></i>
             <div class="font-bold text-lg mt-2">
                 {{ setup.number_of_bathrooms|default:"N/A" }}
             </div>
-            <div class="text-gray-500 text-sm">
-                Bathrooms
-            </div>
+            <div class="text-gray-500 text-sm">Bathrooms</div>
         </div>
 
     </div>
-
 
     <!-- Features -->
     <div class="grid md:grid-cols-2 gap-6">
 
         <!-- Room Types -->
         <div>
-            <h4 class="font-semibold text-lg mb-3">
-                🛏️ Room Types
+            <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-door-open text-green-600 text-lg"></i>
+                Room Types
             </h4>
 
             <ul class="space-y-2">
 
                 {% for room in setup.room_types %}
                 <li class="flex items-center gap-2">
-                    ✅
+                    <i class="fa-solid fa-circle-check text-green-600 text-sm"></i>
                     <span>{{ room }}</span>
                 </li>
                 {% empty %}
-                <li class="text-gray-400">
-                    No room types specified
-                </li>
+                <li class="text-gray-400">No room types specified</li>
                 {% endfor %}
 
             </ul>
         </div>
+
         <!-- BnB Availability -->
-<div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-md transition">
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-md transition">
 
-    <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between">
 
-        <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4">
 
-            <div class="w-14 h-14 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-3xl">
-                🛏️
-            </div>
+                    <div class="w-12 h-12 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center">
+                        <i class="fa-solid fa-bell-concierge text-green-600 text-lg"></i>
+                    </div>
 
-            <div>
+                    <div>
+                        <h6 class="text-lg font-semibold text-gray-800">
+                            BnB Availability
+                        </h6>
+                        <p class="text-sm text-gray-500">
+                            Bed & Breakfast Service
+                        </p>
+                    </div>
 
-                <h6 class="text-lg font-semibold text-gray-800">
-                    BnB Availability
-                </h6>
+                </div>
 
-                <p class="text-sm text-gray-500">
-                    Bed & Breakfast Service
-                </p>
+                {% if property.bnb_available %}
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 font-semibold">
+                        <i class="fa-solid fa-check text-green-600 text-sm"></i> Yes
+                    </span>
+                {% else %}
+                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 text-red-700 font-semibold">
+                        <i class="fa-solid fa-xmark text-red-600 text-sm"></i> No
+                    </span>
+                {% endif %}
 
             </div>
 
         </div>
 
-        {% if property.bnb_available %}
-
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 font-semibold">
-                ✅ Yes
-            </span>
-
-        {% else %}
-
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 text-red-700 font-semibold">
-                ❌ No
-            </span>
-
-        {% endif %}
-
-    </div>
-
-</div>
-
-
         <!-- Amenities -->
         <div>
-            <h4 class="font-semibold text-lg mb-3">
-                ⭐ Amenities
+            <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-star text-green-600 text-lg"></i>
+                Amenities
             </h4>
 
             <ul class="space-y-2">
 
                 {% for amenity in setup.amenities %}
                 <li class="flex items-center gap-2">
-                    ✔️
+                    <i class="fa-solid fa-circle-check text-green-600 text-sm"></i>
                     <span>{{ amenity }}</span>
                 </li>
                 {% empty %}
-                <li class="text-gray-400">
-                    No amenities listed
-                </li>
+                <li class="text-gray-400">No amenities listed</li>
                 {% endfor %}
 
             </ul>
         </div>
 
-
         <!-- Accessibility -->
         <div>
-            <h4 class="font-semibold text-lg mb-3">
-                ♿ Accessibility
+            <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-universal-access text-green-600 text-lg"></i>
+                Accessibility
             </h4>
 
             <ul class="space-y-2">
 
                 {% for feature in setup.accessibility_features %}
-                <li class="flex items-center gap-2">
-                    ♿
-                    <span>{{ feature }}</span>
-                </li>
-                {% empty %}
-                <li class="text-gray-400">
-                    No accessibility features
-                </li>
-                {% endfor %}
+
+    {% if "wheelchair" in feature|lower %}
+        <i class="fa-solid fa-wheelchair text-green-600 text-sm"></i>
+
+    {% elif "lift" in feature|lower or "elevator" in feature|lower %}
+        <i class="fa-solid fa-elevator text-green-600 text-sm"></i>
+
+    {% elif "ramp" in feature|lower %}
+        <i class="fa-solid fa-person-walking-with-cane text-green-600 text-sm"></i>
+
+    {% else %}
+        <i class="fa-solid fa-circle-check text-green-600 text-sm"></i>
+    {% endif %}
+
+    <span>{{ feature }}</span>
+
+{% endfor %}
 
             </ul>
-        </div>
 
+        </div>
 
         <!-- Home Features -->
         <div>
-            <h4 class="font-semibold text-lg mb-3">
-                🏡 Home Features
+            <h4 class="font-semibold text-lg mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-house-chimney text-green-600 text-lg"></i>
+                Home Features
             </h4>
 
             <ul class="space-y-2">
 
                 <li class="flex items-center gap-2">
-                    {% if setup.has_kitchen %}
-                        ✅ 🍳 Kitchen
-                    {% else %}
-                        ❌ 🍳 Kitchen
-                    {% endif %}
+                    <i class="fa-solid {% if setup.has_kitchen %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %} text-sm"></i>
+                    🍳 Kitchen
                 </li>
 
                 <li class="flex items-center gap-2">
-                    {% if setup.has_living_room %}
-                        ✅ 🛋️ Living Room
-                    {% else %}
-                        ❌ 🛋️ Living Room
-                    {% endif %}
+                    <i class="fa-solid {% if setup.has_living_room %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %} text-sm"></i>
+                    🛋️ Living Room
                 </li>
 
                 <li class="flex items-center gap-2">
-                    {% if setup.has_balcony %}
-                        ✅ 🌅 Balcony
-                    {% else %}
-                        ❌ 🌅 Balcony
-                    {% endif %}
+                    <i class="fa-solid {% if setup.has_balcony %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %} text-sm"></i>
+                    🌅 Balcony
                 </li>
 
                 <li class="flex items-center gap-2">
-                    {% if setup.has_storage_room %}
-                        ✅ 📦 Storage Room
-                    {% else %}
-                        ❌ 📦 Storage Room
-                    {% endif %}
+                    <i class="fa-solid {% if setup.has_storage_room %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %} text-sm"></i>
+                    📦 Storage Room
                 </li>
 
                 <li class="flex items-center gap-2">
-                    {% if setup.has_laundry_room %}
-                        ✅ 🧺 Laundry Room
-                    {% else %}
-                        ❌ 🧺 Laundry Room
-                    {% endif %}
+                    <i class="fa-solid {% if setup.has_laundry_room %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %} text-sm"></i>
+                    🧺 Laundry Room
                 </li>
 
             </ul>
@@ -647,44 +510,39 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
 
     <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        🏢 Office Setup
+        <i class="fa-solid fa-building text-green-600 text-lg"></i>
+        Office Setup
     </h3>
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
 
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">📏</div>
+            <i class="fa-solid fa-ruler-combined text-green-600 text-xl mb-2"></i>
             <div class="font-bold text-lg">
                 {{ office_setup.office_size_sqm }}
             </div>
-            <div class="text-sm text-gray-500">
-                Office Size (sqm)
-            </div>
+            <div class="text-sm text-gray-500">Office Size (sqm)</div>
         </div>
 
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🏢</div>
+            <i class="fa-solid fa-building text-green-600 text-xl mb-2"></i>
             <div class="font-bold text-lg">
                 {{ office_setup.number_of_offices }}
             </div>
-            <div class="text-sm text-gray-500">
-                Number of Offices
-            </div>
+            <div class="text-sm text-gray-500">Number of Offices</div>
         </div>
 
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">👥</div>
+            <i class="fa-solid fa-users text-green-600 text-xl mb-2"></i>
             <div class="font-bold text-lg">
                 {{ office_setup.number_of_tenants }}
             </div>
-            <div class="text-sm text-gray-500">
-                Tenants
-            </div>
+            <div class="text-sm text-gray-500">Tenants</div>
         </div>
 
         <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🏬</div>
+            <i class="fa-solid fa-layer-group text-green-600 text-xl mb-2"></i>
             <div class="font-bold text-lg">
                 {{ office_setup.building_level|title }}
             </div>
@@ -699,89 +557,102 @@
 
     </div>
 
-    <!-- Details -->
+    <!-- Details Grid -->
     <div class="grid md:grid-cols-2 gap-8">
 
         <!-- Building Information -->
         <div>
             <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                🏗️ Building Information
+                <i class="fa-solid fa-hotel text-green-600 text-lg"></i>
+                Building Information
             </h4>
 
             <ul class="space-y-3">
 
                 <li class="flex items-center gap-2">
-                    🏢 <strong>Building Condition:</strong>
+                    <i class="fa-solid fa-building text-green-600 text-sm"></i>
+                    <strong>Condition:</strong>
                     <span>{{ office_setup.building_condition|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🧱 <strong>Floor Finish:</strong>
+                    <i class="fa-solid fa-border-all text-green-600 text-sm"></i>
+                    <strong>Floor Finish:</strong>
                     <span>{{ office_setup.floor_finish|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🚪 <strong>Door Type:</strong>
+                    <i class="fa-solid fa-door-open text-green-600 text-sm"></i>
+                    <strong>Door Type:</strong>
                     <span>{{ office_setup.door_type|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🔒 <strong>Door Lock:</strong>
+                    <i class="fa-solid fa-lock text-green-600 text-sm"></i>
+                    <strong>Door Lock:</strong>
                     <span>{{ office_setup.door_lock_condition|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🪟 <strong>Window Type:</strong>
+                    <i class="fa-solid fa-window-maximize text-green-600 text-sm"></i>
+                    <strong>Window Type:</strong>
                     <span>{{ office_setup.window_type|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🏠 <strong>Ceiling Type:</strong>
+                    <i class="fa-solid fa-house text-green-600 text-sm"></i>
+                    <strong>Ceiling Type:</strong>
                     <span>{{ office_setup.ceiling_type|title }}</span>
                 </li>
 
             </ul>
         </div>
 
-        <!-- Utilities & Facilities -->
+        <!-- Utilities -->
         <div>
             <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                ⚡ Facilities & Utilities
+                <i class="fa-solid fa-bolt text-green-600 text-lg"></i>
+                Facilities & Utilities
             </h4>
 
             <ul class="space-y-3">
 
                 <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-droplet text-green-600 text-sm"></i>
                     {% if office_setup.has_water %}
-                        ✅ 💧 Water Available
+                        <span class="text-green-600 font-semibold">Water Available</span>
                     {% else %}
-                        ❌ 💧 Water Available
+                        <span class="text-red-500 font-semibold">No Water</span>
                     {% endif %}
                 </li>
 
                 <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-plug text-green-600 text-sm"></i>
                     {% if office_setup.has_electricity %}
-                        ✅ ⚡ Electricity Available
+                        <span class="text-green-600 font-semibold">Electricity Available</span>
                     {% else %}
-                        ❌ ⚡ Electricity Available
+                        <span class="text-red-500 font-semibold">No Electricity</span>
                     {% endif %}
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🌬️ <strong>Fan / AC:</strong>
+                    <i class="fa-solid fa-fan text-green-600 text-sm"></i>
+                    <strong>Fan / AC:</strong>
                     <span>{{ office_setup.fan_or_ac|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🚻 <strong>Toilet Type:</strong>
+                    <i class="fa-solid fa-toilet text-green-600 text-sm"></i>
+                    <strong>Toilet Type:</strong>
                     <span>{{ office_setup.toilet_type|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-user-shield text-green-600 text-sm"></i>
                     {% if office_setup.has_security_guard %}
-                        ✅ 🛡️ Security Guard
+                        <span class="text-green-600 font-semibold">Security Guard</span>
                     {% else %}
-                        ❌ 🛡️ Security Guard
+                        <span class="text-red-500 font-semibold">No Security Guard</span>
                     {% endif %}
                 </li>
 
@@ -791,54 +662,63 @@
         <!-- Location -->
         <div>
             <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                📍 Location & Environment
+                <i class="fa-solid fa-location-dot text-green-600 text-lg"></i>
+                Location & Environment
             </h4>
 
             <ul class="space-y-3">
 
                 <li class="flex items-center gap-2">
-                    🛣️ <strong>Road Type:</strong>
+                    <i class="fa-solid fa-road text-green-600 text-sm"></i>
+                    <strong>Road Type:</strong>
                     <span>{{ office_setup.road_type|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🌳 <strong>Environment:</strong>
+                    <i class="fa-solid fa-tree text-green-600 text-sm"></i>
+                    <strong>Environment:</strong>
                     <span>{{ office_setup.environment|title }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    📌 <strong>Location Category:</strong>
+                    <i class="fa-solid fa-map-pin text-green-600 text-sm"></i>
+                    <strong>Location Category:</strong>
                     <span>{{ office_setup.location_category|title }}</span>
                 </li>
 
             </ul>
         </div>
 
-        <!-- Office Summary -->
+        <!-- Summary -->
         <div>
             <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                📋 Office Summary
+                <i class="fa-solid fa-clipboard-list text-green-600 text-lg"></i>
+                Office Summary
             </h4>
 
             <ul class="space-y-3">
 
                 <li class="flex items-center gap-2">
-                    📏 <strong>Office Size:</strong>
+                    <i class="fa-solid fa-ruler-combined text-green-600 text-sm"></i>
+                    <strong>Office Size:</strong>
                     <span>{{ office_setup.office_size_sqm }} sqm</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    👥 <strong>Number of Tenants:</strong>
+                    <i class="fa-solid fa-users text-green-600 text-sm"></i>
+                    <strong>Tenants:</strong>
                     <span>{{ office_setup.number_of_tenants }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🏢 <strong>Number of Offices:</strong>
+                    <i class="fa-solid fa-building text-green-600 text-sm"></i>
+                    <strong>Offices:</strong>
                     <span>{{ office_setup.number_of_offices }}</span>
                 </li>
 
                 <li class="flex items-center gap-2">
-                    🏬 <strong>Building Level:</strong>
+                    <i class="fa-solid fa-layer-group text-green-600 text-sm"></i>
+                    <strong>Building Level:</strong>
                     <span>
                         {{ office_setup.building_level|title }}
                         {% if office_setup.floor_number %}
@@ -856,11 +736,12 @@
 {% endif %}
                 
 
-            {% if pricing %}
+ {% if pricing %}
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
 
     <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        💰 Pricing & Rates
+        <i class="fa-solid fa-coins text-green-600 text-lg"></i>
+        Pricing & Rates
     </h3>
 
     <!-- Main Pricing Cards -->
@@ -868,55 +749,43 @@
 
         {% if pricing.base_price %}
         <div class="bg-green-50 border border-green-200 rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🏠</div>
+            <i class="fa-solid fa-house text-green-600 text-xl mb-2"></i>
             <div class="text-xl font-bold text-green-700">
                 {{ pricing.base_price|floatformat:0|intcomma }}
             </div>
-            <div class="text-sm text-gray-600 mt-1">
-                Monthly Price
-            </div>
-            <div class="text-xs text-gray-500">
-                {{ pricing.currency }}
-            </div>
+            <div class="text-sm text-gray-600 mt-1">Monthly Price</div>
+            <div class="text-xs text-gray-500">{{ pricing.currency }}</div>
         </div>
         {% endif %}
 
         {% if pricing.base_price_per_day %}
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🛏️</div>
+            <i class="fa-solid fa-bed text-green-600 text-xl mb-2"></i>
             <div class="text-xl font-bold text-blue-700">
                 {{ pricing.base_price_per_day|floatformat:0|intcomma }}
             </div>
-            <div class="text-sm text-gray-600 mt-1">
-                Per Day Price
-            </div>
-            <div class="text-xs text-gray-500">
-                {{ pricing.currency }}
-            </div>
+            <div class="text-sm text-gray-600 mt-1">Per Day Price</div>
+            <div class="text-xs text-gray-500">{{ pricing.currency }}</div>
         </div>
         {% endif %}
 
         {% if pricing.weekly_discount_percent > 0 %}
         <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">🎉</div>
+            <i class="fa-solid fa-gift text-green-600 text-xl mb-2"></i>
             <div class="text-xl font-bold text-yellow-700">
                 {{ pricing.weekly_discount_percent }}%
             </div>
-            <div class="text-sm text-gray-600">
-                Weekly Discount
-            </div>
+            <div class="text-sm text-gray-600">Weekly Discount</div>
         </div>
         {% endif %}
 
         {% if pricing.monthly_discount_percent > 0 %}
         <div class="bg-purple-50 border border-purple-200 rounded-xl p-5 text-center hover:shadow-md transition">
-            <div class="text-4xl mb-2">💸</div>
+            <i class="fa-solid fa-tags text-green-600 text-xl mb-2"></i>
             <div class="text-xl font-bold text-purple-700">
                 {{ pricing.monthly_discount_percent }}%
             </div>
-            <div class="text-sm text-gray-600">
-                Monthly Discount
-            </div>
+            <div class="text-sm text-gray-600">Monthly Discount</div>
         </div>
         {% endif %}
 
@@ -928,7 +797,8 @@
         <!-- Fees -->
         <div>
             <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                💳 Additional Fees
+                <i class="fa-solid fa-credit-card text-green-600 text-lg"></i>
+                Additional Fees
             </h4>
 
             <ul class="space-y-3">
@@ -936,7 +806,8 @@
                 {% if pricing.cleaning_fee %}
                 <li class="flex items-center justify-between bg-gray-50 rounded-lg p-3 border">
                     <span class="flex items-center gap-2">
-                        🧹 Cleaning Fee
+                        <i class="fa-solid fa-broom text-green-600 text-sm"></i>
+                        Cleaning Fee
                     </span>
 
                     <span class="font-semibold">
@@ -946,7 +817,11 @@
                 </li>
                 {% else %}
                 <li class="flex items-center justify-between bg-gray-50 rounded-lg p-3 border">
-                    <span>🧹 Cleaning Fee</span>
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-broom text-green-600 text-sm"></i>
+                        Cleaning Fee
+                    </span>
+
                     <span class="text-green-600 font-semibold">
                         Free
                     </span>
@@ -959,7 +834,8 @@
         <!-- Rental Conditions -->
         <div>
             <h4 class="text-lg font-semibold mb-4 flex items-center gap-2">
-                📋 Rental Conditions
+                <i class="fa-solid fa-file-contract text-green-600 text-lg"></i>
+                Rental Conditions
             </h4>
 
             <ul class="space-y-3">
@@ -967,20 +843,20 @@
                 {% if property.property_type == "office_space" %}
 
                 <li class="flex items-center justify-between bg-gray-50 rounded-lg p-3 border">
-                    <span>
-                        📅 Minimum Rental
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-days text-green-600 text-sm"></i>
+                        Minimum Rental
                     </span>
-
                     <span class="font-semibold">
                         {{ pricing.min_months|default:"N/A" }} Months
                     </span>
                 </li>
 
                 <li class="flex items-center justify-between bg-gray-50 rounded-lg p-3 border">
-                    <span>
-                        🗓️ Maximum Rental
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-green-600 text-sm"></i>
+                        Maximum Rental
                     </span>
-
                     <span class="font-semibold">
                         {{ pricing.max_months|default:"N/A" }} Months
                     </span>
@@ -990,7 +866,8 @@
 
                 <li class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div class="flex items-center gap-2 font-semibold text-blue-700">
-                        ℹ️ Flexible Pricing
+                        <i class="fa-solid fa-circle-info text-blue-600"></i>
+                        Flexible Pricing
                     </div>
 
                     <p class="text-sm text-gray-600 mt-2">
