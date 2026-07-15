@@ -13,16 +13,20 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-7 gap-6 lg:gap-8">
 
-            <!-- LEFT: Carousel & Description -->
+           <!-- LEFT: Carousel & Description -->
             <div class="lg:col-span-4 space-y-4">
-                 <!-- Property Header -->
-        <div class="w-full bg-[#1591bc] text-white py-6 px-6 mb-6">
-            <h2 class="text-3xl font-bold">{{ property.property_name }}</h2>
-            <p class="text-sm text-green-100 mt-1">{{ property.property_type|title }} | {{ property.address }}, {{ property.district }}, {{ property.region }}, {{ property.country }}</p>
-        </div>
+
+      <!-- ========================= -->
+
+<!-- ========================================= -->
+<!-- Premium Property Header -->
+<!-- ========================================= -->
+
+
+
 
                 {% if photos %}
-                <!-- Carousel -->
+                <!-- Alpine Carousel -->
                 <div x-data="{
                         current: 0,
                         slides: {{ photos|length }},
@@ -64,82 +68,582 @@
                     </div>
                 </div>
                 {% endif %}
+                <!-- Description -->
+                {% if property.property_name %}
+                <div class="mt-4 p-4 bg-gray-50 rounded-xl shadow">
+                    <h5 class="text-lg font-semibold text-gray-900 mb-2">{{ property.property_name }}</h5>
+                    
+                </div>
+                {% endif %}
 
                 <!-- Description -->
                 {% if property.property_description %}
                 <div class="mt-4 p-4 bg-gray-50 rounded-xl shadow">
                     <h5 class="text-lg font-semibold text-gray-900 mb-2">Property Description</h5>
-                    <p class="text-gray-700 break-words whitespace-pre-line">
-    {{ property.property_description }}
-</p>
+                    <p class="text-gray-700">{{ property.property_description }}</p>
                 </div>
                 {% endif %}
 
                 <div class="mt-4">
-                    <a href="{% url 'book_property' property.id %}" class="block w-full text-center py-3 bg-[#1591bc] hover:bg-[#1591bc] text-white font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-1">Book Now</a>
+                    <a href="{% url 'book_residence' property.id %}" class="block w-full text-center py-3 bg-[#1591bc] hover:bg-[#1591bc] text-white font-semibold rounded-xl shadow-lg transition transform hover:-translate-y-1">Book Now</a>
                 </div>
+
+                <div class="bg-white border border-gray-200 rounded-3xl shadow-lg p-6 md:p-8 mb-8">
+
+    <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-8">
+
+        <!-- ================= Left Section ================= -->
+        <div class="flex-1">
+
+            <!-- Badges -->
+            <div class="flex flex-wrap gap-3 mb-4">
+
+                <span class="inline-flex items-center px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 font-semibold text-sm">
+                    <i class="fa-solid fa-house mr-2 text-green-600 text-lg"></i>
+                    {{ property.property_type|title }}
+                </span>
+
+                {% if property.status %}
+
+                    {% if property.status|lower == "open" %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-green-200 bg-green-50 text-green-700 font-semibold text-sm">
+                            <i class="fa-solid fa-circle-check mr-2 text-green-600 text-lg"></i> Available
+                        </span>
+
+                    {% elif property.status|lower == "hold" %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-yellow-200 bg-yellow-50 text-yellow-700 font-semibold text-sm">
+                            <i class="fa-solid fa-clock mr-2 text-green-600 text-lg"></i> On Hold
+                        </span>
+
+                    {% elif property.status|lower == "closed" %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-red-200 bg-red-50 text-red-700 font-semibold text-sm">
+                            <i class="fa-solid fa-circle-xmark mr-2 text-green-600 text-lg"></i> Closed
+                        </span>
+
+                    {% else %}
+                        <span class="inline-flex items-center px-4 py-2 rounded-full border border-gray-200 bg-gray-50 text-gray-700 font-semibold text-sm">
+                            {{ property.status|title }}
+                        </span>
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+            <!-- Property Name -->
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                {{ property.property_name }}
+            </h1>
+
+            <!-- Address -->
+            <div class="flex items-start gap-3 mt-4">
+
+                <div>
+                    <i class="fa-solid fa-location-dot text-green-600 text-lg"></i>
+                </div>
+
+                <div class="text-gray-600 leading-7">
+                    {{ property.address }}
+                    {% if property.district %}, {{ property.district }}{% endif %}
+                    {% if property.region %}, {{ property.region }}{% endif %}
+                    {% if property.country %}, {{ property.country }}{% endif %}
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Right Section ================= -->
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+            <!-- Property Type -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-house text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Property Type</div>
+                <div class="font-bold text-gray-800 mt-2">{{ property.property_type|title }}</div>
+            </div>
+
+            <!-- Property Size -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-ruler-combined text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Size</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.property_size_sqm %}
+                        {{ property.property_size_sqm }} sqm
+                    {% else %} N/A {% endif %}
+                </div>
+            </div>
+
+       
+
+            
+
+            <!-- District -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-map text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">District</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.district %}{{ property.district }}{% else %}N/A{% endif %}
+                </div>
+            </div>
+
+            <!-- Region -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center hover:shadow-md transition">
+                <i class="fa-solid fa-globe text-green-600 text-xl mb-2"></i>
+                <div class="text-xs uppercase tracking-wide text-gray-500">Region</div>
+                <div class="font-bold text-gray-800 mt-2">
+                    {% if property.region %}{{ property.region }}{% else %}N/A{% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
             </div>
 
             <!-- RIGHT: Cards -->
             <div class="lg:col-span-3 space-y-4">
 
-                <!-- Property Info -->
-                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-                    <h5 class="text-lg font-semibold text-green-600 mb-2">Property Info</h5>
-                    <p><strong>Property Size:</strong> {{ property.property_size_sqm }} sqm</p>
-                    <p><strong>Languages:</strong> {{ property.languages_spoken }}</p>
-                    {% if property.status %}
-                    <p><strong>Status:</strong>
-                        {% if property.status|lower == "open" %}
-                        <span class="inline-block bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
-                        {% elif property.status|lower == "hold" %}
-                        <span class="inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
-                        {% elif property.status|lower == "closed" %}
-                        <span class="inline-block bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
-                        {% else %}
-                        <span class="inline-block bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">{{ property.status|title }}</span>
-                        {% endif %}
-                    </p>
+               <!-- Property Information -->
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+
+    <!-- Heading -->
+    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+        <i class="fa-solid fa-house text-green-600 text-xl"></i>
+        Property Information
+    </h3>
+
+    <!-- Information Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Property Size -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center hover:shadow-md transition duration-300">
+
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                <i class="fa-solid fa-ruler-combined text-green-600 text-2xl"></i>
+            </div>
+
+            <h4 class="text-xl font-bold text-gray-800">
+                {% if property.property_size_sqm %}
+                    {{ property.property_size_sqm }} sqm
+                {% else %}
+                    N/A
+                {% endif %}
+            </h4>
+
+            <p class="text-sm text-gray-500 mt-2">
+                Property Size
+            </p>
+
+        </div>
+
+        <!-- Languages -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center hover:shadow-md transition duration-300">
+
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                <i class="fa-solid fa-language text-green-600 text-2xl"></i>
+            </div>
+
+            <h4 class="text-lg font-bold text-gray-800 break-words">
+                {% if property.languages_spoken %}
+                    {{ property.languages_spoken }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </h4>
+
+            <p class="text-sm text-gray-500 mt-2">
+                Languages Spoken
+            </p>
+
+        </div>
+
+        <!-- Status -->
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 text-center hover:shadow-md transition duration-300">
+
+            <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                <i class="fa-solid fa-circle-check text-green-600 text-2xl"></i>
+            </div>
+
+            {% if property.status %}
+
+                {% if property.status|lower == "open" %}
+
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold text-sm">
+                        {{ property.status|title }}
+                    </span>
+
+                {% elif property.status|lower == "hold" %}
+
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-semibold text-sm">
+                        {{ property.status|title }}
+                    </span>
+
+                {% elif property.status|lower == "closed" %}
+
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-red-100 text-red-700 font-semibold text-sm">
+                        {{ property.status|title }}
+                    </span>
+
+                {% else %}
+
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-700 font-semibold text-sm">
+                        {{ property.status|title }}
+                    </span>
+
+                {% endif %}
+
+            {% else %}
+
+                <span class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 text-gray-600 font-semibold text-sm">
+                    N/A
+                </span>
+
+            {% endif %}
+
+            <p class="text-sm text-gray-500 mt-3">
+                Availability
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+               <!-- Setup & Rooms -->
+{% if setup %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+
+    <!-- Heading -->
+    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <i class="fa-solid fa-house text-green-600 text-lg"></i>
+        Setup & Rooms
+    </h3>
+
+    <!-- Summary -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+
+        <!-- Rooms -->
+        <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
+            <i class="fa-solid fa-bed text-green-600 text-2xl mb-3"></i>
+            <h4 class="font-bold text-xl text-gray-800">
+                {{ setup.number_of_rooms|default:"N/A" }}
+            </h4>
+            <p class="text-sm text-gray-500 mt-1">
+                Rooms
+            </p>
+        </div>
+
+        <!-- Beds / Room -->
+        <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
+            <i class="fa-solid fa-person-shelter text-green-600 text-2xl mb-3"></i>
+            <h4 class="font-bold text-xl text-gray-800">
+                {{ setup.beds_per_room|default:"N/A" }}
+            </h4>
+            <p class="text-sm text-gray-500 mt-1">
+                Beds / Room
+            </p>
+        </div>
+
+        <!-- Total Beds -->
+        <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
+            <i class="fa-solid fa-bed text-green-600 text-2xl mb-3"></i>
+            <h4 class="font-bold text-xl text-gray-800">
+                {{ setup.total_beds|default:"N/A" }}
+            </h4>
+            <p class="text-sm text-gray-500 mt-1">
+                Total Beds
+            </p>
+        </div>
+
+        <!-- Bathrooms -->
+        <div class="bg-gray-50 border rounded-xl p-5 text-center hover:shadow-md transition">
+            <i class="fa-solid fa-shower text-green-600 text-2xl mb-3"></i>
+            <h4 class="font-bold text-xl text-gray-800">
+                {{ setup.number_of_bathrooms|default:"N/A" }}
+            </h4>
+            <p class="text-sm text-gray-500 mt-1">
+                Bathrooms
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Details -->
+    <div class="grid md:grid-cols-2 gap-8">
+
+        <!-- Room Types -->
+        <div>
+
+            <h4 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-door-open text-green-600"></i>
+                Room Types
+            </h4>
+
+            <ul class="space-y-2">
+
+                {% for room in setup.room_types %}
+                <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-green-600 text-sm"></i>
+                    {{ room }}
+                </li>
+                {% empty %}
+                <li class="text-gray-400">
+                    No room types specified
+                </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Amenities -->
+        <div>
+
+            <h4 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-star text-green-600"></i>
+                Amenities
+            </h4>
+
+            <ul class="space-y-2">
+
+                {% for amenity in setup.amenities %}
+                <li class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-green-600 text-sm"></i>
+                    {{ amenity }}
+                </li>
+                {% empty %}
+                <li class="text-gray-400">
+                    No amenities available
+                </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Accessibility -->
+        <div>
+
+            <h4 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-universal-access text-green-600"></i>
+                Accessibility Features
+            </h4>
+
+            <ul class="space-y-2">
+
+                {% for feature in setup.accessibility_features %}
+
+                <li class="flex items-center gap-2">
+
+                    {% if "wheelchair" in feature|lower %}
+                        <i class="fa-solid fa-wheelchair text-green-600"></i>
+
+                    {% elif "lift" in feature|lower or "elevator" in feature|lower %}
+                        <i class="fa-solid fa-elevator text-green-600"></i>
+
+                    {% elif "ramp" in feature|lower %}
+                        <i class="fa-solid fa-person-walking-with-cane text-green-600"></i>
+
+                    {% else %}
+                        <i class="fa-solid fa-circle-check text-green-600"></i>
                     {% endif %}
-                </div>
 
-                <!-- Setup & Rooms -->
-                {% if setup %}
-                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-                    <h5 class="text-lg font-semibold text-green-600 mb-2">Setup & Rooms</h5>
-                    <p>Rooms: {{ setup.number_of_rooms }}, Beds per room: {{ setup.beds_per_room }}, Total beds: {{ setup.total_beds }}</p>
-                    <p>Bathrooms: {{ setup.number_of_bathrooms }}</p>
-                    <p>Kitchen: {{ setup.has_kitchen|yesno:"Yes,No" }}, Living Room: {{ setup.has_living_room|yesno:"Yes,No" }}</p>
-                    <p>Amenities: {{ setup.amenities|join:", " }}</p>
-                    <p>Room Types: {{ setup.room_types|join:", " }}</p>
-                    <p>Accessibility: {{ setup.accessibility_features|join:", " }}</p>
-                </div>
-                {% endif %}
+                    {{ feature }}
 
-                <!-- Pricing -->
-                {% if pricing %}
-                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-                    <h5 class="text-lg font-semibold text-green-600 mb-2">Pricing</h5>
-                    <p>Base Price: <strong>{{ pricing.base_price_per_night }}</strong> / night</p>
-                    <p>Available: {{ pricing.available_from }} to {{ pricing.available_to }}</p>
-                    <p>Minimum stay: {{ pricing.minimum_stay_nights }} nights</p>
-                    <p>Maximum stay: {{ pricing.maximum_stay_nights|default:"No limit" }}</p>
-                </div>
-                {% endif %}
+                </li>
 
-                <!-- Legal -->
-                {% if legal %}
-                <div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-                    <h5 class="text-lg font-semibold text-green-600 mb-2">Legal & Policies</h5>
-                    <p><strong>Terms & Conditions:</strong> {{ legal.terms_and_conditions }}</p>
-                    <p><strong>House Rules:</strong> {{ legal.house_rules }}</p>
-                    <p><strong>Cancellation:</strong> {{ legal.cancellation_policy }}</p>
-                    <p><strong>Check-in:</strong> {{ legal.check_in_policy }}</p>
-                    <p><strong>Smoking:</strong> {{ legal.smoking_policy }}</p>
-                    <p><strong>Pets:</strong> {{ legal.pet_policy }}</p>
-                </div>
-                {% endif %}
+                {% empty %}
+                <li class="text-gray-400">
+                    No accessibility features
+                </li>
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+        <!-- Home Features -->
+        <div>
+
+            <h4 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-house-chimney text-green-600"></i>
+                Home Features
+            </h4>
+
+            <ul class="space-y-3">
+
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid {% if setup.has_kitchen %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %}"></i>
+                    Kitchen
+                </li>
+
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid {% if setup.has_living_room %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %}"></i>
+                    Living Room
+                </li>
+
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid {% if setup.has_balcony %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %}"></i>
+                    Balcony
+                </li>
+
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid {% if setup.has_storage_room %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %}"></i>
+                    Storage Room
+                </li>
+
+                <li class="flex items-center gap-3">
+                    <i class="fa-solid {% if setup.has_laundry_room %}fa-check text-green-600{% else %}fa-xmark text-red-500{% endif %}"></i>
+                    Laundry Room
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+
+<!-- Pricing -->
+{% if pricing %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-green-600 to-green-500 px-6 py-4">
+        <h5 class="text-xl font-semibold text-white flex items-center gap-2">
+            <i class="fas fa-tags"></i>
+            Pricing
+        </h5>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 space-y-4 text-gray-700">
+
+        <div class="flex justify-between items-center border-b pb-3">
+            <span class="font-medium text-gray-600">
+                Base Price
+            </span>
+            <span class="font-bold text-green-600">
+                {{ pricing.base_price_per_night }}
+                / night
+            </span>
+        </div>
+
+
+      
+
+
+       
+
+        <div class="flex justify-between items-center border-b pb-3">
+            <span class="font-medium text-gray-600">
+                Minimum Stay
+            </span>
+            <span class="text-gray-800">
+                {{ pricing.minimum_stay_nights }} nights
+            </span>
+        </div>
+
+
+        <div class="flex justify-between items-center">
+            <span class="font-medium text-gray-600">
+                Maximum Stay
+            </span>
+            <span class="text-gray-800">
+                {{ pricing.maximum_stay_nights|default:"No limit" }} nights
+            </span>
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+
+               <!-- Legal -->
+{% if legal %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-green-600 to-green-500 px-6 py-4">
+        <h5 class="text-xl font-semibold text-white flex items-center gap-2">
+            <i class="fas fa-file-contract"></i>
+            Legal & Policies
+        </h5>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 space-y-4 text-gray-700">
+
+        <div class="border-b pb-3">
+            <span class="font-semibold text-gray-600 block mb-1">
+                Terms & Conditions
+            </span>
+            <p class="text-gray-800 leading-relaxed">
+                {{ legal.terms_and_conditions }}
+            </p>
+        </div>
+
+
+        <div class="border-b pb-3">
+            <span class="font-semibold text-gray-600 block mb-1">
+                House Rules
+            </span>
+            <p class="text-gray-800 leading-relaxed">
+                {{ legal.house_rules }}
+            </p>
+        </div>
+
+
+        <div class="border-b pb-3">
+            <span class="font-semibold text-gray-600 block mb-1">
+                Cancellation Policy
+            </span>
+            <p class="text-gray-800 leading-relaxed">
+                {{ legal.cancellation_policy }}
+            </p>
+        </div>
+
+
+        <div class="border-b pb-3">
+            <span class="font-semibold text-gray-600 block mb-1">
+                Check-in Policy
+            </span>
+            <p class="text-gray-800 leading-relaxed">
+                {{ legal.check_in_policy }}
+            </p>
+        </div>
+
+
+        <div class="border-b pb-3">
+            <span class="font-semibold text-gray-600 block mb-1">
+                Smoking Policy
+            </span>
+            <p class="text-gray-800 leading-relaxed">
+                {{ legal.smoking_policy }}
+            </p>
+        </div>
+
+
+        <div>
+            <span class="font-semibold text-gray-600 block mb-1">
+                Pet Policy
+            </span>
+            <p class="text-gray-800 leading-relaxed">
+                {{ legal.pet_policy }}
+            </p>
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
 
             </div>
 
