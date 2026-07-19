@@ -107,7 +107,6 @@ def property_delete(request, pk):
         return redirect('my_properties')
     return redirect('my_properties')
 
-
 from django.shortcuts import render
 from django.db.models import Q
 from .models import BookingProperty
@@ -122,11 +121,11 @@ TANZANIA_REGIONS = [
 
 def booking_properties(request, property_type):
 
-    # ✅ ONLY show properties whose OWNER has VERIFIED attachment
+    # Only verified owners and properties that are not closed
     properties = BookingProperty.objects.filter(
         property_type=property_type,
-        owner__attachments__is_verified=True
-    ).distinct()
+        owner__attachments__is_verified=True,
+    ).exclude(status='closed').distinct()
 
     keyword = request.GET.get("keyword", "")
     region = request.GET.get("region", "")
@@ -149,11 +148,10 @@ def booking_properties(request, property_type):
         "properties": properties,
         "property_type": property_type.replace("_", " ").title(),
         "tanzania_regions": TANZANIA_REGIONS,
-        "property_type_choices": BookingProperty.PROPERTY_TYPE_CHOICES
+        "property_type_choices": BookingProperty.PROPERTY_TYPE_CHOICES,
     }
 
     return render(request, "customer/booking_property_lists.html", context)
-
 
 
 
@@ -334,6 +332,38 @@ def update_owner_booking_status(request, pk):
             messages.error(request, "Invalid status selected.")
 
     return redirect(request.META.get('HTTP_REFERER', 'bookings_list'))
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from .models import BookingProperty
+from .forms import BookingPropertyStatusForm
+
+
+@login_required
+def update_property_booking_status(request, pk):
+    property = get_object_or_404(
+        BookingProperty,
+        pk=pk,
+        owner=request.user
+    )
+
+    if request.method == "POST":
+        form = BookingPropertyStatusForm(
+            request.POST,
+            instance=property
+        )
+
+        if form.is_valid():
+            form.save()
+           
+    else:
+        form = BookingPropertyStatusForm(instance=property)
+
+    return redirect("my_properties")
 
 
 

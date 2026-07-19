@@ -9,51 +9,7 @@
     {% include 'customers/nav.html' %}
     
 
-    <!-- Header Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex flex-col-reverse md:flex-row items-center">
-
-        <!-- Text -->
-        <div class="md:w-1/2 md:pr-8">
-            <h1 class="text-1xl sm:text-2xl lg:text-3xl  mb-4" style="font-family: 'Montserrat', sans-serif;">
-                Property List in <span class="text-green-800">{{ property_type }}</span>
-            </h1>
-            <p class="text-gray-600 text-base sm:text-lg">
-    Explore a curated list of properties available in {{ property_type }}. Filter by type, location, and price to find your perfect home or investment.
-    Each property listing includes detailed information .
-        </div>
-
-        <!-- Image -->
-<!-- Image -->
-<div class="md:w-1/2 mb-8 md:mb-0">
-
-    {% with property_type|lower as pt %}
-
-        {% if pt == "hotel" %}
-            <img src="{% static 'customer/img/hotel.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "lodge" %}
-            <img src="{% static 'customer/img/hw.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "villa" %}
-            <img src="{% static 'customer/img/villa.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "resort" %}
-            <img src="{% static 'customer/img/lodge.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "guest_house" or pt == "guest house" %}
-            <img src="{% static 'customer/img/gest.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% elif pt == "tent or campsite" or pt == "tent or campsite" %}
-            <img src="{% static 'customer/img/cmp.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-
-        {% else %}
-            <img src="{% static 'customer/img/lodge.jpeg' %}" class="rounded-2xl shadow-lg w-full h-64 sm:h-80 md:h-96 object-cover">
-        {% endif %}
-
-    {% endwith %}
-
-</div>
-    </div>
+   
 
     <!-- Search Section -->
     {% include 'customer/search.html' %}
@@ -74,6 +30,28 @@
                         <img src="{% static 'customer/img/property-placeholder.jpg' %}" alt="{{ property.property_name }}" class="w-full h-64 sm:h-72 md:h-80 object-cover transition-transform duration-500 hover:scale-105">
                         {% endif %}
                     </a>
+                     <div class="absolute top-4 left-4">
+    {% if property.status == "open" %}
+        <span class="inline-block bg-green-600 text-white px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+
+    {% elif property.status == "hold" %}
+        <span class="inline-block bg-yellow-500 text-black px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+
+    {% elif property.status == "closed" %}
+        <span class="inline-block bg-red-600 text-white px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+
+    {% else %}
+        <span class="inline-block bg-gray-500 text-white px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+    {% endif %}
+</div>
                     <!-- Property Type Badge -->
                     <div class="absolute bottom-0 left-4 bg-white text-[#00b20d] rounded-t-lg px-3 py-1 text-sm">
                         {{ property.property_type|title }}

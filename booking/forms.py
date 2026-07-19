@@ -257,3 +257,15 @@ class BookingForm(forms.Form):
             )
 
         return cleaned_data
+    
+
+
+
+class BookingPropertyStatusForm(forms.ModelForm):
+    class Meta:
+        model = BookingProperty
+        fields = ["status"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        bootstrap_fields(self.fields)

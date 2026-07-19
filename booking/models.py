@@ -48,6 +48,12 @@ class BookingProperty(models.Model):
 
     ]
 
+    PROPERTY_STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+        ('hold', 'Hold'),
+    ]
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     property_name = models.CharField(max_length=255)
     property_type = models.CharField(max_length=20, choices=PROPERTY_TYPE_CHOICES)
@@ -59,6 +65,11 @@ class BookingProperty(models.Model):
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     property_size_sqm = models.PositiveIntegerField(blank=True, null=True)
+    status = models.CharField(
+        max_length=10,
+        choices=PROPERTY_STATUS_CHOICES,
+        default='open'
+    )
     languages_spoken = models.JSONField(default=list, blank=True)  # e.g., ["English", "French"]
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

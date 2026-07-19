@@ -32,9 +32,28 @@
                         {% endif %}
                     </a>
 
-                    <div class="absolute top-4 left-4 bg-[#00b20d] text-white px-3 py-1 rounded">
-                        {{ property.status|title }}
-                    </div>
+                   <div class="absolute top-4 left-4">
+    {% if property.status == "open" %}
+        <span class="inline-block bg-green-600 text-white px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+
+    {% elif property.status == "hold" %}
+        <span class="inline-block bg-yellow-500 text-black px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+
+    {% elif property.status == "closed" %}
+        <span class="inline-block bg-red-600 text-white px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+
+    {% else %}
+        <span class="inline-block bg-gray-500 text-white px-3 py-1 rounded-full text-lg font-semibold">
+            {{ property.status|title }}
+        </span>
+    {% endif %}
+</div>
                     <div class="absolute bottom-4 left-4 bg-white text-[#00b20d] px-3 py-1 rounded">
                         {{ property.property_type|title }}
                     </div>

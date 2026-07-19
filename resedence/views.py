@@ -273,7 +273,7 @@ def residence_properties(request, property_type):
     properties = ResidenceProperty.objects.filter(
         property_type=property_type,
         owner__attachments__is_verified=True
-    )
+    ).exclude(status='closed').distinct()
 
     keyword = request.GET.get("keyword", "")
     region = request.GET.get("region", "")
