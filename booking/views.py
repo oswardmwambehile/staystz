@@ -1,6 +1,8 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import formset_factory
+
 from .models import BookingProperty, BookingPropertyPhoto
+
 from .forms import (
     BookingPropertyForm,
     BookingPropertySetupForm,
@@ -9,24 +11,36 @@ from .forms import (
     BookingPropertyPhotoForm,
 )
 
+
 def add_property_all_in_one(request):
     success = False
 
     if request.method == "POST":
+
         property_form = BookingPropertyForm(request.POST)
         setup_form = BookingPropertySetupForm(request.POST)
         pricing_form = BookingPropertyPricingForm(request.POST)
         legal_form = BookingPropertyLegalForm(request.POST)
 
-        if (property_form.is_valid() and setup_form.is_valid() and
-            pricing_form.is_valid() and legal_form.is_valid()):
+        # Validate each form separately
+        property_valid = property_form.is_valid()
+        setup_valid = setup_form.is_valid()
+        pricing_valid = pricing_form.is_valid()
+        legal_valid = legal_form.is_valid()
+
+        if (
+            property_valid
+            and setup_valid
+            and pricing_valid
+            and legal_valid
+        ):
 
             # Save main property
             property_obj = property_form.save(commit=False)
             property_obj.owner = request.user
             property_obj.save()
 
-            # Save setup
+            # Save property setup
             setup_obj = setup_form.save(commit=False)
             setup_obj.property = property_obj
             setup_obj.save()
@@ -36,13 +50,14 @@ def add_property_all_in_one(request):
             pricing_obj.property = property_obj
             pricing_obj.save()
 
-            # Save legal
+            # Save legal information
             legal_obj = legal_form.save(commit=False)
             legal_obj.property = property_obj
             legal_obj.save()
 
             # Save multiple images
-            images = request.FILES.getlist("image")  # <-- get all uploaded files
+            images = request.FILES.getlist("image")
+
             for image in images:
                 BookingPropertyPhoto.objects.create(
                     property=property_obj,
@@ -50,7 +65,8 @@ def add_property_all_in_one(request):
                 )
 
             success = True
-            return redirect('my_properties')
+
+            return redirect("my_properties")
 
     else:
         property_form = BookingPropertyForm()
@@ -58,13 +74,17 @@ def add_property_all_in_one(request):
         pricing_form = BookingPropertyPricingForm()
         legal_form = BookingPropertyLegalForm()
 
-    return render(request, "property/add_property_all_in_one.html", {
-        "property_form": property_form,
-        "setup_form": setup_form,
-        "pricing_form": pricing_form,
-        "legal_form": legal_form,
-        "success": success,
-    })
+    return render(
+        request,
+        "property/add_property_all_in_one.html",
+        {
+            "property_form": property_form,
+            "setup_form": setup_form,
+            "pricing_form": pricing_form,
+            "legal_form": legal_form,
+            "success": success,
+        }
+    )
 
 
 

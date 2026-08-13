@@ -1,9 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-from django.db import models
-from django.conf import settings
-
 class BookingProperty(models.Model):
     TANZANIA_REGIONS = [
             ('Arusha', 'Arusha'),
@@ -92,6 +89,23 @@ class BookingPropertySetup(models.Model):
     total_beds = models.IntegerField(blank=True, null=True)
     number_of_bathrooms = models.IntegerField(default=1)
     has_kitchen = models.BooleanField(default=False)
+     # Property Information
+    year_built = models.IntegerField(blank=True, null=True)
+    building_level = models.CharField(
+    max_length=100,
+    choices=[
+        ('Ground Building', 'Ground Building'),
+        ('Multi-Storey Building', 'Multi-Storey Building'),
+    ],
+    blank=True,
+    null=True
+    )
+
+    # Security
+    cctv_camera = models.BooleanField(default=False)
+    security_guard = models.BooleanField(default=False)
+    fenced_compound = models.BooleanField(default=False)
+    has_fridge = models.BooleanField(default=False)
     has_living_room = models.BooleanField(default=False)
     amenities = models.JSONField(default=list, blank=True)  # e.g., ["WiFi", "Parking", "AC"]
     room_types = models.JSONField(default=list, blank=True)  # e.g., ["Single", "Double", "Suite"]
@@ -125,6 +139,7 @@ class BookingPropertyLegal(models.Model):
     check_in_policy = models.TextField(blank=True, null=True)
     smoking_policy = models.TextField(blank=True, null=True)
     pet_policy = models.TextField(blank=True, null=True)
+    deposit_policy = models.TextField(blank=True, null=True)
 
 
 from django.db import models

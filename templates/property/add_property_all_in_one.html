@@ -130,6 +130,48 @@ select {
 
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                   
+    {% if property_form.errors or setup_form.errors or pricing_form.errors or legal_form.errors %}
+        <div class="alert alert-danger">
+            <strong>Please correct the following errors:</strong>
+
+            {% for field in property_form %}
+                {% for error in field.errors %}
+                    <div>
+                        <strong>Basic Information - {{ field.label }}:</strong>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% for field in setup_form %}
+                {% for error in field.errors %}
+                    <div>
+                        <strong>Property Setup - {{ field.label }}:</strong>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% for field in pricing_form %}
+                {% for error in field.errors %}
+                    <div>
+                        <strong>Pricing - {{ field.label }}:</strong>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% for field in legal_form %}
+                {% for error in field.errors %}
+                    <div>
+                        <strong>Legal Information - {{ field.label }}:</strong>
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
 
                     <!-- STEP 1 -->
                     <div class="step" id="step1">

@@ -139,6 +139,13 @@ class BookingPropertySetupForm(forms.ModelForm):
             "amenities",
             "room_types",
             "accessibility_features",
+            "year_built",
+            "building_level",
+            "cctv_camera",
+            "security_guard",
+            "fenced_compound",
+            "has_fridge",
+
         ]
 
     def __init__(self, *args, **kwargs):
@@ -196,6 +203,7 @@ class BookingPropertyLegalForm(forms.ModelForm):
         fields = [
             "terms_and_conditions",
             "house_rules",
+            "deposit_policy",
             "cancellation_policy",
             "check_in_policy",
             "smoking_policy",
@@ -208,6 +216,7 @@ class BookingPropertyLegalForm(forms.ModelForm):
             "check_in_policy": forms.Textarea(attrs={"rows": 3}),
             "smoking_policy": forms.Textarea(attrs={"rows": 3}),
             "pet_policy": forms.Textarea(attrs={"rows": 3}),
+            "deposit_policy": forms.Textarea(attrs={"rows": 3}),
         }
 
     def __init__(self, *args, **kwargs):
