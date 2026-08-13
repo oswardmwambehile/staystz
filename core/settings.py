@@ -103,23 +103,26 @@ TEMPLATES = [
             ],
         },
     },
-]
+] 
 
 WSGI_APPLICATION = "core.wsgi.application"
 
 # --------------------------------------------------
 # DATABASE (MySQL)
 # --------------------------------------------------
-DATABASES = { 
-    "default": { 
-        "ENGINE": "django.db.backends.mysql", 
-        "NAME": "staystz_db", 
-        "USER": "staystz", 
-        "PASSWORD": "StrongPassword123", 
-        "HOST": "localhost", 
-        "PORT": "3306", 
-    } 
-} 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "staystz_db",
+        "USER": "staystz",
+        "PASSWORD": "StrongPassword123",
+        "HOST": "localhost",
+        "PORT": "3306",
+        "OPTIONS": {
+            "charset": "utf8mb4",
+        },
+    }
+}
 
 
 
