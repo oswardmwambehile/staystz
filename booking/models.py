@@ -105,7 +105,7 @@ class BookingPropertySetup(models.Model):
     cctv_camera = models.BooleanField(default=False)
     security_guard = models.BooleanField(default=False)
     fenced_compound = models.BooleanField(default=False)
-    has_fridge = models.BooleanField(default=False)
+   
     has_living_room = models.BooleanField(default=False)
     amenities = models.JSONField(default=list, blank=True)  # e.g., ["WiFi", "Parking", "AC"]
     room_types = models.JSONField(default=list, blank=True)  # e.g., ["Single", "Double", "Suite"]

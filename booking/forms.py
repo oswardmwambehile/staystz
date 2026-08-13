@@ -102,6 +102,7 @@ class BookingPropertySetupForm(forms.ModelForm):
             ("AC", "AC"),
             ("TV", "TV"),
             ("Pool", "Pool"),
+            ("has_fridge", "has_fridge")
         ],
         widget=forms.CheckboxSelectMultiple,
         required=False
@@ -122,6 +123,8 @@ class BookingPropertySetupForm(forms.ModelForm):
             ("Wheelchair accessible", "Wheelchair accessible"),
             ("Elevator", "Elevator"),
             ("Ramp", "Ramp"),
+            ("Solar Power System", "Solar Power System" ),
+            ("Generator power system", "Generator power system" )
         ],
         widget=forms.CheckboxSelectMultiple,
         required=False
@@ -144,7 +147,7 @@ class BookingPropertySetupForm(forms.ModelForm):
             "cctv_camera",
             "security_guard",
             "fenced_compound",
-            "has_fridge",
+           
 
         ]
 

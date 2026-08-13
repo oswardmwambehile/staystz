@@ -26,48 +26,347 @@
 
 
                 {% if photos %}
-                <!-- Alpine Carousel -->
-                <div x-data="{
-                        current: 0,
-                        slides: {{ photos|length }},
-                        images: [
-                            {% for photo in photos %}
-                            '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        ],
-                        setImage(i) { this.current = i; },
-                        next() { this.current = (this.current + 1) % this.slides; },
-                        prev() { this.current = (this.current - 1 + this.slides) % this.slides; }
-                    }" class="relative w-full overflow-hidden rounded-xl shadow-lg">
 
-                    <!-- Main Image -->
-                    <template x-for="(img, index) in images" :key="index">
-                        <img :src="img" x-show="current === index" class="w-full h-[450px] object-cover rounded-xl transition-all duration-500 cursor-zoom-in">
-                    </template>
+<div
+    x-data="{
+        current: 0,
+        slides: {{ photos|length }},
+        fullscreen: false,
+        images: [
+            {% for photo in photos %}
+                '{{ photo.image.url }}'{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ],
 
-                    <!-- Prev/Next Buttons -->
-                    <button @click="prev()" class="absolute top-1/2 -translate-y-1/2 left-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
-                        &#10094;
-                    </button>
-                    <button @click="next()" class="absolute top-1/2 -translate-y-1/2 right-2 bg-white/70 hover:bg-white rounded-full p-2 shadow-lg text-gray-700">
-                        &#10095;
-                    </button>
+        setImage(i) {
+            this.current = i;
+        },
 
-                    <!-- Indicators -->
-                    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-2">
-                        <template x-for="(img, index) in images" :key="index">
-                            <span @click="current = index" :class="current === index ? 'bg-blue-600' : 'bg-gray-400'" class="w-3 h-3 rounded-full cursor-pointer"></span>
-                        </template>
-                    </div>
+        next() {
+            this.current = (this.current + 1) % this.slides;
+        },
 
-                    <!-- Thumbnails -->
-                    <div class="flex gap-2 mt-2 overflow-x-auto px-1">
-                        <template x-for="(img, index) in images" :key="index">
-                            <img :src="img" @click="setImage(index)" class="w-24 h-16 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-blue-600 transition transform hover:scale-105" :class="current === index ? 'border-blue-600' : ''">
-                        </template>
-                    </div>
-                </div>
-                {% endif %}
+        prev() {
+            this.current = (this.current - 1 + this.slides) % this.slides;
+        },
+
+        openFullscreen(index = this.current) {
+            this.current = index;
+            this.fullscreen = true;
+            document.body.classList.add('overflow-hidden');
+        },
+
+        closeFullscreen() {
+            this.fullscreen = false;
+            document.body.classList.remove('overflow-hidden');
+        },
+
+        nextFullscreen() {
+            this.next();
+        },
+
+        prevFullscreen() {
+            this.prev();
+        }
+    }"
+    @keydown.escape.window="closeFullscreen()"
+    @keydown.arrow-right.window="fullscreen && nextFullscreen()"
+    @keydown.arrow-left.window="fullscreen && prevFullscreen()"
+    class="relative w-full"
+>
+
+    <!-- ========================= -->
+    <!-- MAIN IMAGE -->
+    <!-- ========================= -->
+
+    <div class="relative w-full overflow-hidden rounded-xl shadow-lg">
+
+        <template x-for="(img, index) in images" :key="index">
+
+            <img
+                :src="img"
+                x-show="current === index"
+                @click="openFullscreen(index)"
+                class="w-full h-[450px] object-cover rounded-xl transition-all duration-500 cursor-zoom-in hover:scale-[1.01]"
+                alt="Property photo"
+            >
+
+        </template>
+
+
+        <!-- PREVIOUS -->
+
+        <button
+            type="button"
+            @click="prev()"
+            class="absolute top-1/2 -translate-y-1/2 left-3
+                   bg-white/80 hover:bg-white
+                   rounded-full w-11 h-11
+                   shadow-lg text-gray-700
+                   flex items-center justify-center
+                   text-xl z-10"
+        >
+            &#10094;
+        </button>
+
+
+        <!-- NEXT -->
+
+        <button
+            type="button"
+            @click="next()"
+            class="absolute top-1/2 -translate-y-1/2 right-3
+                   bg-white/80 hover:bg-white
+                   rounded-full w-11 h-11
+                   shadow-lg text-gray-700
+                   flex items-center justify-center
+                   text-xl z-10"
+        >
+            &#10095;
+        </button>
+
+
+        <!-- IMAGE COUNTER -->
+
+        <div
+            class="absolute top-3 right-3
+                   bg-black/60 text-white
+                   px-3 py-1 rounded-full
+                   text-sm"
+        >
+            <span x-text="current + 1"></span>
+            /
+            <span x-text="slides"></span>
+        </div>
+
+
+        <!-- OPEN FULLSCREEN BUTTON -->
+
+        <button
+            type="button"
+            @click="openFullscreen(current)"
+            class="absolute bottom-3 right-3
+                   bg-black/60 hover:bg-black/80
+                   text-white rounded-lg
+                   px-3 py-2
+                   flex items-center gap-2
+                   text-sm"
+        >
+            <i class="fa-solid fa-expand"></i>
+            Fullscreen
+        </button>
+
+
+        <!-- INDICATORS -->
+
+        <div
+            class="absolute bottom-3 left-1/2
+                   -translate-x-1/2
+                   flex space-x-2"
+        >
+
+            <template
+                x-for="(img, index) in images"
+                :key="index"
+            >
+
+                <span
+                    @click="setImage(index)"
+                    :class="current === index
+                        ? 'bg-blue-600'
+                        : 'bg-white/70'"
+                    class="w-3 h-3 rounded-full
+                           cursor-pointer shadow"
+                ></span>
+
+            </template>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- THUMBNAILS -->
+    <!-- ========================= -->
+
+    <div class="flex gap-2 mt-3 overflow-x-auto px-1 pb-2">
+
+        <template
+            x-for="(img, index) in images"
+            :key="index"
+        >
+
+            <div
+                @click="openFullscreen(index)"
+                class="flex-shrink-0 cursor-pointer"
+            >
+
+                <img
+                    :src="img"
+                    class="w-24 h-16 object-cover rounded-lg
+                           border-2 transition
+                           hover:scale-105"
+                    :class="current === index
+                        ? 'border-blue-600'
+                        : 'border-transparent'"
+                    alt="Property thumbnail"
+                >
+
+            </div>
+
+        </template>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- FULLSCREEN IMAGE MODAL -->
+    <!-- ================================= -->
+
+    <div
+        x-show="fullscreen"
+        x-transition.opacity
+        class="fixed inset-0 z-[9999]
+               bg-black/95
+               flex items-center justify-center"
+        style="display: none;"
+        @click.self="closeFullscreen()"
+    >
+
+        <!-- CLOSE BUTTON -->
+
+        <button
+            type="button"
+            @click="closeFullscreen()"
+            class="absolute top-5 right-5
+                   z-[10000]
+                   w-12 h-12
+                   rounded-full
+                   bg-white/20
+                   hover:bg-white/30
+                   text-white
+                   text-2xl
+                   flex items-center justify-center"
+            aria-label="Close fullscreen"
+        >
+            &times;
+        </button>
+
+
+        <!-- IMAGE NUMBER -->
+
+        <div
+            class="absolute top-6 left-1/2
+                   -translate-x-1/2
+                   bg-black/60
+                   text-white
+                   px-4 py-2
+                   rounded-full
+                   text-sm z-[10000]"
+        >
+            <span x-text="current + 1"></span>
+            /
+            <span x-text="slides"></span>
+        </div>
+
+
+        <!-- FULLSCREEN IMAGE -->
+
+        <template x-for="(img, index) in images" :key="'fullscreen-' + index">
+
+            <img
+                x-show="current === index"
+                :src="img"
+                class="max-w-[95vw]
+                       max-h-[90vh]
+                       object-contain
+                       rounded-lg
+                       shadow-2xl"
+                alt="Full screen property photo"
+            >
+
+        </template>
+
+
+        <!-- FULLSCREEN PREVIOUS -->
+
+        <button
+            type="button"
+            @click="prevFullscreen()"
+            class="absolute left-5 top-1/2
+                   -translate-y-1/2
+                   w-14 h-14
+                   rounded-full
+                   bg-white/20
+                   hover:bg-white/30
+                   text-white
+                   text-3xl
+                   flex items-center justify-center"
+        >
+            &#10094;
+        </button>
+
+
+        <!-- FULLSCREEN NEXT -->
+
+        <button
+            type="button"
+            @click="nextFullscreen()"
+            class="absolute right-5 top-1/2
+                   -translate-y-1/2
+                   w-14 h-14
+                   rounded-full
+                   bg-white/20
+                   hover:bg-white/30
+                   text-white
+                   text-3xl
+                   flex items-center justify-center"
+        >
+            &#10095;
+        </button>
+
+
+        <!-- FULLSCREEN THUMBNAILS -->
+
+        <div
+            class="absolute bottom-4
+                   left-1/2
+                   -translate-x-1/2
+                   max-w-[90vw]
+                   overflow-x-auto
+                   flex gap-2
+                   px-2 py-2"
+        >
+
+            <template
+                x-for="(img, index) in images"
+                :key="'thumb-' + index"
+            >
+
+                <img
+                    :src="img"
+                    @click="setImage(index)"
+                    class="w-16 h-12
+                           object-cover
+                           rounded-md
+                           cursor-pointer
+                           border-2"
+                    :class="current === index
+                        ? 'border-blue-500'
+                        : 'border-white/40'"
+                    alt="Thumbnail"
+                >
+
+            </template>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
                 <!-- Description -->
                 {% if property.property_name %}
                 <div class="mt-4 p-4 bg-gray-50 rounded-xl shadow">
