@@ -65,6 +65,20 @@ class ResidenceProperty(models.Model):
         ('ground_floor', 'Ground Floor'),
         ('storey_building', 'Storey Building'),
     ]
+    CURRENT_STEP_CHOICES = [
+    ('property', 'Basic Information'),
+    ('setup', 'Property Setup'),
+    ('photos', 'Photos'),
+    ('pricing', 'Pricing'),
+    ('legal', 'Legal Information'),
+    ('complete', 'Complete'),
+]
+
+    current_step = models.CharField(
+        max_length=20,
+        choices=CURRENT_STEP_CHOICES,
+        default='property'
+    )
 
 
 
@@ -329,7 +343,8 @@ class OfficePropertySetup(models.Model):
     )
 
     # 4. Office size (sqm)
-    office_size_sqm = models.PositiveIntegerField()
+    office_size_sqm = models.PositiveIntegerField(blank=True,
+        null=True)
 
     # 5. Number of tenants
     number_of_tenants = models.PositiveIntegerField(default=1)
@@ -522,3 +537,39 @@ class ResidenceBooking(models.Model):
 
     def __str__(self):
         return f"{self.user} booked {self.property.property_name}"
+
+
+class ResidencePropertyReview(models.Model):
+
+    property = models.ForeignKey(
+        ResidenceProperty,
+        on_delete=models.CASCADE,
+        related_name="reviews"
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="residence_property_reviews"
+    )
+
+    rating = models.PositiveSmallIntegerField(
+        choices=[
+            (1, "1 Star"),
+            (2, "2 Stars"),
+            (3, "3 Stars"),
+            (4, "4 Stars"),
+            (5, "5 Stars"),
+        ]
+    )
+
+    comment = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.property.property_name} - {self.rating} Stars - {self.user}"

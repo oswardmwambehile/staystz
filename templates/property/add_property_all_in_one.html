@@ -201,9 +201,11 @@ select {
                         {% endfor %}
 
                         <div class="d-flex gap-2 mt-4">
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
-                        </div>
-                    </div>
+                    <button type="submit" name="step" value="property" class="btn btn-primary">
+                        Save & Continue →
+                    </button>
+                </div>
+                                    </div>
 
                     <!-- STEP 2 -->
                     <div class="step d-none" id="step2">
@@ -232,9 +234,25 @@ select {
                         </div>
                         {% endfor %}
 
-                        <div class="d-flex gap-2 mt-4">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
+                        
+                            <div class="d-flex gap-2 mt-4">
+
+    <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="prevStep()">
+        ← Back
+    </button>
+
+   <button
+    type="submit"
+    name="step"
+    value="setup"
+    class="btn btn-primary">
+    Save & Continue →
+</button>
+
+</div>
                         </div>
                     </div>
 
@@ -247,9 +265,25 @@ select {
                         </div>
                         <p class="text-muted small mt-2">Upload multiple photos</p>
                         <div class="d-flex gap-2 mt-4">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
-                        </div>
+
+    <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="prevStep()">
+        ← Back
+    </button>
+
+   
+
+   <button
+    type="submit"
+    name="step"
+    value="photos"
+    class="btn btn-primary">
+    Save & Continue →
+</button>
+
+</div>
                     </div>
 
                     <!-- STEP 4 -->
@@ -276,9 +310,25 @@ select {
                         </div>
                         {% endfor %}
                         <div class="d-flex gap-2 mt-4">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue →</button>
-                        </div>
+
+    <button
+        type="button"
+        class="btn btn-secondary"
+        onclick="prevStep()">
+        ← Back
+    </button>
+
+   
+
+   <button
+    type="submit"
+    name="step"
+    value="pricing"
+    class="btn btn-primary">
+    Save & Continue →
+</button>
+
+</div>
                     </div>
 
                     <!-- STEP 5 -->
@@ -306,7 +356,15 @@ select {
                         {% endfor %}
                         <div class="d-flex gap-2 mt-4">
                             <button type="button" class="btn btn-secondary" onclick="prevStep()">← Back</button>
-                            <button type="submit" class="btn btn-success">Finish ✓</button>
+                         
+
+<button
+    type="submit"
+    name="step"
+    value="legal"
+    class="btn btn-success">
+    Save & Finish ✓
+</button>
                         </div>
                     </div>
 
@@ -323,88 +381,261 @@ select {
 </script>
 
 <script>
+/* =========================================================
+   PROPERTY MULTI-STEP FORM
+   ========================================================= */
+
+// Start with Step 1 by default
 let currentStep = 1;
 
-// Show the specified step
+
+/* =========================================================
+   GET CURRENT STEP FROM DJANGO
+   ========================================================= */
+
+const savedStep = "{{ current_step|default:'property' }}";
+
+if (savedStep === "property") {
+    currentStep = 1;
+}
+else if (savedStep === "setup") {
+    currentStep = 2;
+}
+else if (savedStep === "photos") {
+    currentStep = 3;
+}
+else if (savedStep === "pricing") {
+    currentStep = 4;
+}
+else if (savedStep === "legal") {
+    currentStep = 5;
+}
+else if (savedStep === "complete") {
+    currentStep = 5;
+}
+
+
+/* =========================================================
+   SHOW STEP
+   ========================================================= */
+
 function showStep(step) {
-    document.querySelectorAll('.step').forEach(s => s.classList.add('d-none'));
-    const current = document.getElementById('step' + step);
-    if (current) current.classList.remove('d-none');
+
+    // Hide all steps
+    document.querySelectorAll(".step").forEach(function(stepElement) {
+        stepElement.classList.add("d-none");
+    });
+
+    // Show selected step
+    const current = document.getElementById("step" + step);
+
+    if (current) {
+        current.classList.remove("d-none");
+    }
 }
 
-// Next / Previous buttons
+
+/* =========================================================
+   NEXT STEP
+   ========================================================= */
+
 function nextStep() {
-    currentStep++;
-    showStep(currentStep);
-}
-function prevStep() {
-    currentStep--;
-    showStep(currentStep);
+
+    if (currentStep < 5) {
+        currentStep++;
+        showStep(currentStep);
+    }
+
 }
 
-// DRAG & DROP MULTIPLE IMAGES
+
+/* =========================================================
+   PREVIOUS STEP
+   ========================================================= */
+
+function prevStep() {
+
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+    }
+
+}
+
+
+/* =========================================================
+   DRAG & DROP MULTIPLE IMAGES
+   ========================================================= */
+
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("imageUpload");
-const preview = document.createElement("div");
-preview.id = "preview";
-preview.style.display = "flex";
-preview.style.flexWrap = "wrap";
-preview.style.marginTop = "10px";
-dropzone.appendChild(preview);
 
-// Click to open file dialog
-dropzone.addEventListener("click", () => fileInput.click());
 
-// Drag over styling
-dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropzone.classList.add("dragover");
-});
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+// Make sure the photo elements exist
+if (dropzone && fileInput) {
 
-// Drop files
-dropzone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropzone.classList.remove("dragover");
+    // Create preview container
+    const preview = document.createElement("div");
 
-    // Merge existing files with dropped files
-    const dtFiles = e.dataTransfer.files;
-    const fileList = new DataTransfer();
+    preview.id = "preview";
 
-    // Add existing files
-    for (let i = 0; i < fileInput.files.length; i++) {
-        fileList.items.add(fileInput.files[i]);
-    }
+    preview.style.display = "flex";
+    preview.style.flexWrap = "wrap";
+    preview.style.gap = "10px";
+    preview.style.marginTop = "15px";
 
-    // Add newly dropped files
-    for (let i = 0; i < dtFiles.length; i++) {
-        fileList.items.add(dtFiles[i]);
-    }
+    dropzone.appendChild(preview);
 
-    fileInput.files = fileList.files;
-    updatePreview();
-});
 
-// File input change (when user selects files manually)
-fileInput.addEventListener("change", () => updatePreview());
+    /* =====================================================
+       CLICK DROPZONE TO OPEN FILE SELECTOR
+       ===================================================== */
 
-// Function to display preview of images
-function updatePreview() {
-    preview.innerHTML = "";
-    Array.from(fileInput.files).forEach(file => {
-        const img = document.createElement("img");
-        img.src = URL.createObjectURL(file);
-        img.style.height = "100px";
-        img.style.marginRight = "10px";
-        img.style.marginBottom = "10px";
-        img.style.border = "1px solid #ccc";
-        img.style.borderRadius = "5px";
-        preview.appendChild(img);
+    dropzone.addEventListener("click", function(e) {
+
+        // Don't trigger twice when clicking the actual input
+        if (e.target !== fileInput) {
+            fileInput.click();
+        }
+
     });
+
+
+    /* =====================================================
+       DRAG OVER
+       ===================================================== */
+
+    dropzone.addEventListener("dragover", function(e) {
+
+        e.preventDefault();
+
+        dropzone.classList.add("dragover");
+
+    });
+
+
+    /* =====================================================
+       DRAG LEAVE
+       ===================================================== */
+
+    dropzone.addEventListener("dragleave", function() {
+
+        dropzone.classList.remove("dragover");
+
+    });
+
+
+    /* =====================================================
+       DROP FILES
+       ===================================================== */
+
+    dropzone.addEventListener("drop", function(e) {
+
+        e.preventDefault();
+
+        dropzone.classList.remove("dragover");
+
+
+        // Files already selected
+        const existingFiles = fileInput.files;
+
+        // Files that were dropped
+        const droppedFiles = e.dataTransfer.files;
+
+        // Create new file list
+        const fileList = new DataTransfer();
+
+
+        // Add existing files
+        for (let i = 0; i < existingFiles.length; i++) {
+
+            fileList.items.add(existingFiles[i]);
+
+        }
+
+
+        // Add newly dropped files
+        for (let i = 0; i < droppedFiles.length; i++) {
+
+            // Only allow images
+            if (droppedFiles[i].type.startsWith("image/")) {
+
+                fileList.items.add(droppedFiles[i]);
+
+            }
+
+        }
+
+
+        // Update input
+        fileInput.files = fileList.files;
+
+
+        // Update preview
+        updatePreview();
+
+    });
+
+
+    /* =====================================================
+       FILE INPUT CHANGE
+       ===================================================== */
+
+    fileInput.addEventListener("change", function() {
+
+        updatePreview();
+
+    });
+
+
+    /* =====================================================
+       UPDATE IMAGE PREVIEW
+       ===================================================== */
+
+    function updatePreview() {
+
+        preview.innerHTML = "";
+
+
+        const files = Array.from(fileInput.files);
+
+
+        files.forEach(function(file) {
+
+            // Only preview images
+            if (!file.type.startsWith("image/")) {
+                return;
+            }
+
+
+            // Create image
+            const img = document.createElement("img");
+
+            img.src = URL.createObjectURL(file);
+
+            img.style.width = "120px";
+            img.style.height = "100px";
+            img.style.objectFit = "cover";
+            img.style.border = "1px solid #ccc";
+            img.style.borderRadius = "5px";
+
+
+            // Add image to preview
+            preview.appendChild(img);
+
+        });
+
+    }
+
 }
 
-// Initialize first step
+
+/* =========================================================
+   INITIALIZE CURRENT STEP
+   ========================================================= */
+
 showStep(currentStep);
+
 </script>
 
 {% endblock %}

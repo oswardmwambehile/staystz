@@ -372,3 +372,31 @@ class ResidenceBookingForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+
+
+from django import forms
+from .models import ResidencePropertyReview
+
+
+class ResidencePropertyReviewForm(forms.ModelForm):
+
+    class Meta:
+        model = ResidencePropertyReview
+        fields = ["rating", "comment"]
+
+        widgets = {
+            "rating": forms.Select(
+                attrs={
+                    "class": "w-full border border-gray-300 rounded-lg px-4 py-3"
+                }
+            ),
+
+            "comment": forms.Textarea(
+                attrs={
+                    "class": "w-full border border-gray-300 rounded-lg px-4 py-3",
+                    "rows": 5,
+                    "placeholder": "Write your review..."
+                }
+            ),
+        }

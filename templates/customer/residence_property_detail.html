@@ -508,6 +508,26 @@
                 </div>
             </div>
 
+            {% if user.is_authenticated %}
+
+    <a
+        href="{% url 'resedence_add_property_review' property.id %}"
+        class="w-full mt-4 inline-flex items-center justify-center py-3 px-6 bg-[#1591bc] hover:bg-[#117fa5] text-white font-semibold rounded-lg transition"
+    >
+        Write a Review
+    </a>
+
+{% else %}
+
+    <a
+        href="{% url 'login' %}"
+        class="w-full mt-4 inline-flex items-center justify-center py-3 px-6 bg-[#1591bc] hover:bg-[#117fa5] text-white font-semibold rounded-lg transition"
+    >
+        Login to Write a Review
+    </a>
+
+{% endif %}
+            
         </div>
 
     </div>
@@ -524,6 +544,19 @@
 
                 <!-- Property Information -->
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+
+             <div class="mt-6">
+
+    <a
+        href="{% url 'resedence_property_reviews' property.id %}"
+        class="w-full inline-flex items-center justify-center gap-2 py-3 px-6 bg-[#1591bc] hover:bg-[#117fa5] text-white font-semibold rounded-xl shadow-sm transition duration-300"
+    >
+        <i class="fa-solid fa-star"></i>
+        View Reviews & Comments
+    </a>
+
+</div>
+
 
     <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
         <i class="fa-solid fa-house text-green-600 text-lg"></i>
@@ -1186,61 +1219,193 @@
 {% endif %}
 
                 <!-- Legal -->
-{% if legal %}
-<div class="p-4 bg-white rounded-xl shadow border border-gray-200">
-    <h5 class="text-lg font-semibold text-green-800 mb-4">
-        Legal & Policies
-    </h5>
 
-    <div class="legal-list">
-        <strong>Terms and Conditions:</strong>
-        <div class="auto-list">
-            {{ legal.terms_and_conditions|default:"N/A" }}
-        </div>
-    </div>
-
-    <div class="legal-list mt-4">
-        <strong>House Rules:</strong>
-        <div class="auto-list">
-            {{ legal.house_rules|default:"N/A" }}
-        </div>
-    </div>
-
-    <div class="legal-list mt-4">
-        <strong>Cancellation Policy:</strong>
-        <div class="auto-list">
-            {{ legal.cancellation_policy|default:"N/A" }}
-        </div>
-    </div>
-
-    <div class="legal-list mt-4">
-        <strong>Deposit Policy:</strong>
-        <div class="auto-list">
-            {{ legal.deposit_policy|default:"N/A" }}
-        </div>
-    </div>
-
-    <div class="legal-list mt-4">
-        <strong>Refund Rules:</strong>
-        <div class="auto-list">
-            {{ legal.refund_rules|default:"N/A" }}
-        </div>
-    </div>
-
-    <div class="legal-list mt-4">
-        <strong>Insurance:</strong>
-        <div class="auto-list">
-            {{ legal.insurance_details|default:"N/A" }}
-        </div>
-    </div>
-</div>
-{% endif %}
 
             </div>
 
         </div>
     </div>
      <div class="h-40 md:h-24"></div>
+
+     </div>
+</div>
+
+
+<!-- ========================================= -->
+<!-- LEGAL & POLICIES - FULL WIDTH SECTION -->
+<!-- ========================================= -->
+
+{% if legal %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+
+        <!-- Section Header -->
+        <div class="flex items-center gap-3 mb-8">
+
+            <div class="w-12 h-12 rounded-xl bg-green-50 border border-green-200 flex items-center justify-center">
+                <i class="fa-solid fa-file-contract text-green-600 text-xl"></i>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-bold text-gray-800">
+                    Legal & Policies
+                </h3>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Important terms, conditions and property policies
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- Legal Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+
+            <!-- Terms and Conditions -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                        <i class="fa-solid fa-file-lines text-blue-600"></i>
+                    </div>
+
+                    <h4 class="font-semibold text-gray-800">
+                        Terms and Conditions
+                    </h4>
+
+                </div>
+
+                <div class="auto-list text-gray-600 text-sm leading-6">
+                    {{ legal.terms_and_conditions|default:"N/A" }}
+                </div>
+
+            </div>
+
+
+            <!-- House Rules -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+                        <i class="fa-solid fa-house text-green-600"></i>
+                    </div>
+
+                    <h4 class="font-semibold text-gray-800">
+                        House Rules
+                    </h4>
+
+                </div>
+
+                <div class="auto-list text-gray-600 text-sm leading-6">
+                    {{ legal.house_rules|default:"N/A" }}
+                </div>
+
+            </div>
+
+
+            <!-- Cancellation Policy -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-xmark text-yellow-600"></i>
+                    </div>
+
+                    <h4 class="font-semibold text-gray-800">
+                        Cancellation Policy
+                    </h4>
+
+                </div>
+
+                <div class="auto-list text-gray-600 text-sm leading-6">
+                    {{ legal.cancellation_policy|default:"N/A" }}
+                </div>
+
+            </div>
+
+
+            <!-- Deposit Policy -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                        <i class="fa-solid fa-money-bill-wave text-purple-600"></i>
+                    </div>
+
+                    <h4 class="font-semibold text-gray-800">
+                        Deposit Policy
+                    </h4>
+
+                </div>
+
+                <div class="auto-list text-gray-600 text-sm leading-6">
+                    {{ legal.deposit_policy|default:"N/A" }}
+                </div>
+
+            </div>
+
+
+            <!-- Refund Rules -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
+                        <i class="fa-solid fa-rotate-left text-red-600"></i>
+                    </div>
+
+                    <h4 class="font-semibold text-gray-800">
+                        Refund Rules
+                    </h4>
+
+                </div>
+
+                <div class="auto-list text-gray-600 text-sm leading-6">
+                    {{ legal.refund_rules|default:"N/A" }}
+                </div>
+
+            </div>
+
+
+            <!-- Insurance -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center">
+                        <i class="fa-solid fa-shield-halved text-indigo-600"></i>
+                    </div>
+
+                    <h4 class="font-semibold text-gray-800">
+                        Insurance
+                    </h4>
+
+                </div>
+
+                <div class="auto-list text-gray-600 text-sm leading-6">
+                    {{ legal.insurance_details|default:"N/A" }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+
+
+<div class="h-40 md:h-24"></div>
+
+
 
     {% include 'customer/footer.html' %}
 

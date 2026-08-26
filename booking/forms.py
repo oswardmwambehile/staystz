@@ -281,3 +281,29 @@ class BookingPropertyStatusForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         bootstrap_fields(self.fields)
+
+from django import forms
+from .models import PropertyReview
+
+
+class PropertyReviewForm(forms.ModelForm):
+
+    class Meta:
+        model = PropertyReview
+        fields = ["rating", "comment"]
+
+        widgets = {
+            "rating": forms.Select(
+                attrs={
+                    "class": "w-full border border-gray-300 rounded-lg px-4 py-3"
+                }
+            ),
+
+            "comment": forms.Textarea(
+                attrs={
+                    "class": "w-full border border-gray-300 rounded-lg px-4 py-3",
+                    "rows": 5,
+                    "placeholder": "Write your review..."
+                }
+            ),
+        }

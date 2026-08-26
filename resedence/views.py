@@ -1,7 +1,14 @@
-from django.shortcuts import render
-from .models import ResidenceProperty, ResidencePropertyPhoto
-from django.shortcuts import render, redirect
-from .models import ResidenceProperty, ResidencePropertyPhoto
+from django.shortcuts import render, redirect, get_object_or_404
+
+from .models import (
+    ResidenceProperty,
+    ResidencePropertySetup,
+    OfficePropertySetup,
+    ResidencePropertyPhoto,
+    ResidencePropertyPricing,
+    ResidencePropertyLegal,
+)
+
 from .forms import (
     ResidencePropertyForm,
     ResidencePropertySetupForm,
@@ -10,168 +17,707 @@ from .forms import (
     ResidencePropertyLegalForm,
 )
 
-from django.shortcuts import render, redirect
-from django.shortcuts import render, redirect
-from .models import ResidenceProperty, ResidencePropertyPhoto
-from .forms import (
-    ResidencePropertyForm,
-    ResidencePropertySetupForm,
-    OfficePropertySetupForm,
-    ResidencePropertyPricingForm,
-    ResidencePropertyLegalForm,
-)
+
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
+
+def get_setup_forms(property_obj=None):
+    """
+    Return the correct setup form depending on property type.
+
+    Office Space:
+        OfficePropertySetupForm
+
+    Apartment / Homes:
+        ResidencePropertySetupForm
+    """
+
+    if property_obj is None:
+
+        return (
+            ResidencePropertySetupForm(),
+            OfficePropertySetupForm()
+        )
 
 
-def add_residence_property_all_in_one(request):
-    success = False
+    # --------------------------------------------------------
+    # OFFICE SPACE
+    # --------------------------------------------------------
 
-    # =========================
-    # DEFAULT SAFE INITIALIZATION
-    # =========================
-    property_form = ResidencePropertyForm(request.POST or None)
-    setup_form = None
-    office_setup_form = None
-    pricing_form = None
-    legal_form = None
+    if property_obj.property_type == "office_space":
 
-    # =========================
-    # HANDLE POST
-    # =========================
-    if request.method == "POST":
+        office_instance = getattr(
+            property_obj,
+            "office_setup",
+            None
+        )
 
-        # -------------------------
-        # LOCK CHECK
-        # -------------------------
-        if request.session.get("residence_lock"):
-            return redirect("my_residence_properties")
+        office_form = OfficePropertySetupForm(
+            instance=office_instance
+        )
 
-        request.session["residence_lock"] = True
+        return None, office_form
 
-        # -------------------------
-        # STEP 1: PROPERTY FORM
-        # -------------------------
-        if property_form.is_valid():
-            prop = property_form.save(commit=False)
-            prop.owner = request.user
-            prop.save()
 
-            property_type = prop.property_type
-            is_office = property_type == "office_space"
+    # --------------------------------------------------------
+    # APARTMENT / HOMES
+    # --------------------------------------------------------
 
-            # -------------------------
-            # STEP 2: SETUP FORM
-            # -------------------------
-            if is_office:
-                setup_form = OfficePropertySetupForm(request.POST)
-            else:
-                setup_form = ResidencePropertySetupForm(request.POST)
+    residence_instance = getattr(
+        property_obj,
+        "residencepropertysetup",
+        None
+    )
 
-            # -------------------------
-            # STEP 3: PRICING FORM
-            # -------------------------
-            pricing_form = ResidencePropertyPricingForm(
-                request.POST,
-                property_obj=prop
+    residence_form = ResidencePropertySetupForm(
+        instance=residence_instance
+    )
+
+    return residence_form, None
+
+
+# ============================================================
+# MAIN VIEW
+# ============================================================
+
+def add_residence_property_all_in_one(
+    request,
+    property_id=None
+):
+
+    # ========================================================
+    # GET EXISTING PROPERTY
+    # ========================================================
+
+    if property_id:
+
+        property_obj = get_object_or_404(
+            ResidenceProperty,
+            id=property_id,
+            owner=request.user
+        )
+
+    else:
+
+        property_obj = None
+
+
+    # ========================================================
+    # GET REQUEST
+    # ========================================================
+
+    if request.method == "GET":
+
+        # ====================================================
+        # NEW PROPERTY
+        # ====================================================
+
+        if property_obj is None:
+
+            property_form = ResidencePropertyForm()
+
+            residence_setup_form = (
+                ResidencePropertySetupForm()
             )
 
-            # -------------------------
-            # STEP 4: LEGAL FORM
-            # -------------------------
-            legal_form = ResidencePropertyLegalForm(request.POST)
+            office_setup_form = (
+                OfficePropertySetupForm()
+            )
 
-            # -------------------------
-            # VALIDATION
-            # -------------------------
-            setup_valid = setup_form.is_valid()
-            pricing_valid = pricing_form.is_valid()
-            legal_valid = legal_form.is_valid()
+            pricing_form = (
+                ResidencePropertyPricingForm()
+            )
 
-            if setup_valid and pricing_valid and legal_valid:
+            legal_form = (
+                ResidencePropertyLegalForm()
+            )
 
-                # -------------------------
-                # SAVE SETUP
-                # -------------------------
-                setup_obj = setup_form.save(commit=False)
-                setup_obj.property = prop
-                setup_obj.save()
+            current_step = "property"
 
-                # -------------------------
-                # SAVE PRICING
-                # -------------------------
-                pricing_obj = pricing_form.save(commit=False)
-                pricing_obj.property = prop
-                pricing_obj.save()
 
-                # -------------------------
-                # SAVE LEGAL
-                # -------------------------
-                legal_obj = legal_form.save(commit=False)
-                legal_obj.property = prop
-                legal_obj.save()
-
-                # -------------------------
-                # IMAGE UPLOAD SAFE
-                # -------------------------
-                images = request.FILES.getlist("image")
-
-                if len(images) > 100:
-                    request.session["residence_lock"] = False
-                    return render(request, "property/add_residence_property.html", {
-                        "property_form": property_form,
-                        "residence_setup_form": setup_form if setup_form else ResidencePropertySetupForm(),
-                        "office_setup_form": office_setup_form if office_setup_form else OfficePropertySetupForm(),
-                        "pricing_form": pricing_form,
-                        "legal_form": legal_form,
-                        "success": False,
-                        "error": "Maximum 100 images allowed"
-                    })
-
-                batch_size = 10
-
-                for i in range(0, len(images), batch_size):
-                    batch = images[i:i + batch_size]
-                    for img in batch:
-                        ResidencePropertyPhoto.objects.create(
-                            property=prop,
-                            image=img
-                        )
-
-                success = True
-                request.session["residence_lock"] = False
-                return redirect("my_residence_properties")
+        # ====================================================
+        # EXISTING PROPERTY
+        # ====================================================
 
         else:
-            # PROPERTY FORM INVALID
-            setup_form = ResidencePropertySetupForm(request.POST)
-            office_setup_form = OfficePropertySetupForm(request.POST)
-            pricing_form = ResidencePropertyPricingForm(request.POST)
-            legal_form = ResidencePropertyLegalForm(request.POST)
 
-            request.session["residence_lock"] = False
+            property_form = ResidencePropertyForm(
+                instance=property_obj
+            )
 
-    # =========================
-    # SAFE DEFAULT RENDER (GET OR FAIL)
-    # =========================
-    if setup_form is None:
-        setup_form = ResidencePropertySetupForm()
 
-    if office_setup_form is None:
-        office_setup_form = OfficePropertySetupForm()
+            # ------------------------------------------------
+            # CORRECT SETUP FORM
+            # ------------------------------------------------
 
-    if pricing_form is None:
-        pricing_form = ResidencePropertyPricingForm()
+            (
+                residence_setup_form,
+                office_setup_form
+            ) = get_setup_forms(property_obj)
 
-    if legal_form is None:
-        legal_form = ResidencePropertyLegalForm()
 
-    return render(request, "property/add_residence_property.html", {
-        "property_form": property_form,
-        "residence_setup_form": setup_form,
-        "office_setup_form": office_setup_form,
-        "pricing_form": pricing_form,
-        "legal_form": legal_form,
-        "success": success,
-    })
+            # ------------------------------------------------
+            # PRICING
+            # ------------------------------------------------
+
+            pricing_form = ResidencePropertyPricingForm(
+                instance=getattr(
+                    property_obj,
+                    "residencepropertypricing",
+                    None
+                ),
+                property_obj=property_obj
+            )
+
+
+            # ------------------------------------------------
+            # LEGAL
+            # ------------------------------------------------
+
+            legal_form = ResidencePropertyLegalForm(
+                instance=getattr(
+                    property_obj,
+                    "residencepropertylegal",
+                    None
+                )
+            )
+
+
+            current_step = property_obj.current_step
+
+
+        return render(
+            request,
+            "property/add_residence_property.html",
+            {
+                "property_form": property_form,
+
+                "residence_setup_form":
+                    residence_setup_form,
+
+                "office_setup_form":
+                    office_setup_form,
+
+                "pricing_form":
+                    pricing_form,
+
+                "legal_form":
+                    legal_form,
+
+                "property_obj":
+                    property_obj,
+
+                "current_step":
+                    current_step,
+            }
+        )
+
+
+    # ========================================================
+    # POST
+    # ========================================================
+
+    step = request.POST.get("step")
+
+
+    # ========================================================
+    # STEP 1
+    # BASIC PROPERTY INFORMATION
+    # ========================================================
+
+    if step == "property":
+
+        property_form = ResidencePropertyForm(
+            request.POST
+        )
+
+
+        if property_form.is_valid():
+
+            property_obj = property_form.save(
+                commit=False
+            )
+
+            property_obj.owner = request.user
+
+            property_obj.current_step = "setup"
+
+            property_obj.save()
+
+
+            return redirect(
+                "continue_residence_property",
+                property_id=property_obj.id
+            )
+
+
+        # ----------------------------------------------------
+        # FORM ERROR
+        # ----------------------------------------------------
+
+        return render(
+            request,
+            "property/add_residence_property.html",
+            {
+                "property_form":
+                    property_form,
+
+                "residence_setup_form":
+                    ResidencePropertySetupForm(),
+
+                "office_setup_form":
+                    OfficePropertySetupForm(),
+
+                "pricing_form":
+                    ResidencePropertyPricingForm(),
+
+                "legal_form":
+                    ResidencePropertyLegalForm(),
+
+                "property_obj":
+                    None,
+
+                "current_step":
+                    "property",
+            }
+        )
+
+
+    # ========================================================
+    # MAKE SURE PROPERTY EXISTS FOR ALL OTHER STEPS
+    # ========================================================
+
+    if not property_obj:
+
+        return redirect(
+            "add_residence_property_all_in_one"
+        )
+
+
+    # ========================================================
+    # STEP 2
+    # PROPERTY SETUP
+    # ========================================================
+
+    if step == "setup":
+
+
+        # ====================================================
+        # OFFICE SPACE
+        # ====================================================
+
+        if property_obj.property_type == "office_space":
+
+            office_setup_obj, created = (
+                OfficePropertySetup.objects.get_or_create(
+                    property=property_obj
+                )
+            )
+
+
+            office_setup_form = OfficePropertySetupForm(
+                request.POST,
+                instance=office_setup_obj
+            )
+
+
+            if office_setup_form.is_valid():
+
+                office_setup_form.save()
+
+
+                property_obj.current_step = "photos"
+
+                property_obj.save(
+                    update_fields=[
+                        "current_step",
+                        "updated_at"
+                    ]
+                )
+
+
+                return redirect(
+                    "continue_residence_property",
+                    property_id=property_obj.id
+                )
+
+
+            # ------------------------------------------------
+            # OFFICE FORM ERROR
+            # ------------------------------------------------
+
+            return render(
+                request,
+                "property/add_residence_property.html",
+                {
+                    "property_form":
+                        ResidencePropertyForm(
+                            instance=property_obj
+                        ),
+
+                    "residence_setup_form":
+                        None,
+
+                    "office_setup_form":
+                        office_setup_form,
+
+                    "pricing_form":
+                        ResidencePropertyPricingForm(
+                            property_obj=property_obj
+                        ),
+
+                    "legal_form":
+                        ResidencePropertyLegalForm(),
+
+                    "property_obj":
+                        property_obj,
+
+                    "current_step":
+                        "setup",
+                }
+            )
+
+
+        # ====================================================
+        # APARTMENT / HOMES
+        # ====================================================
+
+        residence_setup_obj, created = (
+            ResidencePropertySetup.objects.get_or_create(
+                property=property_obj
+            )
+        )
+
+
+        residence_setup_form = (
+            ResidencePropertySetupForm(
+                request.POST,
+                instance=residence_setup_obj
+            )
+        )
+
+
+        if residence_setup_form.is_valid():
+
+            residence_setup_form.save()
+
+
+            property_obj.current_step = "photos"
+
+            property_obj.save(
+                update_fields=[
+                    "current_step",
+                    "updated_at"
+                ]
+            )
+
+
+            return redirect(
+                "continue_residence_property",
+                property_id=property_obj.id
+            )
+
+
+        # ----------------------------------------------------
+        # RESIDENCE FORM ERROR
+        # ----------------------------------------------------
+
+        return render(
+            request,
+            "property/add_residence_property.html",
+            {
+                "property_form":
+                    ResidencePropertyForm(
+                        instance=property_obj
+                    ),
+
+                "residence_setup_form":
+                    residence_setup_form,
+
+                "office_setup_form":
+                    None,
+
+                "pricing_form":
+                    ResidencePropertyPricingForm(
+                        property_obj=property_obj
+                    ),
+
+                "legal_form":
+                    ResidencePropertyLegalForm(),
+
+                "property_obj":
+                    property_obj,
+
+                "current_step":
+                    "setup",
+            }
+        )
+
+
+    # ========================================================
+    # STEP 3
+    # PHOTOS
+    # ========================================================
+
+    if step == "photos":
+
+        images = request.FILES.getlist(
+            "image"
+        )
+
+
+        # ====================================================
+        # MAXIMUM 100 PHOTOS
+        # ====================================================
+
+        if len(images) > 100:
+
+            (
+                residence_setup_form,
+                office_setup_form
+            ) = get_setup_forms(property_obj)
+
+
+            return render(
+                request,
+                "property/add_residence_property.html",
+                {
+                    "property_form":
+                        ResidencePropertyForm(
+                            instance=property_obj
+                        ),
+
+                    "residence_setup_form":
+                        residence_setup_form,
+
+                    "office_setup_form":
+                        office_setup_form,
+
+                    "pricing_form":
+                        ResidencePropertyPricingForm(
+                            property_obj=property_obj
+                        ),
+
+                    "legal_form":
+                        ResidencePropertyLegalForm(),
+
+                    "property_obj":
+                        property_obj,
+
+                    "current_step":
+                        "photos",
+
+                    "error":
+                        "Maximum 100 images allowed.",
+                }
+            )
+
+
+        # ====================================================
+        # SAVE PHOTOS
+        # ====================================================
+
+        for image in images:
+
+            ResidencePropertyPhoto.objects.create(
+                property=property_obj,
+                image=image
+            )
+
+
+        property_obj.current_step = "pricing"
+
+        property_obj.save(
+            update_fields=[
+                "current_step",
+                "updated_at"
+            ]
+        )
+
+
+        return redirect(
+            "continue_residence_property",
+            property_id=property_obj.id
+        )
+
+
+    # ========================================================
+    # STEP 4
+    # PRICING
+    # ========================================================
+
+    if step == "pricing":
+
+        pricing_obj, created = (
+            ResidencePropertyPricing.objects.get_or_create(
+                property=property_obj
+            )
+        )
+
+
+        pricing_form = ResidencePropertyPricingForm(
+            request.POST,
+            instance=pricing_obj,
+            property_obj=property_obj
+        )
+
+
+        if pricing_form.is_valid():
+
+            pricing_form.save()
+
+
+            property_obj.current_step = "legal"
+
+            property_obj.save(
+                update_fields=[
+                    "current_step",
+                    "updated_at"
+                ]
+            )
+
+
+            return redirect(
+                "continue_residence_property",
+                property_id=property_obj.id
+            )
+
+
+        # ----------------------------------------------------
+        # PRICING ERROR
+        # ----------------------------------------------------
+
+        (
+            residence_setup_form,
+            office_setup_form
+        ) = get_setup_forms(property_obj)
+
+
+        return render(
+            request,
+            "property/add_residence_property.html",
+            {
+                "property_form":
+                    ResidencePropertyForm(
+                        instance=property_obj
+                    ),
+
+                "residence_setup_form":
+                    residence_setup_form,
+
+                "office_setup_form":
+                    office_setup_form,
+
+                "pricing_form":
+                    pricing_form,
+
+                "legal_form":
+                    ResidencePropertyLegalForm(),
+
+                "property_obj":
+                    property_obj,
+
+                "current_step":
+                    "pricing",
+            }
+        )
+
+
+    # ========================================================
+    # STEP 5
+    # LEGAL
+    # ========================================================
+
+    if step == "legal":
+
+        legal_obj, created = (
+            ResidencePropertyLegal.objects.get_or_create(
+                property=property_obj
+            )
+        )
+
+
+        legal_form = ResidencePropertyLegalForm(
+            request.POST,
+            instance=legal_obj
+        )
+
+
+        if legal_form.is_valid():
+
+            legal_form.save()
+
+
+            property_obj.current_step = "complete"
+
+            property_obj.save(
+                update_fields=[
+                    "current_step",
+                    "updated_at"
+                ]
+            )
+
+
+            return redirect(
+                "my_residence_properties"
+            )
+
+
+        # ----------------------------------------------------
+        # LEGAL ERROR
+        # ----------------------------------------------------
+
+        (
+            residence_setup_form,
+            office_setup_form
+        ) = get_setup_forms(property_obj)
+
+
+        return render(
+            request,
+            "property/add_residence_property.html",
+            {
+                "property_form":
+                    ResidencePropertyForm(
+                        instance=property_obj
+                    ),
+
+                "residence_setup_form":
+                    residence_setup_form,
+
+                "office_setup_form":
+                    office_setup_form,
+
+                "pricing_form":
+                    ResidencePropertyPricingForm(
+                        instance=getattr(
+                            property_obj,
+                            "residencepropertypricing",
+                            None
+                        ),
+                        property_obj=property_obj
+                    ),
+
+                "legal_form":
+                    legal_form,
+
+                "property_obj":
+                    property_obj,
+
+                "current_step":
+                    "legal",
+            }
+        )
+
+
+    # ========================================================
+    # UNKNOWN STEP
+    # ========================================================
+
+    return redirect(
+        "add_residence_property_all_in_one"
+    )
 
 
 
@@ -487,3 +1033,81 @@ def residence_booking_success(request, booking_id):
     return render(request, "customer/residence_booking_success.html", {
         "booking": booking
     })
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+
+from .forms import ResidencePropertyReviewForm
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+
+from .forms import ResidencePropertyReviewForm
+
+
+@login_required
+def resedence_add_property_review(request, property_id):
+
+    property = get_object_or_404(
+       ResidenceProperty,
+        id=property_id
+    )
+
+    if request.method == "POST":
+
+        form = ResidencePropertyReviewForm(request.POST)
+
+        if form.is_valid():
+
+            review = form.save(commit=False)
+
+            review.property = property
+            review.user = request.user
+
+            review.save()
+
+            return redirect(
+    "residence_property_details",
+    pk=property.id
+)
+
+    else:
+        form = ResidencePropertyReviewForm()
+
+    return render(
+        request,
+        "customer/resedince_add_review.html",
+        {
+            "property": property,
+            "form": form,
+        }
+    )
+
+
+from django.shortcuts import get_object_or_404, render
+from .models import ResidenceProperty
+
+
+def resedence_property_reviews(request, property_id):
+
+    property = get_object_or_404(
+        ResidenceProperty,
+        id=property_id
+    )
+
+    reviews = property.reviews.select_related(
+        'user'
+    ).all()
+
+    return render(
+        request,
+        'customer/residence_property_reviews.html',
+        {
+            'property': property,
+            'reviews': reviews,
+        }
+    )

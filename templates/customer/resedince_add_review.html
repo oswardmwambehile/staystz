@@ -1,0 +1,122 @@
+{% extends 'customers/base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+
+<div class="bg-white min-h-screen">
+
+    {% include 'customers/nav.html' %}
+
+
+    <div class="container mx-auto py-10 px-4 md:px-8">
+
+        <div class="max-w-2xl mx-auto">
+
+            <!-- Page Header -->
+            <div class="text-center mb-8">
+
+                <h1 class="text-3xl font-bold text-gray-900">
+                    Rate & Review
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Share your experience about
+                    <span class="font-semibold text-gray-800">
+                        {{ property.property_name|title }}
+                    </span>
+                </p>
+
+            </div>
+
+
+            <!-- Review Card -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-lg p-6 md:p-8">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+
+                    <!-- Rating -->
+                    <div class="mb-6">
+
+                        <label class="block text-gray-800 font-semibold mb-3">
+                            Your Rating
+                        </label>
+
+                        {{ form.rating|add_class:"w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#1591bc] focus:border-[#1591bc] outline-none" }}
+
+                        {% if form.rating.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                {{ form.rating.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Comment -->
+                    <div class="mb-6">
+
+                        <label class="block text-gray-800 font-semibold mb-3">
+                            Your Comment
+                        </label>
+
+                        {{ form.comment|add_class:"w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-[#1591bc] focus:border-[#1591bc] outline-none resize-none" }}
+
+                        {% if form.comment.errors %}
+                            <div class="text-red-600 text-sm mt-2">
+                                {{ form.comment.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Non-field errors -->
+                    {% if form.non_field_errors %}
+
+                        <div class="bg-red-100 text-red-700 p-3 rounded-lg mb-5">
+
+                            {{ form.non_field_errors }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3">
+
+                        <button
+                            type="submit"
+                            class="flex-1 bg-[#1591bc] hover:bg-[#117fa5] text-white font-semibold py-3 px-6 rounded-lg transition"
+                        >
+                            Submit Review
+                        </button>
+
+                        <a
+                            href="{% url 'property_detail' property.id %}"
+                            class="flex-1 text-center border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold py-3 px-6 rounded-lg transition"
+                        >
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}

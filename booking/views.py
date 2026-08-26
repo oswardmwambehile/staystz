@@ -1,91 +1,321 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.forms import formset_factory
 
-from .models import BookingProperty, BookingPropertyPhoto
+from .models import (
+    BookingProperty,
+    BookingPropertySetup,
+    BookingPropertyPricing,
+    BookingPropertyLegal,
+    BookingPropertyPhoto,
+)
 
 from .forms import (
     BookingPropertyForm,
     BookingPropertySetupForm,
     BookingPropertyPricingForm,
     BookingPropertyLegalForm,
-    BookingPropertyPhotoForm,
 )
 
 
-def add_property_all_in_one(request):
-    success = False
+def add_property_all_in_one(request, property_id=None):
 
-    if request.method == "POST":
+    # =====================================================
+    # NEW PROPERTY
+    # =====================================================
+
+    if property_id:
+        property_obj = get_object_or_404(
+            BookingProperty,
+            id=property_id,
+            owner=request.user
+        )
+    else:
+        property_obj = None
+
+
+    # =====================================================
+    # GET
+    # =====================================================
+
+    if request.method == "GET":
+
+        if property_obj:
+
+            property_form = BookingPropertyForm(
+                instance=property_obj
+            )
+
+            setup_form = BookingPropertySetupForm(
+                instance=getattr(
+                    property_obj,
+                    "bookingpropertysetup",
+                    None
+                )
+            )
+
+            pricing_form = BookingPropertyPricingForm(
+                instance=getattr(
+                    property_obj,
+                    "bookingpropertypricing",
+                    None
+                )
+            )
+
+            legal_form = BookingPropertyLegalForm(
+                instance=getattr(
+                    property_obj,
+                    "bookingpropertylegal",
+                    None
+                )
+            )
+
+            current_step = property_obj.current_step
+
+        else:
+
+            property_form = BookingPropertyForm()
+            setup_form = BookingPropertySetupForm()
+            pricing_form = BookingPropertyPricingForm()
+            legal_form = BookingPropertyLegalForm()
+
+            current_step = "property"
+
+
+        return render(
+            request,
+            "property/add_property_all_in_one.html",
+            {
+                "property_form": property_form,
+                "setup_form": setup_form,
+                "pricing_form": pricing_form,
+                "legal_form": legal_form,
+                "property_obj": property_obj,
+                "current_step": current_step,
+            }
+        )
+
+
+    # =====================================================
+    # WHICH STEP WAS SUBMITTED?
+    # =====================================================
+
+    step = request.POST.get("step")
+
+
+    # =====================================================
+    # STEP 1 - PROPERTY
+    # =====================================================
+
+    if step == "property":
 
         property_form = BookingPropertyForm(request.POST)
-        setup_form = BookingPropertySetupForm(request.POST)
-        pricing_form = BookingPropertyPricingForm(request.POST)
-        legal_form = BookingPropertyLegalForm(request.POST)
 
-        # Validate each form separately
-        property_valid = property_form.is_valid()
-        setup_valid = setup_form.is_valid()
-        pricing_valid = pricing_form.is_valid()
-        legal_valid = legal_form.is_valid()
+        if property_form.is_valid():
 
-        if (
-            property_valid
-            and setup_valid
-            and pricing_valid
-            and legal_valid
-        ):
-
-            # Save main property
             property_obj = property_form.save(commit=False)
+
             property_obj.owner = request.user
+
+            property_obj.current_step = "setup"
+
             property_obj.save()
 
-            # Save property setup
-            setup_obj = setup_form.save(commit=False)
-            setup_obj.property = property_obj
-            setup_obj.save()
+            return redirect(
+                "continue_property",
+                property_id=property_obj.id
+            )
 
-            # Save pricing
-            pricing_obj = pricing_form.save(commit=False)
-            pricing_obj.property = property_obj
-            pricing_obj.save()
+        return render(
+            request,
+            "property/add_property_all_in_one.html",
+            {
+                "property_form": property_form,
+                "setup_form": BookingPropertySetupForm(),
+                "pricing_form": BookingPropertyPricingForm(),
+                "legal_form": BookingPropertyLegalForm(),
+                "current_step": "property",
+                "property_obj": None,
+            }
+        )
 
-            # Save legal information
-            legal_obj = legal_form.save(commit=False)
-            legal_obj.property = property_obj
-            legal_obj.save()
 
-            # Save multiple images
-            images = request.FILES.getlist("image")
+    # =====================================================
+    # STEP 2 - SETUP
+    # =====================================================
 
-            for image in images:
-                BookingPropertyPhoto.objects.create(
-                    property=property_obj,
-                    image=image
-                )
+    if step == "setup":
 
-            success = True
+        if not property_obj:
+            return redirect("add_property_all_in_one")
+
+        setup_form = BookingPropertySetupForm(request.POST)
+
+        if setup_form.is_valid():
+
+            setup_obj, created = BookingPropertySetup.objects.get_or_create(
+                property=property_obj
+            )
+
+            setup_form = BookingPropertySetupForm(
+                request.POST,
+                instance=setup_obj
+            )
+
+            if setup_form.is_valid():
+                setup_form.save()
+
+            property_obj.current_step = "photos"
+
+            property_obj.save(
+                update_fields=["current_step"]
+            )
+
+            return redirect(
+                "continue_property",
+                property_id=property_obj.id
+            )
+
+        return render(
+            request,
+            "property/add_property_all_in_one.html",
+            {
+                "property_form": BookingPropertyForm(
+                    instance=property_obj
+                ),
+                "setup_form": setup_form,
+                "pricing_form": BookingPropertyPricingForm(),
+                "legal_form": BookingPropertyLegalForm(),
+                "current_step": "setup",
+                "property_obj": property_obj,
+            }
+        )
+
+
+    # =====================================================
+    # STEP 3 - PHOTOS
+    # =====================================================
+
+    if step == "photos":
+
+        if not property_obj:
+            return redirect("add_property_all_in_one")
+
+        images = request.FILES.getlist("image")
+
+        for image in images:
+
+            BookingPropertyPhoto.objects.create(
+                property=property_obj,
+                image=image
+            )
+
+        property_obj.current_step = "pricing"
+
+        property_obj.save(
+            update_fields=["current_step"]
+        )
+
+        return redirect(
+            "continue_property",
+            property_id=property_obj.id
+        )
+
+
+    # =====================================================
+    # STEP 4 - PRICING
+    # =====================================================
+
+    if step == "pricing":
+
+        if not property_obj:
+            return redirect("add_property_all_in_one")
+
+        pricing_obj, created = BookingPropertyPricing.objects.get_or_create(
+            property=property_obj
+        )
+
+        pricing_form = BookingPropertyPricingForm(
+            request.POST,
+            instance=pricing_obj
+        )
+
+        if pricing_form.is_valid():
+
+            pricing_form.save()
+
+            property_obj.current_step = "legal"
+
+            property_obj.save(
+                update_fields=["current_step"]
+            )
+
+            return redirect(
+                "continue_property",
+                property_id=property_obj.id
+            )
+
+        return render(
+            request,
+            "property/add_property_all_in_one.html",
+            {
+                "property_form": BookingPropertyForm(
+                    instance=property_obj
+                ),
+                "setup_form": BookingPropertySetupForm(),
+                "pricing_form": pricing_form,
+                "legal_form": BookingPropertyLegalForm(),
+                "current_step": "pricing",
+                "property_obj": property_obj,
+            }
+        )
+
+
+    # =====================================================
+    # STEP 5 - LEGAL
+    # =====================================================
+
+    if step == "legal":
+
+        if not property_obj:
+            return redirect("add_property_all_in_one")
+
+        legal_obj, created = BookingPropertyLegal.objects.get_or_create(
+            property=property_obj
+        )
+
+        legal_form = BookingPropertyLegalForm(
+            request.POST,
+            instance=legal_obj
+        )
+
+        if legal_form.is_valid():
+
+            legal_form.save()
+
+            property_obj.current_step = "complete"
+
+            property_obj.save(
+                update_fields=["current_step"]
+            )
 
             return redirect("my_properties")
 
-    else:
-        property_form = BookingPropertyForm()
-        setup_form = BookingPropertySetupForm()
-        pricing_form = BookingPropertyPricingForm()
-        legal_form = BookingPropertyLegalForm()
+        return render(
+            request,
+            "property/add_property_all_in_one.html",
+            {
+                "property_form": BookingPropertyForm(
+                    instance=property_obj
+                ),
+                "setup_form": BookingPropertySetupForm(),
+                "pricing_form": BookingPropertyPricingForm(),
+                "legal_form": legal_form,
+                "current_step": "legal",
+                "property_obj": property_obj,
+            }
+        )
 
-    return render(
-        request,
-        "property/add_property_all_in_one.html",
-        {
-            "property_form": property_form,
-            "setup_form": setup_form,
-            "pricing_form": pricing_form,
-            "legal_form": legal_form,
-            "success": success,
-        }
-    )
 
+    return redirect("add_property_all_in_one")
 
 
 
@@ -386,5 +616,79 @@ def update_property_booking_status(request, pk):
     return redirect("my_properties")
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import BookingProperty, Booking, PropertyReview
+from .forms import PropertyReviewForm
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .models import BookingProperty, PropertyReview
+from .forms import PropertyReviewForm
+
+
+@login_required
+def add_property_review(request, property_id):
+
+    property = get_object_or_404(
+        BookingProperty,
+        id=property_id
+    )
+
+    if request.method == "POST":
+
+        form = PropertyReviewForm(request.POST)
+
+        if form.is_valid():
+
+            review = form.save(commit=False)
+
+            review.property = property
+            review.user = request.user
+
+            review.save()
+
+            return redirect(
+    "booking_property_detail",
+    pk=property.id
+)
+
+    else:
+        form = PropertyReviewForm()
+
+    return render(
+        request,
+        "customer/add_review.html",
+        {
+            "property": property,
+            "form": form,
+        }
+    )
+
+
+from django.shortcuts import get_object_or_404, render
+from .models import BookingProperty
+
+
+def property_reviews(request, property_id):
+
+    property = get_object_or_404(
+        BookingProperty,
+        id=property_id
+    )
+
+    reviews = property.reviews.select_related(
+        'user'
+    ).all()
+
+    return render(
+        request,
+        'customer/property_reviews.html',
+        {
+            'property': property,
+            'reviews': reviews,
+        }
+    )

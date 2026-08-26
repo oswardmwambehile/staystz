@@ -50,14 +50,28 @@ class BookingProperty(models.Model):
         ('closed', 'Closed'),
         ('hold', 'Hold'),
     ]
+    CURRENT_STEP_CHOICES = [
+    ('property', 'Property Information'),
+    ('setup', 'Property Setup'),
+    ('photos', 'Photos'),
+    ('pricing', 'Pricing'),
+    ('legal', 'Legal Information'),
+    ('complete', 'Complete'),
+]
+    
+    current_step = models.CharField(
+        max_length=20,
+        choices=CURRENT_STEP_CHOICES,
+        default='property'
+    )
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    property_name = models.CharField(max_length=255)
-    property_type = models.CharField(max_length=20, choices=PROPERTY_TYPE_CHOICES)
+    property_name = models.CharField(max_length=255, blank=True, null=True)
+    property_type = models.CharField(max_length=20, choices=PROPERTY_TYPE_CHOICES, blank=True, null=True)
     property_description = models.TextField(blank=True, null=True)
-    address = models.CharField(max_length=255)
-    district = models.CharField(max_length=100)
-    region = models.CharField( max_length=50, choices=TANZANIA_REGIONS )
+    address = models.CharField(max_length=255, blank=True, null=True)
+    district = models.CharField(max_length=100, blank=True, null=True)
+    region = models.CharField( max_length=50, choices=TANZANIA_REGIONS, blank=True, null=True )
     country = models.CharField(max_length=50, default='Tanzania')
     postal_code = models.CharField(max_length=20, blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
@@ -72,8 +86,8 @@ class BookingProperty(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.property_name
-
+      return self.property_name or "Unnamed Property"
+    
     class Meta:
         verbose_name = "BookingProperty"
         verbose_name_plural = "Booking Properties"
@@ -123,9 +137,9 @@ class BookingPropertyPhoto(models.Model):
 
 class BookingPropertyPricing(models.Model):
     property = models.OneToOneField(BookingProperty, on_delete=models.CASCADE)
-    base_price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
-    available_from = models.DateField()
-    available_to = models.DateField()
+    base_price_per_night = models.DecimalField(max_digits=10, decimal_places=2 , blank=True, null=True)
+    available_from = models.DateField(blank=True, null=True)
+    available_to = models.DateField(blank=True, null=True)
     minimum_stay_nights = models.PositiveIntegerField(default=1)
     maximum_stay_nights = models.PositiveIntegerField(blank=True, null=True)
 
@@ -140,6 +154,9 @@ class BookingPropertyLegal(models.Model):
     smoking_policy = models.TextField(blank=True, null=True)
     pet_policy = models.TextField(blank=True, null=True)
     deposit_policy = models.TextField(blank=True, null=True)
+
+    
+    
 
 
 from django.db import models
@@ -185,3 +202,37 @@ class Booking(models.Model):
                 full_name = self.user.email  # fallback
             return f"{full_name} booked {self.property.property_name}"
 
+class PropertyReview(models.Model):
+
+    property = models.ForeignKey(
+        BookingProperty,
+        on_delete=models.CASCADE,
+        related_name="reviews"
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="property_reviews"
+    )
+
+    rating = models.PositiveSmallIntegerField(
+        choices=[
+            (1, "1 Star"),
+            (2, "2 Stars"),
+            (3, "3 Stars"),
+            (4, "4 Stars"),
+            (5, "5 Stars"),
+        ]
+    )
+
+    comment = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.property.property_name} - {self.rating} Stars - {self.user}"

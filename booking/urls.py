@@ -2,7 +2,27 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("add-property/", views.add_property_all_in_one, name="add_property_all_in_one"),
+  path(
+    "add-property/",
+    views.add_property_all_in_one,
+    name="add_property_all_in_one"
+),
+
+path(
+    "add-property/<int:property_id>/",
+    views.add_property_all_in_one,
+    name="continue_property"
+),
+path(
+    'property/<int:property_id>/reviews/',
+    views.property_reviews,
+    name='property_reviews'
+),
+path(
+        'property/<int:property_id>/review/',
+        views.add_property_review,
+        name='add_property_review'
+    ),
     path('my-properties/', views.my_properties, name='my_properties'),
     path('booking/<str:property_type>/', views.booking_properties, name='booking_properties'),
     path('property/<int:pk>/', views.property_detail, name='property_detail'),

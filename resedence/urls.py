@@ -2,7 +2,17 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("add-residence/", views.add_residence_property_all_in_one, name="add_residence_all_in_one"),
+   path(
+    "add-residence/",
+    views.add_residence_property_all_in_one,
+    name="add_residence_all_in_one"
+),
+
+path(
+    "add-residence/<int:property_id>/",
+    views.add_residence_property_all_in_one,
+    name="continue_residence_property"
+),
      path('my-properties/', views.my_residence_properties, name='my_residence_properties'),
       path(
         'residence/<int:pk>/',
@@ -30,6 +40,20 @@ urlpatterns = [
         "residence/booking/success/<int:booking_id>/",
         views.residence_booking_success,
         name="residence_booking_success"
+
+        
     ),
+
+
+    path(
+    'property/<int:property_id>/reviews/',
+    views.resedence_property_reviews,
+    name='resedence_property_reviews'
+),
+path(
+        'property/<int:property_id>/review/',
+        views.resedence_add_property_review,
+        name='resedence_add_property_review'
+)
 ]
 

@@ -1,0 +1,204 @@
+{% extends 'customers/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class=" min-h-screen">
+
+    {% include 'customers/nav.html' %}
+
+   
+
+    <div class="container mx-auto px-4 md:px-8 py-10">
+
+        <div class="max-w-4xl mx-auto">
+
+            <!-- HEADER -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
+
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">
+                            Reviews & Comments
+                        </h1>
+
+                        <p class="text-gray-500 mt-2">
+                            {{ property.property_name|title }}
+                        </p>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            {{ reviews|length }} review{{ reviews|length|pluralize }}
+                        </p>
+                    </div>
+
+                    {% if user.is_authenticated %}
+
+                        <a
+                            href="{% url 'add_property_review' property.id %}"
+                            class="inline-flex items-center justify-center bg-[#1591bc] hover:bg-[#117fa5] text-white px-5 py-3 rounded-lg font-semibold transition"
+                        >
+                            Write a Review
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'login' %}"
+                            class="inline-flex items-center justify-center bg-[#1591bc] hover:bg-[#117fa5] text-white px-5 py-3 rounded-lg font-semibold transition"
+                        >
+                            Login to Review
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- REVIEWS -->
+
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+
+                {% for review in reviews %}
+
+                    <div class="p-6 border-b border-gray-200 last:border-b-0">
+
+                        <!-- USER + RATING -->
+
+                        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+
+                            <div class="flex items-center gap-3">
+
+                                <!-- Avatar -->
+
+                                <div class="w-11 h-11 rounded-full bg-[#1591bc] text-white flex items-center justify-center font-bold">
+
+                                    {% if review.user.first_name %}
+                                        {{ review.user.first_name|first|upper }}
+                                    {% else %}
+                                        {{ review.user.email|first|upper }}
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- User -->
+
+                                <div>
+
+                                    <h3 class="font-semibold text-gray-900">
+
+                                        {% if review.user.first_name or review.user.last_name %}
+
+                                            {{ review.user.first_name }}
+                                            {{ review.user.last_name }}
+
+                                        {% else %}
+
+                                            {{ review.user.email }}
+
+                                        {% endif %}
+
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500">
+                                        {{ review.created_at|date:"d M Y" }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- STARS -->
+
+                            <div class="text-yellow-500 text-xl tracking-wide">
+
+                                {% for star in "12345" %}
+
+                                    {% if forloop.counter <= review.rating %}
+                                        ★
+                                    {% else %}
+                                        ☆
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COMMENT -->
+
+                        <div class="mt-4">
+
+                            <p class="text-gray-700 leading-relaxed">
+                                {{ review.comment }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <!-- NO REVIEWS -->
+
+                    <div class="text-center py-16 px-6">
+
+                        <div class="text-5xl text-gray-300 mb-4">
+                            ★
+                        </div>
+
+                        <h2 class="text-xl font-semibold text-gray-800">
+                            No Reviews Yet
+                        </h2>
+
+                        <p class="text-gray-500 mt-2">
+                            Be the first person to review this property.
+                        </p>
+
+                        {% if user.is_authenticated %}
+
+                            <a
+                                href="{% url 'add_property_review' property.id %}"
+                                class="inline-block mt-6 bg-[#1591bc] hover:bg-[#117fa5] text-white px-6 py-3 rounded-lg font-semibold transition"
+                            >
+                                Write the First Review
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- BACK BUTTON -->
+
+            <div class="mt-6">
+
+                <a
+                    href="{% url 'booking_property_detail' pk=property.id %}"
+                    class="inline-flex items-center text-[#1591bc] hover:text-[#117fa5] font-semibold"
+                >
+                    ← Back to Property
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% include 'customer/footer.html' %}
+
+{% endblock %}
