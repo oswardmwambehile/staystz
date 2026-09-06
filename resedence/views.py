@@ -1049,7 +1049,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms import ResidencePropertyReviewForm
 
 
-@login_required
+@login_required(login_url="signin")
 def resedence_add_property_review(request, property_id):
 
     property = get_object_or_404(
